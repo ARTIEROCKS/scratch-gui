@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {sendSensorInformation} from "../../lib/artie-api";
 
-const ArtieWebcamRecorderComponent = (userName, password, student, sensorObjectType, sensorName, callback) => {
+const ArtieWebcamRecorderComponent = props => {
 
     const videoRef = useRef<null | HTMLVideoElement>(null);
     const streamRef = useRef<null | MediaStream>(null);
@@ -63,7 +63,8 @@ const ArtieWebcamRecorderComponent = (userName, password, student, sensorObjectT
         });
 
         // Sends all the information to the API
-        callback(userName, password, student, sensorObjectType, sensorName, blob, fromDate, toDate);
+        props.callback(props.userName, props.password, props.student, props.sensorObjectType, props.sensorName, blob,
+            fromDate, toDate);
 
         chunks.current = [];
     }, [isRecording]);
