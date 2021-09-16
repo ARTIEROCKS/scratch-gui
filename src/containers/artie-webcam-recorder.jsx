@@ -14,7 +14,13 @@ class ArtieWebcamRecorder extends React.Component{
         sendSensorInformation(userName, password, student, sensorObjectType, sensorName, data, fromDate, toDate);
     }
     render () {
-        return <ArtieWebcamRecorderComponent {...this.props.artieLogin, this.handleSendSensorInformation}/>;
+        return (<ArtieWebcamRecorderComponent
+            userName={this.props.artieLogin.user.login}
+            password={this.props.artieLogin.user.password}
+            student={this.props.artieLogin.currentStudent}
+            sensorObjectType={'VIDEO'}
+            sensorName={'SCRATCH_WEBCAM'}
+        />);
     }
 }
 
