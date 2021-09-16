@@ -1,18 +1,27 @@
 import {useEffect, useRef, useState} from 'react';
+import {sendSensorInformation} from "../../lib/artie-api";
 
-const ArtieWebcamRecorder = () => {
+const ArtieWebcamRecorderComponent = props => {
 
     const videoRef = useRef<null | HTMLVideoElement>(null);
     const streamRef = useRef<null | MediaStream>(null);
     const streamRecorderRef = useRef<null | MediaRecorder>(null);
-    const [downloadLink, setDownloadLink] = useState('');
     const [isRecording, setIsRecording] = useState(false);
     const [audioSource, setAudioSource] = useState<string>('');
     const [videoSource, setVideoSource] = useState<string>('');
-    const [audioSourceOptions, setAudioSourceOptions] = useState<Record<string, string>[]>([]);
-    const [videoSourceOptions, setVideoSourceOptions] = useState<Record<string, string>[]>([]);
+    const [fromDate, setFromDate] = useState<Date>(null);
+    const [toDate, setToDate] = useState<Date>(null);
     const chunks = useRef<any[]>([]);
     const [error, setError] = useState<null | Error>(null);
+
+    const dateOptions = {year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZone: 'UTC',
+        timeZoneName: 'short'};
 
     const startRecording = () => {
         if (isRecording) {
@@ -23,6 +32,8 @@ const ArtieWebcamRecorder = () => {
         }
         streamRecorderRef.current = new MediaRecorder(streamRef.current);
         streamRecorderRef.current.start();
+        setToDate(null);
+        setFromDate(new Date().toLocaleDateString('es-ES', dateOptions));
         streamRecorderRef.current.ondataavailable = function (event: BlobEvent){
             if (chunks.current) {
                 chunks.current.push(event.data);
@@ -36,6 +47,7 @@ const ArtieWebcamRecorder = () => {
             return;
         }
         streamRecorderRef.current.stop();
+        setToDate(new Date().toLocaleDateString('es-ES', dateOptions));
         setIsRecording(false);
     };
 
@@ -49,9 +61,26 @@ const ArtieWebcamRecorder = () => {
         const blob = new Blob(chunks.current, {
             type: 'video/x-matroska;codecs=avc1,opus'
         });
-        setDownloadLink(URL.createObjectURL(blob));
+
+        // Sends all the information to the API
+        props.sendSensorInformation(props.userName, props.password, props.student, 'VIDEO',
+            'SCRATCH WEBCAM', blob, fromDate, toDate);
+
         chunks.current = [];
     }, [isRecording]);
+
+    // Effect to stop and then to start again the video and audio recording
+    useEffect(() => {
+        // Creates the interval function to send the video every x seconds
+        const interval = setInterval(() => {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         async function prepareStream () {
@@ -69,20 +98,19 @@ const ArtieWebcamRecorder = () => {
 
                 for (const device of deviceInfos){
                     if (device.kind === 'audioinput'){
-                        _audioSourceOptions.push({
-                            value: device.deviceId,
-                            label: device.label || `Microphone ${device.deviceId}`
-                        });
+                        _audioSourceOptions.push(device.deviceId);
                     } else if (device === 'videoinput') {
-                        _videoSourceOptions.push({
-                            value: device.deviceId,
-                            label: device.label || `Camera ${device.deviceId}`
-                        });
+                        _videoSourceOptions.push(device.deviceId);
                     }
                 }
 
-                setAudioSourceOptions(_audioSourceOptions);
-                setVideoSourceOptions(_videoSourceOptions);
+                // We take the first options for audio and video
+                if (_audioSourceOptions.length > 0) {
+                    setAudioSource(_audioSourceOptions[0]);
+                }
+                if (_videoSourceOptions.length > 0) {
+                    setVideoSource(_videoSourceOptions[0]);
+                }
             }
 
             const getDevices = () => navigator.mediaDevices.enumerateDevices();
@@ -101,52 +129,20 @@ const ArtieWebcamRecorder = () => {
 
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                    gotStream(stream);
-                } catch (error) {
-                    setError(error);
+                    await gotStream(stream);
+                } catch (err) {
+                    setError(err);
                 }
 
             }
             await getStream();
             const mediaDevices = await getDevices();
             gotDevices(mediaDevices);
-
-        };
+        }
         prepareStream();
     }, []);
 
-    return (
-        <div>
-            <div>
-                <select id="videoSource" name="videoSource" value={videoSource}>
-                    {videoSourceOptions.map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <select id="audioSource" name="audioSource" value={audioSource}>
-                    {audioSourceOptions.map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <video ref={videoRef} autoPlay muted playsInline />
-            </div>
-            <div>
-                {downloadLink && <video src={downloadLink} controls></video>}
-                {downloadLink && (<a href={downloadLink} download="file.mp4">Descargar</a>)}
-            </div>
-            <div>
-                <button onClick={startRecording} disabled={isRecording}>Grabar</button>
-                <button onClick={stopRecording} disabled={!isRecording}>Parar</button>
-            </div>
-            <div>
-                {error && <p>{error.message}</p>}
-            </div>
-        </div>
-    );
+    return null;
 };
 
-export default ArtieWebcamRecorder;
+export default ArtieWebcamRecorderComponent;
