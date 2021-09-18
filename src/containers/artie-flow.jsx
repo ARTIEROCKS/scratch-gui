@@ -54,8 +54,7 @@ class ArtieFlow extends React.Component {
             artieExercisesComponent: false,
             artieHelpComponent: false,
             artiePopupComponent: false,
-            artieHelpPopupComponent: false,
-            artieWebcamStartRecording: false
+            artieHelpPopupComponent: false
         };
         bindAll(this, [
             'flow',
