@@ -73,9 +73,9 @@ const ArtieWebcamRecorderComponent = props => {
     useEffect(() => {
         // Creates the interval function to send the video every x seconds
         const interval = setInterval(() => {
-            if (isRecording && props.artieWebcam) {
+            if (isRecording && props.artieWebcam.recording) {
                 stopRecording();
-            } else if (props.artieWebcam) {
+            } else if (props.artieWebcam.recording) {
                 startRecording();
             }
         }, 5000);
@@ -83,12 +83,12 @@ const ArtieWebcamRecorderComponent = props => {
     }, []);
 
     useEffect(() => {
-        if (props.artieWebcam) {
+        if (props.artieWebcam.recording) {
             startRecording();
         } else {
             stopRecording();
         }
-    }, [props.artieWebcam]);
+    }, [props.artieWebcam.recording]);
 
     useEffect(() => {
         async function prepareStream () {
