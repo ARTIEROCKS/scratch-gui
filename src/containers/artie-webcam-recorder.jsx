@@ -8,9 +8,9 @@ import {sendSensorInformation} from "../lib/artie-api";
 class ArtieWebcamRecorder extends React.Component{
     constructor (props) {
         super(props);
-        bindAll(this, ['handleSendSensorInformation']);
+        bindAll(this, ['onHandleSendSensorInformation']);
     }
-    handleSendSensorInformation (userName, password, student, sensorObjectType, sensorName, data, fromDate, toDate) {
+    onHandleSendSensorInformation (userName, password, student, sensorObjectType, sensorName, data, fromDate, toDate) {
         sendSensorInformation(userName, password, student, sensorObjectType, sensorName, data, fromDate, toDate);
     }
     render () {
@@ -20,12 +20,15 @@ class ArtieWebcamRecorder extends React.Component{
             student={this.props.artieLogin.currentStudent}
             sensorObjectType={'VIDEO'}
             sensorName={'SCRATCH_WEBCAM'}
+            send={this.onHandleSendSensorInformation}
+            artieWebcam={this.props.artieWebcam}
         />);
     }
 }
 
 const mapStateToProps = state => ({
-    artieLogin: state.scratchGui.artieLogin
+    artieLogin: state.scratchGui.artieLogin,
+    artieWebcam: state.scratchGui.artieWebcam
 });
 
 export default compose(

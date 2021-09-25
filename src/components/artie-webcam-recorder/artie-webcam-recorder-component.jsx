@@ -1,5 +1,4 @@
 import {useEffect, useRef, useState} from 'react';
-import {sendSensorInformation} from "../../lib/artie-api";
 
 const ArtieWebcamRecorderComponent = props => {
 
@@ -63,7 +62,7 @@ const ArtieWebcamRecorderComponent = props => {
         });
 
         // Sends all the information to the API
-        props.callback(props.userName, props.password, props.student, props.sensorObjectType, props.sensorName, blob,
+        props.send(props.userName, props.password, props.student, props.sensorObjectType, props.sensorName, blob,
             fromDate, toDate);
 
         chunks.current = [];
@@ -73,14 +72,22 @@ const ArtieWebcamRecorderComponent = props => {
     useEffect(() => {
         // Creates the interval function to send the video every x seconds
         const interval = setInterval(() => {
-            if (isRecording) {
+            if (isRecording && props.artieWebcam) {
                 stopRecording();
-            } else {
+            } else if (props.artieWebcam) {
                 startRecording();
             }
         }, 5000);
         return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+        if (props.artieWebcam) {
+            startRecording();
+        } else {
+            stopRecording();
+        }
+    }, [props.artieWebcam]);
 
     useEffect(() => {
         async function prepareStream () {
