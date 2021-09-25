@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
+import regeneratorRuntime from 'regenerator-runtime';
 
 const ArtieWebcamRecorderComponent = props => {
 
@@ -6,12 +7,12 @@ const ArtieWebcamRecorderComponent = props => {
     const streamRef = useRef<null | MediaStream>(null);
     const streamRecorderRef = useRef<null | MediaRecorder>(null);
     const [isRecording, setIsRecording] = useState(false);
-    const [audioSource, setAudioSource] = useState<string>('');
-    const [videoSource, setVideoSource] = useState<string>('');
-    const [fromDate, setFromDate] = useState<Date>(null);
-    const [toDate, setToDate] = useState<Date>(null);
-    const chunks = useRef<any[]>([]);
-    const [error, setError] = useState<null | Error>(null);
+    const [audioSource, setAudioSource] = useState('');
+    const [videoSource, setVideoSource] = useState('');
+    const [fromDate, setFromDate] = useState(null);
+    const [toDate, setToDate] = useState(null);
+    const chunks = useRef<[]>([]);
+    const [error, setError] = useState(null);
 
     const dateOptions = {year: 'numeric',
         month: '2-digit',
@@ -33,7 +34,7 @@ const ArtieWebcamRecorderComponent = props => {
         streamRecorderRef.current.start();
         setToDate(null);
         setFromDate(new Date().toLocaleDateString('es-ES', dateOptions));
-        streamRecorderRef.current.ondataavailable = function (event: BlobEvent){
+        streamRecorderRef.current.ondataavailable = function (event){
             if (chunks.current) {
                 chunks.current.push(event.data);
             }
@@ -54,7 +55,7 @@ const ArtieWebcamRecorderComponent = props => {
         if (isRecording) {
             return;
         }
-        if (chunks.current.length === 0){
+        if (chunks !== undefined || chunks.current !== undefined || chunks.current.length === 0){
             return;
         }
         const blob = new Blob(chunks.current, {
@@ -92,14 +93,14 @@ const ArtieWebcamRecorderComponent = props => {
     useEffect(() => {
         async function prepareStream () {
 
-            async function gotStream (stream: MediaStream) {
+            async function gotStream (stream) {
                 streamRef.current = stream;
                 if (videoRef.current){
                     videoRef.current.srcObject = stream;
                 }
             }
 
-            function gotDevices (deviceInfos: MediaDeviceInfo[]){
+            function gotDevices (deviceInfos){
                 const _audioSourceOptions = [];
                 const _videoSourceOptions = [];
 
