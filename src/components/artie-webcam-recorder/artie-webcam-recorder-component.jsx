@@ -1,17 +1,16 @@
-import {useEffect, useRef, useState} from 'react';
+import {createRef, useEffect, useRef, useState} from 'react';
 import regeneratorRuntime from 'regenerator-runtime';
 
 const ArtieWebcamRecorderComponent = props => {
 
-    const videoRef = useRef<null | HTMLVideoElement>(null);
-    const streamRef = useRef<null | MediaStream>(null);
-    const streamRecorderRef = useRef<null | MediaRecorder>(null);
+    const streamRef = useRef();
+    const streamRecorderRef = useRef();
     const [isRecording, setIsRecording] = useState(false);
     const [audioSource, setAudioSource] = useState('');
     const [videoSource, setVideoSource] = useState('');
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
-    const chunks = useRef<[]>([]);
+    const chunks = useRef();
     const [error, setError] = useState(null);
 
     const dateOptions = {year: 'numeric',
@@ -37,6 +36,8 @@ const ArtieWebcamRecorderComponent = props => {
         streamRecorderRef.current.ondataavailable = function (event){
             if (chunks.current) {
                 chunks.current.push(event.data);
+            } else {
+                chunks.current = [event.data];
             }
         };
         setIsRecording(true);
@@ -94,9 +95,8 @@ const ArtieWebcamRecorderComponent = props => {
         async function prepareStream () {
 
             async function gotStream (stream) {
-                streamRef.current = stream;
-                if (videoRef.current){
-                    videoRef.current.srcObject = stream;
+                if (streamRef !== undefined) {
+                    streamRef.current = stream;
                 }
             }
 
@@ -107,7 +107,7 @@ const ArtieWebcamRecorderComponent = props => {
                 for (const device of deviceInfos){
                     if (device.kind === 'audioinput'){
                         _audioSourceOptions.push(device.deviceId);
-                    } else if (device === 'videoinput') {
+                    } else if (device.kind === 'videoinput') {
                         _videoSourceOptions.push(device.deviceId);
                     }
                 }
@@ -120,8 +120,6 @@ const ArtieWebcamRecorderComponent = props => {
                     setVideoSource(_videoSourceOptions[0]);
                 }
             }
-
-            const getDevices = () => navigator.mediaDevices.enumerateDevices();
 
             async function getStream () {
                 if (streamRef.current) {
@@ -143,8 +141,10 @@ const ArtieWebcamRecorderComponent = props => {
                 }
 
             }
-            await getStream();
+            const getDevices = () => navigator.mediaDevices.enumerateDevices();
+
             const mediaDevices = await getDevices();
+            await getStream();
             gotDevices(mediaDevices);
         }
         prepareStream();
