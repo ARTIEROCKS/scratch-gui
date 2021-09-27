@@ -52,6 +52,32 @@ const ArtieWebcamRecorderComponent = props => {
         setIsRecording(false);
     };
 
+    /**
+     * Use Effect for getting the states from the local storage and sets in the component
+     */
+    useEffect(() => {
+
+        setIsRecording(JSON.parse(window.localStorage.getItem('webcamRecorder_isRecording')));
+        /* setAudioSource(JSON.parse(window.localStorage.getItem('webcamRecorder_audioSource')));
+        setVideoSource(JSON.parse(window.localStorage.getItem('webcamRecorder_videoSource')));*/
+        setFromDate(JSON.parse(window.localStorage.getItem('webcamRecorder_fromDate')));
+        setFromDate(JSON.parse(window.localStorage.getItem('webcamRecorder_toDate')));
+        setError(JSON.parse(window.localStorage.getItem('webcamRecorder_error')));
+
+    }, []);
+
+    /**
+     * Use Effect for setting the states to the local storage
+     */
+    useEffect(() => {
+        window.localStorage.setItem('webcamRecorder_isRecording', isRecording);
+        window.localStorage.setItem('webcamRecorder_audioSource', audioSource);
+        window.localStorage.setItem('webcamRecorder_videoSource', videoSource);
+        window.localStorage.setItem('webcamRecorder_fromDate', fromDate);
+        window.localStorage.setItem('webcamRecorder_toDate', toDate);
+        window.localStorage.setItem('webcamRecorder_error', error);
+    }, [isRecording, audioSource, videoSource, fromDate, toDate, error]);
+
     useEffect(() => {
         if (isRecording) {
             return;
