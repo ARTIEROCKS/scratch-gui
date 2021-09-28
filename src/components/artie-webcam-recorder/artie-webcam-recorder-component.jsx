@@ -57,12 +57,12 @@ const ArtieWebcamRecorderComponent = props => {
      */
     useEffect(() => {
 
-        setIsRecording(JSON.parse(window.localStorage.getItem('webcamRecorder_isRecording')));
-        /* setAudioSource(JSON.parse(window.localStorage.getItem('webcamRecorder_audioSource')));
-        setVideoSource(JSON.parse(window.localStorage.getItem('webcamRecorder_videoSource')));*/
-        setFromDate(JSON.parse(window.localStorage.getItem('webcamRecorder_fromDate')));
-        setFromDate(JSON.parse(window.localStorage.getItem('webcamRecorder_toDate')));
-        setError(JSON.parse(window.localStorage.getItem('webcamRecorder_error')));
+        setIsRecording(window.localStorage.getItem('webcamRecorder_isRecording') === 'true');
+        setAudioSource(window.localStorage.getItem('webcamRecorder_audioSource'));
+        setVideoSource(window.localStorage.getItem('webcamRecorder_videoSource'));
+        setFromDate(window.localStorage.getItem('webcamRecorder_fromDate'));
+        setFromDate(window.localStorage.getItem('webcamRecorder_toDate'));
+        setError(window.localStorage.getItem('webcamRecorder_error'));
 
     }, []);
 
