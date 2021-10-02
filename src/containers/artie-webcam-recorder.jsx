@@ -30,15 +30,22 @@ class ArtieWebcamRecorder extends React.Component{
         window.localStorage.removeItem('webcamRecorder_error');
     }
     render () {
-        return (<ArtieWebcamRecorderComponent
-            userName={this.props.login}
-            password={this.props.password}
-            student={this.props.artieLogin.currentStudent}
-            sensorObjectType={'VIDEO'}
-            sensorName={'SCRATCH_WEBCAM'}
-            send={this.onHandleSendSensorInformation}
-            artieWebcam={this.props.artieWebcam}
-        />);
+        if (this.props.artieLogin !== null &&
+            this.props.artieLogin.user !== null && this.props.artieLogin.user.login !== null &&
+            this.props.artieLogin.user.password !== null &&
+            this.props.artieLogin.currentStudent !== null) {
+
+            return (<ArtieWebcamRecorderComponent
+                userName={this.props.artieLogin.user.login}
+                password={this.props.artieLogin.user.password}
+                student={this.props.artieLogin.currentStudent}
+                sensorObjectType={'VIDEO'}
+                sensorName={'SCRATCH_WEBCAM'}
+                send={this.onHandleSendSensorInformation}
+                artieWebcam={this.props.artieWebcam}
+            />);
+        }
+        return null;
     }
 }
 

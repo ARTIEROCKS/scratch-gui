@@ -362,7 +362,7 @@ const sendSensorInformation = (userName, password, student, sensorObjectType, se
             timeZone: 'UTC',
             timeZoneName: 'short'};
         const date = new Date().toLocaleDateString('es-ES', dateOptions);
-        const milliseconds = new Date.now();
+        const milliseconds = Date.now();
 
         // 1- Creates the sensor object
         const sensorObject = {date: date,
