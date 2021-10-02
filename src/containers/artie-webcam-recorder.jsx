@@ -8,10 +8,26 @@ import {sendSensorInformation} from "../lib/artie-api";
 class ArtieWebcamRecorder extends React.Component{
     constructor (props) {
         super(props);
-        bindAll(this, ['onHandleSendSensorInformation']);
+        bindAll(this, ['onHandleSendSensorInformation', 'removeAllItems']);
     }
+    componentWillMount () {
+        this.removeAllItems();
+    }
+    componentWillUnmount () {
+        this.removeAllItems();
+    }
+
     onHandleSendSensorInformation (userName, password, student, sensorObjectType, sensorName, data, fromDate, toDate) {
         sendSensorInformation(userName, password, student, sensorObjectType, sensorName, data, fromDate, toDate);
+    }
+    removeAllItems () {
+        window.localStorage.removeItem('webcamRecorder_isRecording');
+        window.localStorage.removeItem('webcamRecorder_props_recording');
+        window.localStorage.removeItem('webcamRecorder_audioSource');
+        window.localStorage.removeItem('webcamRecorder_videoSource');
+        window.localStorage.removeItem('webcamRecorder_fromDate');
+        window.localStorage.removeItem('webcamRecorder_toDate');
+        window.localStorage.removeItem('webcamRecorder_error');
     }
     render () {
         return (<ArtieWebcamRecorderComponent

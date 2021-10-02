@@ -71,6 +71,7 @@ const ArtieWebcamRecorderComponent = props => {
      */
     useEffect(() => {
         window.localStorage.setItem('webcamRecorder_isRecording', isRecording);
+        window.localStorage.setItem('webcamRecorder_props_recording', props.artieWebcam.recording);
         window.localStorage.setItem('webcamRecorder_audioSource', audioSource);
         window.localStorage.setItem('webcamRecorder_videoSource', videoSource);
         window.localStorage.setItem('webcamRecorder_fromDate', fromDate);
@@ -82,7 +83,7 @@ const ArtieWebcamRecorderComponent = props => {
         if (isRecording) {
             return;
         }
-        if (chunks !== undefined || chunks.current !== undefined || chunks.current.length === 0){
+        if (chunks !== undefined && chunks.current !== undefined && chunks.current.length === 0){
             return;
         }
         const blob = new Blob(chunks.current, {
@@ -98,11 +99,17 @@ const ArtieWebcamRecorderComponent = props => {
 
     // Effect to stop and then to start again the video and audio recording
     useEffect(() => {
+
         // Creates the interval function to send the video every x seconds
         const interval = setInterval(() => {
-            if (isRecording && props.artieWebcam.recording) {
+
+            // eslint-disable-next-line max-len
+            const isRecordingLocal = (window.localStorage.getItem('webcamRecorder_isRecording') === 'true');
+            const propsRecording = (window.localStorage.getItem('webcamRecorder_props_recording') === 'true');
+
+            if (isRecordingLocal && propsRecording) {
                 stopRecording();
-            } else if (props.artieWebcam.recording) {
+            } else if (propsRecording) {
                 startRecording();
             }
         }, 5000);
