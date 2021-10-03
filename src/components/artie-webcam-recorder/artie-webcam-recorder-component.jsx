@@ -34,7 +34,7 @@ const ArtieWebcamRecorderComponent = props => {
         setToDate(null);
         setFromDate(new Date().toLocaleDateString('es-ES', dateOptions));
         streamRecorderRef.current.ondataavailable = function (event){
-            if (chunks.current) {
+            if (chunks.current.length > 0) {
                 chunks.current.push(event.data);
             } else {
                 chunks.current = [event.data];
@@ -90,11 +90,19 @@ const ArtieWebcamRecorderComponent = props => {
             type: 'video/x-matroska;codecs=avc1,opus'
         });
 
-        // Sends all the information to the API
-        props.send(props.userName, props.password, props.student, props.sensorObjectType, props.sensorName, blob,
-            fromDate, toDate);
+        const reader = new FileReader();
+        reader.onload = function () {
+            const jsonBlob = reader.result;
 
-        chunks.current = [];
+            // Sends all the information to the API
+            // eslint-disable-next-line max-len
+            props.send(props.userName, props.password, props.student, props.sensorObjectType, props.sensorName, jsonBlob,
+                fromDate, toDate);
+
+            chunks.current = [];
+        };
+        reader.readAsText(blob);
+
     }, [isRecording]);
 
     // Effect to stop and then to start again the video and audio recording
