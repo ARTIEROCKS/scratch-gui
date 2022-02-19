@@ -377,9 +377,7 @@ class ArtieFlow extends React.Component {
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit',
-            timeZone: 'UTC',
-            timeZoneName: 'short'};
+            second: '2-digit'};
         const date = new Date().toLocaleDateString('es-ES', options);
         this.props.onArtieLogged(user, date);
 
@@ -419,9 +417,7 @@ class ArtieFlow extends React.Component {
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit',
-            timeZone: 'UTC',
-            timeZoneName: 'short'};
+            second: '2-digit'};
         const date = new Date().toLocaleDateString('es-ES', options);
         this.props.onArtieSetCurrentExercise(exercise, date);
         this.props.onDeactivateArtieExercises();
