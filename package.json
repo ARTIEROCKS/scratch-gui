@@ -146,5 +146,8 @@
       "\\.(css|less)$": "<rootDir>/test/__mocks__/styleMock.js",
       "editor-msgs(\\.js)?$": "<rootDir>/test/__mocks__/editor-msgs-mock.js"
     }
-  }
+  },
+    "publishConfig": {
+        "registry": "http://nexus.ai-mind.com:8081/nexus/repository/npm-internal/"
+    }
 }
