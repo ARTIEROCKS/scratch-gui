@@ -5111,6 +5111,7 @@
     "assert-plus" "^1.0.0"
 
 "gh-pages@github:rschamp/gh-pages#publish-branch-to-subfolder":
+  "integrity" "sha512-+eav0WETsX2kZ2rs0mCT/wxkbPiGvR6JMQbWJh2FNpffFT6UJyXiisCQF7adITE6xHWn0qjP9lYxKNj42gh85g=="
   "resolved" "git+ssh://git@github.com/rschamp/gh-pages.git#47e5e5c376ca65f4b407325e115174172d9c12ae"
   "version" "0.12.0"
   dependencies:
@@ -9134,7 +9135,7 @@
     "classnames" "^2.2.5"
     "object-assign" "^4.1.0"
 
-"react-dom@^0.14.0 || ^15.0.0 || ^16", "react-dom@^0.14.0 || ^15.0.0 || ^16.0.0", "react-dom@^15.3.0 || ^16.0.0-alpha", "react-dom@^16", "react-dom@^16.0.0-0", "react-dom@>=0.14", "react-dom@16.2.1":
+"react-dom@^0.14.0 || ^15.0.0 || ^16", "react-dom@^0.14.0 || ^15.0.0 || ^16.0.0", "react-dom@^15.3.0 || ^16.0.0-alpha", "react-dom@^16", "react-dom@^16.0.0", "react-dom@^16.0.0-0", "react-dom@>=0.14":
   "integrity" "sha512-0ujGgYnpX0GlaAjUfwU7ddy0DjuzPmTHHi2SlPolGv7hAyUpK7XA7WZcxit5ZcU7cW5QU1HJjlS3eMn42tSfYQ=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-16.2.1.tgz"
   "version" "16.2.1"
@@ -9271,7 +9272,7 @@
     "prop-types" "^15.6.0"
     "react-lifecycles-compat" "^3.0.4"
 
-"react@^0.14 || ^15.0.0 || ^16.0.0-alpha", "react@^0.14.0 || ^15.0.0 || ^16", "react@^0.14.0 || ^15.0.0 || ^16.0.0", "react@^0.14.0 || ^15.0.0-0 || ^16.0.0-0", "react@^0.14.9 || ^15.0.0 || ^16.0.0", "react@^0.14.9 || ^15.3.0 || ^16.0.0", "react@^15.3.0 || ^16.0.0-alpha", "react@^15.6.2 || ^16.0", "react@^16", "react@^16.0.0", "react@^16.0.0-0", "react@>=0.14", "react@0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0", "react@16.2.0":
+"react@^0.14 || ^15.0.0 || ^16.0.0-alpha", "react@^0.14.0 || ^15.0.0 || ^16", "react@^0.14.0 || ^15.0.0 || ^16.0.0", "react@^0.14.0 || ^15.0.0-0 || ^16.0.0-0", "react@^0.14.9 || ^15.0.0 || ^16.0.0", "react@^0.14.9 || ^15.3.0 || ^16.0.0", "react@^15.3.0 || ^16.0.0-alpha", "react@^15.6.2 || ^16.0", "react@^16", "react@^16.0.0", "react@^16.0.0-0", "react@>=0.14", "react@0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0":
   "integrity" "sha512-ZmIomM7EE1DvPEnSFAHZn9Vs9zJl5A9H7el0EGTE6ZbW9FKe/14IYAlPbC8iH25YarEQxZL+E8VW7Mi7kfQrDQ=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.2.0.tgz"
   "version" "16.2.0"
@@ -9943,10 +9944,9 @@
     "babel-plugin-react-intl" "^3.0.1"
     "transifex" "1.6.6"
 
-"scratch-l10n@3.15.4-artie":
-  "integrity" "sha512-9KvjQh/6TpVhjRpJ223kv+7rGQf95phP02BR2d6DnCyULmOjtBN/hW6Ii/lIQN7L3rYtwEsn7kc6C7GZ/CYNIA=="
-  "resolved" "http://nexus.ai-mind.com:8081/nexus/repository/npm-all/scratch-l10n/-/scratch-l10n-3.15.4-artie.tgz"
-  "version" "3.15.4-artie"
+"scratch-l10n@file:../scratch-l10n":
+  "resolved" "file:../scratch-l10n"
+  "version" "3.16.0-artie"
   dependencies:
     "@babel/cli" "^7.1.2"
     "@babel/core" "^7.1.2"
