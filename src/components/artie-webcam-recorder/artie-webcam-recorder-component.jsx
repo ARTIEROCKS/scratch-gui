@@ -87,7 +87,7 @@ const ArtieWebcamRecorderComponent = props => {
             return;
         }
         const blob = new Blob(chunks.current, {
-            type: 'video/x-matroska;codecs=avc1,opus'
+            type: 'video/x-matroska;codecs=avc1'
         });
 
         const reader = new FileReader();
@@ -101,7 +101,7 @@ const ArtieWebcamRecorderComponent = props => {
 
             chunks.current = [];
         };
-        reader.readAsText(blob);
+        reader.readAsDataURL(blob);
 
     }, [isRecording]);
 
