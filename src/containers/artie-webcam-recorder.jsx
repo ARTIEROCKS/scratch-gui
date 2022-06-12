@@ -33,7 +33,8 @@ class ArtieWebcamRecorder extends React.Component{
         if (this.props.artieLogin !== null &&
             this.props.artieLogin.user !== null && this.props.artieLogin.user.login !== null &&
             this.props.artieLogin.user.password !== null &&
-            this.props.artieLogin.currentStudent !== null) {
+            this.props.artieLogin.currentStudent !== null &&
+            (this.props.artieLogin.currentStudent.recordFace === null || this.props.artieLogin.currentStudent.recordFace)) {
 
             return (<ArtieWebcamRecorderComponent
                 userName={this.props.artieLogin.user.login}
