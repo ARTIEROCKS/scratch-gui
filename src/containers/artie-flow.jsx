@@ -34,6 +34,7 @@ import {
     artieHelpReceived,
     artiePopupStatement
 } from '../reducers/artie-exercises';
+import {changeArtieWebcamRecording} from '../reducers/artie-webcam';
 import {compose} from 'redux';
 import {injectIntl} from 'react-intl';
 
@@ -108,6 +109,9 @@ class ArtieFlow extends React.Component {
                 artieHelpPopupComponent = false;
                 artiePopupComponent = false;
                 changes = true;
+
+                // If the user is logged out, we stop recording
+                this.props.onChangeArtieWebcamRecording(false);
             }
         } else if (nextState.artieLoginComponent &&
                 (nextProps.artieLogin.user !== undefined &&
@@ -333,6 +337,9 @@ class ArtieFlow extends React.Component {
                 const tempStudent = this.props.artieLogin.students.filter(s => s.id == studentLogin)[0];
                 this.props.onArtieSetCurrentStudent(tempStudent);
 
+                // Once the student has been selected, we start recording
+                this.props.onChangeArtieWebcamRecording(true);
+
                 // If the current user is not null and the competence is already set, we show the exercises
                 if (tempStudent.competence !== undefined && tempStudent.competence !== null &&
                     tempStudent.competence > 0){
@@ -508,7 +515,10 @@ const mapDispatchToProps = dispatch => ({
 
     // 3- Help properties
     onArtieClearHelp: () => dispatch(artieClearHelp(new Date())),
-    onArtieHelpReceived: help => dispatch(artieHelpReceived(help))
+    onArtieHelpReceived: help => dispatch(artieHelpReceived(help)),
+
+    // 4- Webcam properties
+    onChangeArtieWebcamRecording: recording => dispatch(changeArtieWebcamRecording(recording))
 
 });
 

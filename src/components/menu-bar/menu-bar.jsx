@@ -89,6 +89,7 @@ import {activateArtieExercises, artieClearExercises,
     artieHelpReceived, artieLoadingSolution, artieLoadingExercise, artieLoadingHelp,
     artiePopupExercise, artieEvaluationStop, artiePopupStatement, artieResetSecondsHelpOpen} from '../../reducers/artie-exercises';
 import ArtieFlow from '../../containers/artie-flow.jsx';
+import ArtieWebcamRecorder from '../../containers/artie-webcam-recorder.jsx';
 import {ArtieExerciseStatementTooltip} from '../artie-exercises/artie-exercises-statement.jsx';
 
 import html2canvas from 'html2canvas';
@@ -1063,6 +1064,7 @@ class MenuBar extends React.Component {
                 {aboutButton}
 
                 <ArtieFlow />
+                <ArtieWebcamRecorder />
             </Box>
         );
     }

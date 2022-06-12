@@ -9,9 +9,9 @@
 /* eslint-disable arrow-parens */
 
 const _inputElementsValues = ['text', 'math_number', 'math_positive_number', 'math_whole_number'];
-const _pedagogicalInterventionWebServiceUrl = 'http://prod.artie.rocks:8000';
-const _pedagogialWebUrl = 'http://prod.artie.rocks:8000';
-const _apiKey = '0dkNqC39mclJrshzwe5ui11q6lQZpl04';
+const _pedagogicalInterventionWebServiceUrl = 'http://pre-prod.artie.rocks:8000';
+const _pedagogialWebUrl = 'http://pre-prod.artie.rocks:8000';
+const _apiKey = 'UvKWufu4HKOvEJp10l3eaLft46Tw2iOm';
 
 
 const _createArtieBlockFromTempBlock = (tempBlock) => ({id: tempBlock.id, elementName: tempBlock.elementName, elementFamily: tempBlock.elementFamily, next: tempBlock.next, inputs: tempBlock.inputs, nested: tempBlock.nested, previous: tempBlock.previous, parent: tempBlock.parent});
@@ -348,6 +348,61 @@ const updateStudentData = (studentId, gender, motherTongue, age) => new Promise(
     xhr.send();
 });
 
+
+const sendSensorInformation = (userName, password, student, sensorObjectType, sensorName, data, fromDate, toDate) =>
+    new Promise((resolve) => {
+
+        // Gets the current date and milliseconds
+        const dateOptions = {year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: 'UTC',
+            timeZoneName: 'short'};
+        const date = new Date().toLocaleDateString('es-ES', dateOptions);
+        const milliseconds = Date.now();
+
+        // 1- Creates the sensor object
+        const sensorObject = {date: date,
+            milliseconds: milliseconds,
+            data: data,
+            sensorObjectType: sensorObjectType,
+            sensorName: sensorName,
+            fromDate: fromDate,
+            toDate: toDate};
+
+        // 2- Creates the security sensor data object
+        const securitySensorData = {user: userName,
+            password: password,
+            data: [sensorObject],
+            student: student
+        }
+
+        const xhr = new XMLHttpRequest();
+        const params = JSON.stringify(securitySensorData);
+        xhr.addEventListener('readystatechange', () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 201 && xhr.response !== null) {
+                    if (xhr.response === '') {
+                        resolve(null);
+                    } else {
+                        const json = JSON.parse(xhr.response);
+
+                        // If the response is not null, we send the parsed response
+                        resolve(json.body.object);
+                    }
+                }
+            }
+        });
+
+        xhr.open('POST', `${_pedagogicalInterventionWebServiceUrl}/api/v1/sensor/sendSensorData`, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('apiKey', _apiKey);
+        xhr.send(params);
+    });
+
 export {sendBlockArtie, sendSolutionArtie, updateAnsweredNeedHelp, loginArtie,
     getArtieStudents, getArtieExercises, getAllArtieExercises, updateStudentCompetence,
-    updateStudentData, getFinishedExercisesByStudentId};
+    updateStudentData, getFinishedExercisesByStudentId, sendSensorInformation};
