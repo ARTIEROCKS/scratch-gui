@@ -11,7 +11,7 @@ const SelectExerciseButton = ({
     className,
     onClick,
     isExerciseSelected,
-    isEvaluation
+    evaluation
 }) => (
     <Button
         className={classNames(
@@ -20,7 +20,7 @@ const SelectExerciseButton = ({
         )}
         onClick={onClick}
     >
-        {isEvaluation ?
+        {evaluation ?
             <FormattedMessage
                 defaultMessage="Exit from the test"
                 description="Exit from the test"

@@ -339,7 +339,7 @@ class ArtieExercisePopup extends React.Component {
         // Checks if the exercise is an evaluation and if the distance is 0 we show the next exercise
         if (this.props.artieExercises !== undefined && this.props.artieExercises !== null &&
            this.props.artieExercises.currentExercise !== null &&
-            this.props.artieExercises.currentExercise.isEvaluation && this.props.artieExercises.help !== null &&
+            this.props.artieExercises.currentExercise.evaluation && this.props.artieExercises.help !== null &&
             this.props.artieExercises.help.totalDistance === 0){
 
             // Getting the current student to update the competence of the student

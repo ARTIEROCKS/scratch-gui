@@ -263,7 +263,7 @@ const getArtieStudents = (userName, password) => new Promise((resolve) => {
 });
 
 
-const getArtieExercises = (userName, password, isEvaluation) => new Promise((resolve) => {
+const getArtieExercises = (userName, password, evaluation) => new Promise((resolve) => {
     const xhr = new XMLHttpRequest();
     xhr.addEventListener('readystatechange', () => {
         if (xhr.readyState === 4) {
@@ -274,7 +274,7 @@ const getArtieExercises = (userName, password, isEvaluation) => new Promise((res
         }
     });
 
-    xhr.open('GET', `${_pedagogialWebUrl}/api/v1/exercises/getAllIsEvaluation?userName=${userName}&password=${password}&isEvaluation=${isEvaluation}`, true);
+    xhr.open('GET', `${_pedagogialWebUrl}/api/v1/exercises/getAllIsEvaluation?userName=${userName}&password=${password}&isEvaluation=${evaluation}`, true);
     xhr.setRequestHeader('apiKey', _apiKey);
     xhr.send();
 
