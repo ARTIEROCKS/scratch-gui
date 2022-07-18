@@ -88,6 +88,7 @@ import {activateArtieLogin, artieLogout} from '../../reducers/artie-login';
 import {activateArtieExercises, artieClearExercises,
     artieHelpReceived, artieLoadingSolution, artieLoadingExercise, artieLoadingHelp,
     artiePopupExercise, artieEvaluationStop, artiePopupStatement, artieResetSecondsHelpOpen} from '../../reducers/artie-exercises';
+import {artieShowHelpPopup} from '../../reducers/artie-help';
 import ArtieFlow from '../../containers/artie-flow.jsx';
 import ArtieWebcamRecorder from '../../containers/artie-webcam-recorder.jsx';
 import {ArtieExerciseStatementTooltip} from '../artie-exercises/artie-exercises-statement.jsx';
@@ -198,7 +199,8 @@ class MenuBar extends React.Component {
             'handleArtieExerciseChange',
             'handleClickFinishExercise',
             'handleStopEvaluation',
-            'handleShowPopupStatement'
+            'handleShowPopupStatement',
+            'handleClickRequestEmotionalHelp'
         ]);
     }
     componentDidMount () {
@@ -465,6 +467,9 @@ class MenuBar extends React.Component {
     handleShowPopupStatement (){
         this.props.onArtiePopupStatement(true);
     }
+    handleClickRequestEmotionalHelp (){
+        this.props.onArtieShowHelpPopup(null, true);
+    }
 
     render () {
 
@@ -700,6 +705,15 @@ class MenuBar extends React.Component {
                                             />
                                         </MenuItem>
                                     }
+                                </MenuSection>
+                                <MenuSection>
+                                    <MenuItem onClick={this.handleClickRequestEmotionalHelp}>
+                                        <FormattedMessage
+                                            defaultMessage="Emotional Help"
+                                            description="Emotional Help"
+                                            id="gui.menuBar.artie.emotionalHelp"
+                                        />
+                                    </MenuItem>
                                 </MenuSection>
                                 {this.props.artieLogin.user !== null && this.props.artieLogin.user.role === 1 && this.props.artieExercises.currentExercise !== null ?
                                     <MenuSection>
@@ -1177,6 +1191,7 @@ const mapStateToProps = (state, ownProps) => {
         vm: state.scratchGui.vm,
         artieLogin: state.scratchGui.artieLogin,
         artieExercises: state.scratchGui.artieExercises,
+        artieEmotionalStatus: state.scratchGui.artieEmotionalStatus,
         sprites: state.scratchGui.targets.sprites,
         saveProjectSb3: state.scratchGui.vm.saveProjectSb3.bind(state.scratchGui.vm)
     };
@@ -1215,7 +1230,8 @@ const mapDispatchToProps = dispatch => ({
     onArtieLoadingHelp: loading => dispatch(artieLoadingHelp(loading)),
     onArtieExerciseSentPopupOpen: active => dispatch(artiePopupExercise(active)),
     onArtieEvaluationStop: stop => dispatch(artieEvaluationStop(stop)),
-    onArtiePopupStatement: active => dispatch(artiePopupStatement(active))
+    onArtiePopupStatement: active => dispatch(artiePopupStatement(active)),
+    onArtieShowHelpPopup: (id, showHelpPopup) => dispatch(artieShowHelpPopup(id, showHelpPopup))
 });
 
 export default compose(

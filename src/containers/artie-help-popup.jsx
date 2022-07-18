@@ -58,11 +58,6 @@ class ArtieHelpPopup extends React.Component {
             />
         );
     }
-
-    componentDidMount(){
-        //Once the component has been rendered, we stop the emotional help loading
-        this.props.onArtieLoadingEmotionalHelp(false);
-    }
 }
 
 const mapStateToProps = state => ({
