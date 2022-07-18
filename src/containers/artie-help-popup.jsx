@@ -17,7 +17,8 @@ class ArtieHelpPopup extends React.Component {
         };
         bindAll(this, [
             'handleAnswerYes',
-            'handleAnswerNo'
+            'handleAnswerNo',
+            'handleAnswerEmotionalStatus'
         ]);
     }
 
@@ -44,13 +45,23 @@ class ArtieHelpPopup extends React.Component {
         this.props.onHideHelpPopup(this.props.artieHelp.id);
     }
 
+    handleAnswerEmotionalStatus (emotionalStatus) {
+        
+    }
+
     render () {
         return (
             <ArtieHelpPopupComponent
                 onYesClick={this.handleAnswerYes}
                 onNoClick={this.handleAnswerNo}
+                onEmotionalStatusChanged={this.handleAnswerEmotionalStatus}
             />
         );
+    }
+
+    componentDidMount(){
+        //Once the component has been rendered, we stop the emotional help loading
+        this.props.onArtieLoadingEmotionalHelp(false);
     }
 }
 
