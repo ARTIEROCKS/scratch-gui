@@ -1,5 +1,5 @@
 import ArtieHelpPopupComponent from '../components/artie-help/artie-help-popup.jsx';
-import {artieShowHelpPopup, artieAnswerHelpPopup} from '../reducers/artie-help.js';
+import {artieShowHelpPopup, artieAnswerHelpPopup, artieEmotionalStateChangeHelpPopup} from '../reducers/artie-help.js';
 import {artieHelpReceived} from '../reducers/artie-exercises.js';
 import React from 'react';
 import bindAll from 'lodash.bindall';
@@ -18,7 +18,7 @@ class ArtieHelpPopup extends React.Component {
         bindAll(this, [
             'handleAnswerYes',
             'handleAnswerNo',
-            'handleAnswerEmotionalStatus'
+            'handleEmotionalStatusChanged'
         ]);
     }
 
@@ -45,8 +45,8 @@ class ArtieHelpPopup extends React.Component {
         this.props.onHideHelpPopup(this.props.artieHelp.id);
     }
 
-    handleAnswerEmotionalStatus (emotionalStatus) {
-        
+    handleEmotionalStatusChanged (emotionalState) {
+        this.props.onEmotionalStatusChanged(emotionalState.target.value);
     }
 
     render () {
@@ -54,7 +54,7 @@ class ArtieHelpPopup extends React.Component {
             <ArtieHelpPopupComponent
                 onYesClick={this.handleAnswerYes}
                 onNoClick={this.handleAnswerNo}
-                onEmotionalStatusChanged={this.handleAnswerEmotionalStatus}
+                onEmotionalStatusChanged={this.handleEmotionalStatusChanged}
             />
         );
     }
@@ -67,7 +67,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onAnswerHelpPopup: (answer, datetime) => dispatch(artieAnswerHelpPopup(answer, datetime)),
     onHideHelpPopup: id => dispatch(artieShowHelpPopup(id, false)),
-    onArtieHelpReceived: (help, date) => dispatch(artieHelpReceived(help, date))
+    onArtieHelpReceived: (help, date) => dispatch(artieHelpReceived(help, date)),
+    onEmotionalStatusChanged: emotionalState => dispatch(artieEmotionalStateChangeHelpPopup(emotionalState))
 });
 
 export default compose(

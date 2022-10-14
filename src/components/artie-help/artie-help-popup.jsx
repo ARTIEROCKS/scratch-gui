@@ -4,7 +4,7 @@ import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import styles from './artie-help-popup.css';
 import Box from '../box/box.jsx';
 import PropTypes from 'prop-types';
-import IconText from '../icon-text/icon-text.jsx'
+import IconText from '../icon-text/icon-text.jsx';
 
 const messages = defineMessages({
     artieHelpModalTitle: {
@@ -40,8 +40,8 @@ const ArtieHelpPopupComponent = props => (
                         onChange={props.onEmotionalStatusChanged}
                     />
                     <IconText
-                        img='../../static/emotions/surprise.svg'
-                        title = "Surprise"
+                        img="../../static/emotions/surprise.svg"
+                        title="Surprise"
                     />
                 </label>
                 <label>
@@ -52,8 +52,8 @@ const ArtieHelpPopupComponent = props => (
                         onChange={props.onEmotionalStatusChanged}
                     />
                     <IconText
-                        img='../../static/emotions/happy.svg'
-                        title = "Happy"
+                        img="../../static/emotions/happy.svg"
+                        title="Happy"
                     />
                 </label>
                 <label>
@@ -64,8 +64,8 @@ const ArtieHelpPopupComponent = props => (
                         onChange={props.onEmotionalStatusChanged}
                     />
                     <IconText
-                        img='../../static/emotions/neutral.svg'
-                        title = "Neutral"
+                        img="../../static/emotions/neutral.svg"
+                        title="Neutral"
                     />
                 </label>
                 <label>
@@ -76,8 +76,8 @@ const ArtieHelpPopupComponent = props => (
                         onChange={props.onEmotionalStatusChanged}
                     />
                     <IconText
-                        img='../../static/emotions/fear.svg'
-                        title = "Fear"
+                        img="../../static/emotions/fear.svg"
+                        title="Fear"
                     />
                 </label>
                 <label>
@@ -88,8 +88,8 @@ const ArtieHelpPopupComponent = props => (
                         onChange={props.onEmotionalStatusChanged}
                     />
                     <IconText
-                        img='../../static/emotions/sad.svg'
-                        title = "Sad"
+                        img="../../static/emotions/sad.svg"
+                        title="Sad"
                     />
                 </label>
                 <label>
@@ -100,8 +100,8 @@ const ArtieHelpPopupComponent = props => (
                         onChange={props.onEmotionalStatusChanged}
                     />
                     <IconText
-                        img='../../static/emotions/angry.svg'
-                        title = "Angry"
+                        img="../../static/emotions/angry.svg"
+                        title="Angry"
                     />
                 </label>
             </Box>

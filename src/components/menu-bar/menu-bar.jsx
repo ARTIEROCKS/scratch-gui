@@ -397,7 +397,7 @@ class MenuBar extends React.Component {
     handleClickRequestHelp (){
         this.props.onArtieLoadingHelp(true);
         sendBlockArtie(this.props.artieLogin.currentStudent, this.props.sprites,
-            this.props.artieExercises.currentExercise, true,
+            this.props.artieExercises.currentExercise, true, null,
             this.props.artieExercises.secondsHelpOpen, false, this.props.artieLogin.lastLogin,
             this.props.artieExercises.lastExerciseChange, null, null)
             .then(responseBodyObject => {
@@ -439,7 +439,7 @@ class MenuBar extends React.Component {
                 binary = reader.result;
                 html2canvas(body).then(canvas => {
                     canvasUrl = canvas.toDataURL('image/png');
-                    sendBlockArtie(currentStudent, sprites, currentExercise, false, secondsHelpOpen,
+                    sendBlockArtie(currentStudent, sprites, currentExercise, false, null, secondsHelpOpen,
                         true, lastLogin, lastExerciseChange, canvasUrl, binary)
                         .then(() => {
 
