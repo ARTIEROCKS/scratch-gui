@@ -397,7 +397,7 @@ class MenuBar extends React.Component {
     handleClickRequestHelp (){
         this.props.onArtieLoadingHelp(true);
         sendBlockArtie(this.props.artieLogin.currentStudent, this.props.sprites,
-            this.props.artieExercises.currentExercise, true, null,
+            this.props.artieExercises.currentExercise, true, this.props.artieHelp.emotionalState,
             this.props.artieExercises.secondsHelpOpen, false, this.props.artieLogin.lastLogin,
             this.props.artieExercises.lastExerciseChange, null, null)
             .then(responseBodyObject => {
@@ -433,13 +433,14 @@ class MenuBar extends React.Component {
             const fOnArtieLoadingExercise = this.props.onArtieLoadingExercise;
             const fOnArtieExerciseSentPopupOpen = this.props.onArtieExerciseSentPopupOpen;
             const fOnArtieResetSecondsHelpOpen = this.props.onArtieResetSecondsHelpOpen;
+            const emotionalState = this.props.artieHelp.emotionalState;
 
             reader.readAsDataURL(content);
             reader.onloadend = function () {
                 binary = reader.result;
                 html2canvas(body).then(canvas => {
                     canvasUrl = canvas.toDataURL('image/png');
-                    sendBlockArtie(currentStudent, sprites, currentExercise, false, null, secondsHelpOpen,
+                    sendBlockArtie(currentStudent, sprites, currentExercise, false, emotionalState, secondsHelpOpen,
                         true, lastLogin, lastExerciseChange, canvasUrl, binary)
                         .then(() => {
 
@@ -1192,6 +1193,7 @@ const mapStateToProps = (state, ownProps) => {
         artieLogin: state.scratchGui.artieLogin,
         artieExercises: state.scratchGui.artieExercises,
         artieEmotionalStatus: state.scratchGui.artieEmotionalStatus,
+        artieHelp: state.scratchGui.artieHelp,
         sprites: state.scratchGui.targets.sprites,
         saveProjectSb3: state.scratchGui.vm.saveProjectSb3.bind(state.scratchGui.vm)
     };

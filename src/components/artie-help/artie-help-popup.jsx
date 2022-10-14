@@ -58,6 +58,7 @@ const ArtieHelpPopupComponent = props => (
                 </label>
                 <label>
                     <input
+                        checked={props.emotionalStateChecked}
                         name="variableScopeOption"
                         type="radio"
                         value="neutral"
@@ -143,7 +144,8 @@ const ArtieHelpPopupComponent = props => (
 ArtieHelpPopupComponent.propTypes = {
     onYesClick: PropTypes.func,
     onNoClick: PropTypes.func.isRequired,
-    onEmotionalStatusChanged: PropTypes.func.isRequired
+    onEmotionalStatusChanged: PropTypes.func.isRequired,
+    emotionalStateChecked: PropTypes.bool.isRequired
 };
 
 export default injectIntl(ArtieHelpPopupComponent);

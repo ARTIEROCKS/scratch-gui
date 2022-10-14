@@ -91,6 +91,7 @@ class ArtieHelpPopup extends React.Component {
                 onYesClick={this.handleAnswerYes}
                 onNoClick={this.handleAnswerNo}
                 onEmotionalStatusChanged={this.handleEmotionalStatusChanged}
+                emotionalStateChecked={this.props.artieHelp.emotionalState === null}
             />
         );
     }

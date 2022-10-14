@@ -126,7 +126,7 @@ const vmListenerHOC = function (WrappedComponent) {
                 setTimeout(() => {
                     this.props.onArtieBlocksUpdated(this.props.vm.editingTarget.blocks._blocks);
                     sendBlockArtie(this.props.artieLogin.currentStudent, this.props.sprites,
-                        this.props.artieExercises.currentExercise, false, null,
+                        this.props.artieExercises.currentExercise, false, this.props.artieHelp.emotionalState,
                         this.props.artieExercises.secondsHelpOpen, false, this.props.artieLogin.lastLogin,
                         this.props.artieExercises.lastExerciseChange,null, null)
                         .then(responseBodyObject => {
@@ -146,7 +146,7 @@ const vmListenerHOC = function (WrappedComponent) {
                 setTimeout(() => {
                     this.props.onArtieBlocksUpdated(this.props.vm.editingTarget.blocks._blocks);
                     sendBlockArtie(this.props.artieLogin.currentStudent, this.props.sprites,
-                        this.props.artieExercises.currentExercise,false, null,
+                        this.props.artieExercises.currentExercise,false, this.props.artieHelp.emotionalState,
                         this.props.artieExercises.secondsHelpOpen, false, this.props.artieLogin.lastLogin,
                         this.props.artieExercises.lastExerciseChange,null, null)
                         .then(responseBodyObject => {
@@ -177,7 +177,7 @@ const vmListenerHOC = function (WrappedComponent) {
                 setTimeout(() => {
                     this.props.onArtieBlocksUpdated(this.props.vm.editingTarget.blocks._blocks);
                     sendBlockArtie(this.props.artieLogin.currentStudent, this.props.sprites,
-                        this.props.artieExercises.currentExercise, false, null,
+                        this.props.artieExercises.currentExercise, false, this.props.artieHelp.emotionalState,
                         this.props.artieExercises.secondsHelpOpen, false, this.props.artieLogin.lastLogin,
                         this.props.artieExercises.lastExerciseChange, null, null)
                         .then(responseBodyObject => {
