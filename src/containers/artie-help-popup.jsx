@@ -45,8 +45,8 @@ class ArtieHelpPopup extends React.Component {
         this.props.onHideHelpPopup(this.props.artieHelp.id);
     }
 
-    handleEmotionalStatusChanged (emotionalState) {
-        this.props.onEmotionalStatusChanged(emotionalState.target.value);
+    handleEmotionalStatusChanged (option) {
+        this.props.onEmotionalStatusChanged(option.target.value);
     }
 
     render () {
