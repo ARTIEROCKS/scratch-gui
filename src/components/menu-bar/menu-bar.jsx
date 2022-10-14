@@ -194,7 +194,6 @@ class MenuBar extends React.Component {
             'getSaveToComputerHandler',
             'restoreOptionMessage',
             'handleClickRegisterSolution',
-            'handleClickRequestHelp',
             'handleArtieLogout',
             'handleArtieExerciseChange',
             'handleClickFinishExercise',
@@ -393,26 +392,6 @@ class MenuBar extends React.Component {
             callback();
             this.props.onRequestCloseAbout();
         };
-    }
-    handleClickRequestHelp (){
-        this.props.onArtieLoadingHelp(true);
-        sendBlockArtie(this.props.artieLogin.currentStudent, this.props.sprites,
-            this.props.artieExercises.currentExercise, true, this.props.artieHelp.emotionalState,
-            this.props.artieExercises.secondsHelpOpen, false, this.props.artieLogin.lastLogin,
-            this.props.artieExercises.lastExerciseChange, null, null)
-            .then(responseBodyObject => {
-
-                // Stops the loading help
-                this.props.onArtieLoadingHelp(false);
-
-                // If the response has a solution distance object
-                if (responseBodyObject !== null && responseBodyObject.solutionDistance !== null){
-                    this.props.onArtieHelpReceived(responseBodyObject.solutionDistance);
-                }
-            });
-        if (this.props.artieExercises.secondsHelpOpen > 0) {
-            this.props.onArtieResetSecondsHelpOpen();
-        }
     }
     handleClickFinishExercise (){
         this.props.onArtieLoadingExercise(true, false);
@@ -707,15 +686,6 @@ class MenuBar extends React.Component {
                                         </MenuItem>
                                     }
                                 </MenuSection>
-                                <MenuSection>
-                                    <MenuItem onClick={this.handleClickRequestEmotionalHelp}>
-                                        <FormattedMessage
-                                            defaultMessage="Emotional Help"
-                                            description="Emotional Help"
-                                            id="gui.menuBar.artie.emotionalHelp"
-                                        />
-                                    </MenuItem>
-                                </MenuSection>
                                 {this.props.artieLogin.user !== null && this.props.artieLogin.user.role === 1 && this.props.artieExercises.currentExercise !== null ?
                                     <MenuSection>
                                         <MenuItem onClick={this.handleClickRegisterSolution}>
@@ -738,7 +708,7 @@ class MenuBar extends React.Component {
                                 {this.props.artieLogin.user !== null && this.props.artieLogin.user.role === 0 && this.props.artieLogin.currentStudent !== null &&
                                  this.props.artieExercises.currentExercise !== null && !this.props.artieExercises.currentExercise.evaluation ?
                                     <MenuSection>
-                                         <MenuItem onClick={this.handleClickRequestHelp}>
+                                         <MenuItem onClick={this.handleClickRequestEmotionalHelp}>
                                             <FormattedMessage
                                                  defaultMessage="Request help"
                                                  description="Menu bar item for requesting help"
@@ -832,7 +802,7 @@ class MenuBar extends React.Component {
                                           <Divider className={classNames(styles.divider)} />
                                           <RequestHelpButton
                                             className={styles.menuBarButton}
-                                            onClick={this.handleClickRequestHelp}
+                                            onClick={this.handleClickRequestEmotionalHelp}
                                         />
                                       </React.Fragment> :
                                     null }
