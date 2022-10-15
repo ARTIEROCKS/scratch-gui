@@ -10,7 +10,37 @@ const messages = defineMessages({
     artieHelpModalTitle: {
         defaultMessage: 'ARTIE Help',
         description: 'ARTIE Help.',
-        id: 'gui.menuBar.artie.help.modalTitle'
+        id: 'gui.artie.help.modalTitle'
+    },
+    surprise: {
+        defaultMessage: 'Surprised',
+        description: 'Surprised',
+        id: 'gui.artie.emotion.surprise'
+    },
+    happy: {
+        defaultMessage: 'Happy',
+        description: 'Happy',
+        id: 'gui.artie.emotion.happy'
+    },
+    neutral: {
+        defaultMessage: 'Normal',
+        description: 'Normal',
+        id: 'gui.artie.emotion.neutral'
+    },
+    fear: {
+        defaultMessage: 'With fear',
+        description: 'With fear',
+        id: 'gui.artie.emotion.fear'
+    },
+    sad: {
+        defaultMessage: 'Sad',
+        description: 'Sad',
+        id: 'gui.artie.emotion.sad'
+    },
+    angry: {
+        defaultMessage: 'Angry',
+        description: 'Angry',
+        id: 'gui.artie.emotion.angry'
     }
 });
 
@@ -41,7 +71,7 @@ const ArtieHelpPopupComponent = props => (
                     />
                     <IconText
                         img="../../static/emotions/surprise.svg"
-                        title="Surprise"
+                        title={props.intl.formatMessage(messages.surprise)}
                     />
                 </label>
                 <label>
@@ -53,7 +83,7 @@ const ArtieHelpPopupComponent = props => (
                     />
                     <IconText
                         img="../../static/emotions/happy.svg"
-                        title="Happy"
+                        title={props.intl.formatMessage(messages.happy)}
                     />
                 </label>
                 <label>
@@ -66,7 +96,7 @@ const ArtieHelpPopupComponent = props => (
                     />
                     <IconText
                         img="../../static/emotions/neutral.svg"
-                        title="Neutral"
+                        title={props.intl.formatMessage(messages.neutral)}
                     />
                 </label>
                 <label>
@@ -78,7 +108,7 @@ const ArtieHelpPopupComponent = props => (
                     />
                     <IconText
                         img="../../static/emotions/fear.svg"
-                        title="Fear"
+                        title={props.intl.formatMessage(messages.fear)}
                     />
                 </label>
                 <label>
@@ -90,7 +120,7 @@ const ArtieHelpPopupComponent = props => (
                     />
                     <IconText
                         img="../../static/emotions/sad.svg"
-                        title="Sad"
+                        title={props.intl.formatMessage(messages.sad)}
                     />
                 </label>
                 <label>
@@ -102,7 +132,7 @@ const ArtieHelpPopupComponent = props => (
                     />
                     <IconText
                         img="../../static/emotions/angry.svg"
-                        title="Angry"
+                        title={props.intl.formatMessage(messages.angry)}
                     />
                 </label>
             </Box>

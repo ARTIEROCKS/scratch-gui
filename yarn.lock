@@ -9815,10 +9815,9 @@
     "babel-plugin-react-intl" "^3.0.1"
     "transifex" "1.6.6"
 
-"scratch-l10n@3.15.4-artie":
-  "integrity" "sha512-9KvjQh/6TpVhjRpJ223kv+7rGQf95phP02BR2d6DnCyULmOjtBN/hW6Ii/lIQN7L3rYtwEsn7kc6C7GZ/CYNIA=="
-  "resolved" "http://nexus.ai-mind.com:8081/nexus/repository/npm-all/scratch-l10n/-/scratch-l10n-3.15.4-artie.tgz"
-  "version" "3.15.4-artie"
+"scratch-l10n@file:../scratch-l10n":
+  "resolved" "file:../scratch-l10n"
+  "version" "3.17.0-artie"
   dependencies:
     "@babel/cli" "^7.1.2"
     "@babel/core" "^7.1.2"
