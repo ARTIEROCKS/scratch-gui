@@ -13,6 +13,12 @@ const _pedagogicalInterventionWebServiceUrl = 'https://pre-prod.artie.rocks:8443
 const _pedagogialWebUrl = 'https://pre-prod.artie.rocks:8443';
 const _apiKey = 'k6siZlG9OZGyMorpmSUeYo87ebfsN7s0';
 
+const _pedagogicalSoftwarePath = '/api/v1/pedagogicalsoftware';
+const _usersPath = '/users';
+const _studentsPath = '/students';
+const _exercisesPath = '/exercises';
+const _sensorPath = '/api/v1/sensor';
+
 
 const _createArtieBlockFromTempBlock = (tempBlock) => ({id: tempBlock.id, elementName: tempBlock.elementName, elementFamily: tempBlock.elementFamily, next: tempBlock.next, inputs: tempBlock.inputs, nested: tempBlock.nested, previous: tempBlock.previous, parent: tempBlock.parent});
 
@@ -160,7 +166,7 @@ const sendBlockArtie = (student, sprites, exercise, requestHelp, manualEmotional
         }
     });
 
-    xhr.open('POST', `${_pedagogicalInterventionWebServiceUrl}/api/v1/pedagogicalsoftware/sendPedagogicalSoftwareData`, true);
+    xhr.open('POST', `${_pedagogicalInterventionWebServiceUrl}${_pedagogicalSoftwarePath}/sendPedagogicalSoftwareData`, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('apiKey', _apiKey);
     xhr.send(params);
@@ -193,7 +199,7 @@ const sendSolutionArtie = (userId, sprites, exercise, screenShot, binary) => new
         }
     });
 
-    xhr.open('POST', `${_pedagogicalInterventionWebServiceUrl}/api/v1/pedagogicalsoftware/sendPedagogicalSoftwareSolution`, true);
+    xhr.open('POST', `${_pedagogicalInterventionWebServiceUrl}${_pedagogicalSoftwarePath}/sendPedagogicalSoftwareSolution`, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('apiKey', _apiKey);
     xhr.send(params);
@@ -215,7 +221,7 @@ const updateAnsweredNeedHelp = (id, answeredNeedHelp) => new Promise((resolve, r
         }
     });
 
-    xhr.open('PUT', `${_pedagogicalInterventionWebServiceUrl}/api/v1/pedagogicalsoftware/update/answeredNeedHelp?id=${id}&answeredNeedHelp=${answeredNeedHelp}`, true);
+    xhr.open('PUT', `${_pedagogicalInterventionWebServiceUrl}${_pedagogicalSoftwarePath}/update/answeredNeedHelp?id=${id}&answeredNeedHelp=${answeredNeedHelp}`, true);
     xhr.setRequestHeader('apiKey', _apiKey);
     xhr.send();
 });
@@ -239,7 +245,7 @@ const loginArtie = (userName, password) => new Promise((resolve, reject) => {
         }
     });
 
-    xhr.open('GET', `${_pedagogialWebUrl}/api/v1/users/loginWithRole?userName=${userName}&password=${password}`, true);
+    xhr.open('GET', `${_pedagogialWebUrl}${_usersPath}/loginWithRole?userName=${userName}&password=${password}`, true);
     xhr.setRequestHeader('apiKey', _apiKey);
     xhr.send();
 
@@ -257,7 +263,7 @@ const getArtieStudents = (userName, password) => new Promise((resolve) => {
         }
     });
 
-    xhr.open('GET', `${_pedagogialWebUrl}/api/v1/students/getAllActiveString?userName=${userName}&password=${password}`, true);
+    xhr.open('GET', `${_pedagogialWebUrl}${_studentsPath}/getAllActiveString?userName=${userName}&password=${password}`, true);
     xhr.setRequestHeader('apiKey', _apiKey);
     xhr.send();
 
@@ -275,7 +281,7 @@ const getArtieExercises = (userName, password, evaluation) => new Promise((resol
         }
     });
 
-    xhr.open('GET', `${_pedagogialWebUrl}/api/v1/exercises/getAllIsEvaluation?userName=${userName}&password=${password}&isEvaluation=${evaluation}`, true);
+    xhr.open('GET', `${_pedagogialWebUrl}${_exercisesPath}/getAllIsEvaluation?userName=${userName}&password=${password}&isEvaluation=${evaluation}`, true);
     xhr.setRequestHeader('apiKey', _apiKey);
     xhr.send();
 
@@ -293,7 +299,7 @@ const getAllArtieExercises = (userName, password) => new Promise((resolve) => {
         }
     });
 
-    xhr.open('GET', `${_pedagogialWebUrl}/api/v1/exercises/getAll?userName=${userName}&password=${password}`, true);
+    xhr.open('GET', `${_pedagogialWebUrl}${_exercisesPath}/getAll?userName=${userName}&password=${password}`, true);
     xhr.setRequestHeader('apiKey', _apiKey);
     xhr.send();
 
@@ -310,7 +316,7 @@ const getFinishedExercisesByStudentId = (studentId) => new Promise((resolve) => 
         }
     });
 
-    xhr.open('GET', `${_pedagogicalInterventionWebServiceUrl}/api/v1/pedagogicalsoftware/finishedExercisesByStudentId?studentId=${studentId}`, true);
+    xhr.open('GET', `${_pedagogicalInterventionWebServiceUrl}${_pedagogicalSoftwarePath}/finishedExercisesByStudentId?studentId=${studentId}`, true);
     xhr.setRequestHeader('apiKey', _apiKey);
     xhr.send();
 });
@@ -326,7 +332,7 @@ const updateStudentCompetence = (studentId, competence) => new Promise((resolve)
         }
     });
 
-    xhr.open('GET', `${_pedagogialWebUrl}/api/v1/students/updateStudentCompetence?studentId=${studentId}&competence=${competence}`, true);
+    xhr.open('GET', `${_pedagogialWebUrl}${_studentsPath}/updateStudentCompetence?studentId=${studentId}&competence=${competence}`, true);
     xhr.setRequestHeader('apiKey', _apiKey);
     xhr.send();
 
@@ -344,7 +350,7 @@ const updateStudentData = (studentId, gender, motherTongue, age) => new Promise(
         }
     });
 
-    xhr.open('GET', `${_pedagogialWebUrl}/api/v1/students/updateStudentData?studentId=${studentId}&gender=${gender}&motherTongue=${motherTongue}&age=${age}`, true);
+    xhr.open('GET', `${_pedagogialWebUrl}${_studentsPath}/updateStudentData?studentId=${studentId}&gender=${gender}&motherTongue=${motherTongue}&age=${age}`, true);
     xhr.setRequestHeader('apiKey', _apiKey);
     xhr.send();
 });
@@ -398,7 +404,7 @@ const sendSensorInformation = (userName, password, student, sensorObjectType, se
             }
         });
 
-        xhr.open('POST', `${_pedagogicalInterventionWebServiceUrl}/api/v1/sensor/sendSensorData`, true);
+        xhr.open('POST', `${_pedagogicalInterventionWebServiceUrl}${_sensorPath}/sendSensorData`, true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('apiKey', _apiKey);
         xhr.send(params);
