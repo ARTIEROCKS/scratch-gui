@@ -3,6 +3,7 @@ frontend:
   phases:
     build:
       commands:
+        - npm install rimraf --global
         - npm run build
   artifacts:
     baseDirectory: build
