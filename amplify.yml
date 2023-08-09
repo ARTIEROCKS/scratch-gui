@@ -5,6 +5,7 @@ frontend:
       commands:
         - npm install rimraf --global
         - npm install mkdirp --global
+        - npm install webpack --global
     build:
       commands:
         - npm run build
