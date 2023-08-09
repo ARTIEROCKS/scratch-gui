@@ -2,6 +2,7 @@ version: 1
 frontend:
   phases:
     prebuild:
+      commands:
         - npm install rimraf --global
         - npm install rimraf --save
     build:
