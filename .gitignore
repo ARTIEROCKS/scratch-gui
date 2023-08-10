@@ -17,10 +17,9 @@ npm-*
 # Generated translation files
 /translations
 /locale
-.idea/.gitignore
-.idea/modules.xml
-.idea/scratch-gui.iml
-.idea/vcs.xml
-.idea/codeStyles/codeStyleConfig.xml
-.idea/codeStyles/Project.xml
-.idea/inspectionProfiles/Project_Default.xml
+
+# Other generated source
+/src/generated
+
+# Downloaded during "npm install"
+/static/microbit
