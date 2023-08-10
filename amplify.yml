@@ -8,7 +8,7 @@ frontend:
         - npm install webpack --global
     build:
       commands:
-        - npm run build
+        - npm run clean
   artifacts:
     baseDirectory: build
     files:
