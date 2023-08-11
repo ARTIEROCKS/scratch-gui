@@ -412,7 +412,7 @@ class ArtieExercisePopup extends React.Component {
         } else if (type === 'solution'){
             return solutionComponent(this.props.onCloseSentSolution, type);
         } else if (type === 'initialEvaluation'){
-            image = require('../../static/ThreeJedi.jpg');
+            image = '../../static/ThreeJedi.jpg';
             return evaluationComponent(this.handleEvaluationOKClick, this.handleEvaluationOKClick, type, image,
                 initialEvaluationMessages, null);
         } else if (type === 'evaluation'){
@@ -421,13 +421,13 @@ class ArtieExercisePopup extends React.Component {
             image = null;
             let messages = null;
             if (this.props.artieExercises.currentExercise.level === 1){
-                image = require('../../static/Padawan.jpg');
+                image = '../../static/Padawan.jpg';
                 messages = padawanEvaluationMessages;
             } else if (this.props.artieExercises.currentExercise.level === 2){
-                image = require('../../static/Jedi.jpg');
+                image = '../../static/Jedi.jpg';
                 messages = jediEvaluationMessages;
             } else if (this.props.artieExercises.currentExercise.level === 3){
-                image = require('../../static/Master.jpg');
+                image = '../../static/Master.jpg';
                 messages = masterJediEvaluationMessages;
             }
 
@@ -454,7 +454,7 @@ class ArtieExercisePopup extends React.Component {
             }
 
 
-            image = require('../../static/ThreeJedi.jpg');
+            image = '../../static/ThreeJedi.jpg';
             return stopEvaluationComponent(this.handleEvaluationStopCancelClick, this.handleEvaluationStopOKClick, type,
                 image, exitFromEvaluation, level);
 
