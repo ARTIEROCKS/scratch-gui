@@ -43,6 +43,7 @@ class ArtieExercisesPopupComponent extends React.Component {
                                 <img
                                     src={this.props.image}
                                     className={styles.image}
+                                    alt={''}
                                 />
                             </div> :
                             null}

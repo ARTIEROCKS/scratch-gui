@@ -26,7 +26,7 @@
 }
 
 .container:active {
-    background-color: $motion-light-transparent;
+    background-color: $looks-light-transparent;
 }
 
 .icon {

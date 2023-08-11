@@ -28,6 +28,9 @@ import DeletionRestorer from '../../containers/deletion-restorer.jsx';
 import TurboMode from '../../containers/turbo-mode.jsx';
 import MenuBarHOC from '../../containers/menu-bar-hoc.jsx';
 import SettingsMenu from './settings-menu.jsx';
+import SelectExerciseButton from './select-exercise-button.jsx';
+import RequestHelpButton from './request-help-button.jsx';
+import StatementButton from './statement-button.jsx';
 
 import {openTipsLibrary} from '../../reducers/modals';
 import {setPlayer} from '../../reducers/mode';
