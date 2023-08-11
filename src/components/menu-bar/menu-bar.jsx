@@ -72,7 +72,10 @@ import {
     modeMenuOpen,
     settingsMenuOpen,
     openSettingsMenu,
-    closeSettingsMenu
+    closeSettingsMenu,
+    openArtieMenu,
+    closeArtieMenu,
+    artieMenuOpen
 } from '../../reducers/menus';
 
 import collectMetadata from '../../lib/collect-metadata';
@@ -1174,6 +1177,7 @@ MenuBar.propTypes = {
     confirmReadyToReplaceProject: PropTypes.func,
     currentLocale: PropTypes.string.isRequired,
     editMenuOpen: PropTypes.bool,
+    artieMenuOpen: PropTypes.bool,
     enableCommunity: PropTypes.bool,
     fileMenuOpen: PropTypes.bool,
     intl: intlShape,
@@ -1253,6 +1257,7 @@ const mapStateToProps = (state, ownProps) => {
         currentLocale: state.locales.locale,
         fileMenuOpen: fileMenuOpen(state),
         editMenuOpen: editMenuOpen(state),
+        artieMenuOpen: artieMenuOpen(state),
         isRtl: state.locales.isRtl,
         isUpdating: getIsUpdating(loadingState),
         isShowingProject: getIsShowingProject(loadingState),
@@ -1315,7 +1320,9 @@ const mapDispatchToProps = dispatch => ({
     onArtieExerciseSentPopupOpen: active => dispatch(artiePopupExercise(active)),
     onArtieEvaluationStop: stop => dispatch(artieEvaluationStop(stop)),
     onArtiePopupStatement: active => dispatch(artiePopupStatement(active)),
-    onArtieShowHelpPopup: (id, showHelpPopup) => dispatch(artieShowHelpPopup(id, showHelpPopup))
+    onArtieShowHelpPopup: (id, showHelpPopup) => dispatch(artieShowHelpPopup(id, showHelpPopup)),
+    onClickArtie: () => dispatch(openArtieMenu()),
+    onRequestCloseArtie: () => dispatch(closeArtieMenu())
 });
 
 export default compose(
