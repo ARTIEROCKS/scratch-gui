@@ -34,7 +34,7 @@
   "dependencies": {
     "@microbit/microbit-universal-hex": "0.2.2",
     "arraybuffer-loader": "^1.0.6",
-    "artie-scratch-l10n": "3.18.0-artie",
+    "artie-scratch-l10n": "3.16.0",
     "artie-scratch-vm": "1.6.1",
     "autoprefixer": "^9.0.1",
     "balance-text": "3.3.1",
