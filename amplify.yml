@@ -9,6 +9,7 @@ frontend:
         - npm install yarn --global
     build:
       commands:
+        - npm install
         - yarn install
         - npm run build
   artifacts:
