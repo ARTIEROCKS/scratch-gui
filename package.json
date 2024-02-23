@@ -100,7 +100,8 @@
     "xhr": "^2.5.0",
 
     "redux-logger": "^3.0.6",
-    "html2canvas": "^1.4.1"
+    "html2canvas": "^1.4.1",
+    "@splitsoftware/splitio-react": "^1.11.0"
   },
   "peerDependencies": {
     "react": "^16.0.0",

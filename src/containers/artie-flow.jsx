@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import bindAll from 'lodash.bindall';
 import {connect} from 'react-redux';
@@ -9,6 +8,8 @@ import ArtieExercises from '../components/artie-exercises/artie-exercises.jsx';
 import ArtieHelp from './artie-help.jsx';
 import ArtieHelpPopup from './artie-help-popup.jsx';
 import ArtieExercisePopup from './artie-exercises-popup.jsx';
+
+import {SplitTreatments} from '@splitsoftware/splitio-react';
 
 import {
     artieError,
@@ -45,6 +46,9 @@ let passwordLogin = null;
 let studentLogin = null;
 let exerciseId = null;
 
+// --- Split IO variables
+const emotionalPopupFeatureName = 'Emotional_Popup';
+
 class ArtieFlow extends React.Component {
 
     constructor (props) {
@@ -76,7 +80,7 @@ class ArtieFlow extends React.Component {
         this.flow(this.props, this.state);
     }
 
-    shouldComponentUpdate (nextProps, nextState, nextContext) {
+    shouldComponentUpdate (nextProps, nextState) {
         this.flow(nextProps, nextState);
         return true;
     }
@@ -267,8 +271,8 @@ class ArtieFlow extends React.Component {
 
     /**
      * Function to get the current student
-     * @param artieLogin
-     * @returns {null|*|null}
+     * @param {object} artieLogin - The artieLogin object.
+     * @returns {null|*|null} The current student or null if it doesn't exist.
      */
     getCurrentStudent (artieLogin){
         if (artieLogin !== undefined && artieLogin !== null){
@@ -280,8 +284,8 @@ class ArtieFlow extends React.Component {
 
     /**
      * Function to get the current exercise
-     * @param artieExercises
-     * @returns {null|*|null}
+     * @param {object} artieExercises - The artieExercises object.
+     * @returns {object|null} - The current exercise or null if it doesn't exist.
      */
     getCurrentExercise (artieExercises){
         if (artieExercises !== undefined && artieExercises !== null){
@@ -427,6 +431,11 @@ class ArtieFlow extends React.Component {
     }
     // ------------------------------------
 
+    renderArtieHelpPopupFeatureFlag (treatmentWithConfig) {
+        const {treatment, config} = treatmentWithConfig;
+        if (treatment === 'on') return (<ArtieHelpPopup />);
+        return (null);
+    }
 
     render (){
 
@@ -482,7 +491,13 @@ class ArtieFlow extends React.Component {
 
         // 6- Checks if the component must show the help popup or not
         if (this.state.artieHelpPopupComponent){
-            return (<ArtieHelpPopup />);
+            return (
+                <SplitTreatments names={[emotionalPopupFeatureName]}>
+                    {({treatments, isReady}) => (isReady ?
+                        this.renderArtieHelpPopupFeatureFlag(treatments[emotionalPopupFeatureName]) :
+                        null)}
+                </SplitTreatments>
+            );
         }
 
         return null;

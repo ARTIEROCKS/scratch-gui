@@ -36,7 +36,7 @@ import decks from '../lib/libraries/decks/index.jsx';
 import artieLoginReducer, {artieLoginInitialState} from './artie-login';
 import artieExercisesReducer, {artieExercisesInitialState} from './artie-exercises';
 import artieHelpReducer, {artieHelpInitialState} from './artie-help';
-import artieWebcamReducer, {artieWebcamInitialState} from "./artie-webcam";
+import artieWebcamReducer, {artieWebcamInitialState} from './artie-webcam';
 
 const guiMiddleware = compose(applyMiddleware(logger, throttle(300, {leading: true, trailing: true})));
 

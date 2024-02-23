@@ -120,6 +120,7 @@ import {ArtieExerciseStatementTooltip} from '../artie-exercises/artie-exercises-
 
 import html2canvas from 'html2canvas';
 import Spinner from '../spinner/spinner.jsx';
+import { SplitFactoryProvider } from '@splitsoftware/splitio-react';
 
 const ariaMessages = defineMessages({
     tutorials: {
@@ -198,6 +199,14 @@ AboutButton.propTypes = {
 
 // eslint-disable-next-line no-unused-vars
 let exerciseId = null;
+
+// SPLIT_IO Config Object
+const SPLIT_IO_CONFIG = {
+    core: {
+        authorizationKey: 'aabooomno9lpi60pp8rp29i3jdacfo0ve40',
+        key: '1c3b0c90-9d15-11ee-9115-1afcd9bd52af'
+    }
+};
 
 class MenuBar extends React.Component {
     constructor (props) {
@@ -1150,7 +1159,9 @@ class MenuBar extends React.Component {
 
                 {aboutButton}
 
-                <ArtieFlow />
+                <SplitFactoryProvider config={SPLIT_IO_CONFIG} >
+                    <ArtieFlow />
+                </SplitFactoryProvider>
                 <ArtieWebcamRecorder />
             </Box>
         );
