@@ -1,4 +1,4 @@
-import ArtieHelpPopupComponent from '../components/artie-help/artie-help-popup.jsx';
+import ArtieEmotionalPopupComponent from '../components/artie-help/artie-emotional-popup.jsx';
 import {artieShowHelpPopup, artieAnswerHelpPopup, artieEmotionalStateChangeHelpPopup} from '../reducers/artie-help.js';
 import {artieHelpReceived, artieLoadingHelp, artieResetSecondsHelpOpen} from '../reducers/artie-exercises.js';
 import React from 'react';
@@ -8,7 +8,7 @@ import {injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
 import {sendBlockArtie, updateAnsweredNeedHelp} from '../lib/artie-api.js';
 
-class ArtieHelpPopup extends React.Component {
+class ArtieEmotionalPopup extends React.Component {
 
     constructor (props) {
         super(props);
@@ -87,7 +87,7 @@ class ArtieHelpPopup extends React.Component {
 
     render () {
         return (
-            <ArtieHelpPopupComponent
+            <ArtieEmotionalPopupComponent
                 onYesClick={this.handleAnswerYes}
                 onNoClick={this.handleAnswerNo}
                 onEmotionalStatusChanged={this.handleEmotionalStatusChanged}
@@ -119,4 +119,4 @@ export default compose(
         mapStateToProps,
         mapDispatchToProps
     )
-)(ArtieHelpPopup);
+)(ArtieEmotionalPopup);

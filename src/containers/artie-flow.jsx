@@ -6,7 +6,7 @@ import ArtieLogin from '../components/artie-login/artie-login.jsx';
 import ArtieStudentData from './artie-student-data-popup.jsx';
 import ArtieExercises from '../components/artie-exercises/artie-exercises.jsx';
 import ArtieHelp from './artie-help.jsx';
-import ArtieHelpPopup from './artie-help-popup.jsx';
+import ArtieEmotionalPopup from './artie-emotional-popup.jsx';
 import ArtieExercisePopup from './artie-exercises-popup.jsx';
 
 import {SplitTreatments} from '@splitsoftware/splitio-react';
@@ -59,7 +59,7 @@ class ArtieFlow extends React.Component {
             artieExercisesComponent: false,
             artieHelpComponent: false,
             artiePopupComponent: false,
-            artieHelpPopupComponent: false
+            artieEmotionalPopupComponent: false
         };
         bindAll(this, [
             'flow',
@@ -91,7 +91,7 @@ class ArtieFlow extends React.Component {
         let artieStudentDataComponent = nextState.artieStudentDataComponent;
         let artieExercisesComponent = nextState.artieExercisesComponent;
         let artieHelpComponent = nextState.artieHelpComponent;
-        let artieHelpPopupComponent = nextState.artieHelpPopupComponent;
+        let artieEmotionalPopupComponent = nextState.artieEmotionalPopupComponent;
         let artiePopupComponent = nextState.artiePopupComponent;
         let changes = false;
 
@@ -110,7 +110,7 @@ class ArtieFlow extends React.Component {
                 artieStudentDataComponent = false;
                 artieExercisesComponent = false;
                 artieHelpComponent = false;
-                artieHelpPopupComponent = false;
+                artieEmotionalPopupComponent = false;
                 artiePopupComponent = false;
                 changes = true;
 
@@ -135,7 +135,7 @@ class ArtieFlow extends React.Component {
                 artieStudentDataComponent = true;
                 artieExercisesComponent = false;
                 artieHelpComponent = false;
-                artieHelpPopupComponent = false;
+                artieEmotionalPopupComponent = false;
                 artiePopupComponent = false;
                 changes = true;
             }
@@ -150,7 +150,7 @@ class ArtieFlow extends React.Component {
 
         // 3- Checks if we must show the exercises component or not
         if (!nextState.artieExercisesComponent && !nextState.artieHelpComponent &&
-            !nextState.artieStudentDataComponent && !nextState.artieHelpPopupComponent){
+            !nextState.artieStudentDataComponent && !nextState.artieEmotionalPopupComponent){
             if (((currentStudent !== null && currentStudent.competence > 0) || nextProps.artieExercises.active) &&
                 !popupActivation){
 
@@ -158,7 +158,7 @@ class ArtieFlow extends React.Component {
                 artieStudentDataComponent = false;
                 artieExercisesComponent = true;
                 artieHelpComponent = false;
-                artieHelpPopupComponent = false;
+                artieEmotionalPopupComponent = false;
                 artiePopupComponent = false;
                 changes = true;
             }
@@ -171,7 +171,7 @@ class ArtieFlow extends React.Component {
         }
 
         // 4- Checks if we must show the help component or not
-        if (!nextState.artieHelpComponent && !nextState.artieHelpPopupComponent){
+        if (!nextState.artieHelpComponent && !nextState.artieEmotionalPopupComponent){
             if (currentStudent !== null && currentExercise !== null && nextProps.artieExercises.help !== undefined &&
                 nextProps.artieExercises.help !== null && nextProps.artieExercises.help.nextSteps !== null &&
                 nextProps.artieExercises.help.totalDistance > 0){
@@ -180,7 +180,7 @@ class ArtieFlow extends React.Component {
                 artieStudentDataComponent = false;
                 artieExercisesComponent = false;
                 artieHelpComponent = true;
-                artieHelpPopupComponent = false;
+                artieEmotionalPopupComponent = false;
                 artiePopupComponent = false;
                 changes = true;
             }
@@ -194,7 +194,7 @@ class ArtieFlow extends React.Component {
         }
 
         // 5- Checks if we must show the help popup or not
-        if (!nextState.artieHelpPopupComponent && !artieHelpComponent && artieExercisesComponent){
+        if (!nextState.artieEmotionalPopupComponent && !artieHelpComponent && artieExercisesComponent){
             // If we must show the help and there are any last answer, we show the help popup
             if (nextProps.artieHelp !== null &&
                 nextProps.artieHelp.showHelpPopup &&
@@ -204,7 +204,7 @@ class ArtieFlow extends React.Component {
                 artieStudentDataComponent = false;
                 artieExercisesComponent = false;
                 artieHelpComponent = false;
-                artieHelpPopupComponent = true;
+                artieEmotionalPopupComponent = true;
                 artiePopupComponent = false;
                 changes = true;
             } else if (nextProps.artieHelp !== null &&
@@ -221,21 +221,21 @@ class ArtieFlow extends React.Component {
                     artieStudentDataComponent = false;
                     artieExercisesComponent = false;
                     artieHelpComponent = false;
-                    artieHelpPopupComponent = true;
+                    artieEmotionalPopupComponent = true;
                     artiePopupComponent = false;
                     changes = true;
                 }
             }
-        } else if (nextState.artieHelpPopupComponent){
+        } else if (nextState.artieEmotionalPopupComponent){
             if (!nextProps.artieHelp.showHelpPopup) {
-                artieHelpPopupComponent = false;
+                artieEmotionalPopupComponent = false;
                 changes = true;
             }
         }
 
         // 6- Checks if we must show the popup component or not
         if (!nextState.artiePopupComponent && !nextState.artieExercisesComponent &&
-            !nextState.artieHelpPopupComponent && !nextState.artieHelpComponent &&
+            !nextState.artieEmotionalPopupComponent && !nextState.artieHelpComponent &&
             !nextState.artieStudentDataComponent){
             if ((currentStudent !== null &&
                 (currentStudent.competence === undefined || currentStudent.competence === 0)) ||
@@ -245,7 +245,7 @@ class ArtieFlow extends React.Component {
                 artieStudentDataComponent = false;
                 artieExercisesComponent = false;
                 artieHelpComponent = false;
-                artieHelpPopupComponent = false;
+                artieEmotionalPopupComponent = false;
                 artiePopupComponent = true;
                 changes = true;
 
@@ -263,7 +263,7 @@ class ArtieFlow extends React.Component {
                 artieStudentDataComponent: artieStudentDataComponent,
                 artieExercisesComponent: artieExercisesComponent,
                 artieHelpComponent: artieHelpComponent,
-                artieHelpPopupComponent: artieHelpPopupComponent,
+                artieEmotionalPopupComponent: artieEmotionalPopupComponent,
                 artiePopupComponent: artiePopupComponent
             });
         }
@@ -431,9 +431,9 @@ class ArtieFlow extends React.Component {
     }
     // ------------------------------------
 
-    renderArtieHelpPopupFeatureFlag (treatmentWithConfig) {
+    renderArtieEmotionalPopupFeatureFlag (treatmentWithConfig) {
         const {treatment, config} = treatmentWithConfig;
-        if (treatment === 'on') return (<ArtieHelpPopup />);
+        if (treatment === 'on') return (<ArtieEmotionalPopup />);
         return (null);
     }
 
@@ -490,11 +490,11 @@ class ArtieFlow extends React.Component {
         }
 
         // 6- Checks if the component must show the help popup or not
-        if (this.state.artieHelpPopupComponent){
+        if (this.state.artieEmotionalPopupComponent){
             return (
                 <SplitTreatments names={[emotionalPopupFeatureName]}>
                     {({treatments, isReady}) => (isReady ?
-                        this.renderArtieHelpPopupFeatureFlag(treatments[emotionalPopupFeatureName]) :
+                        this.renderArtieEmotionalPopupFeatureFlag(treatments[emotionalPopupFeatureName]) :
                         null)}
                 </SplitTreatments>
             );
