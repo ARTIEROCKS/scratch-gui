@@ -46,6 +46,9 @@ let passwordLogin = null;
 let studentLogin = null;
 let exerciseId = null;
 
+// --- ARTIE flow configuration constants
+const TIME_TO_SHOW_HELP_POPUP = 120000; // 2 minutes
+
 // --- Split IO variables
 const emotionalPopupFeatureName = 'Emotional_Popup';
 
@@ -59,7 +62,8 @@ class ArtieFlow extends React.Component {
             artieExercisesComponent: false,
             artieHelpComponent: false,
             artiePopupComponent: false,
-            artieEmotionalPopupComponent: false
+            artieEmotionalPopupComponent: false,
+            flagEmotionalPopup: true
         };
         bindAll(this, [
             'flow',
@@ -93,6 +97,8 @@ class ArtieFlow extends React.Component {
         let artieHelpComponent = nextState.artieHelpComponent;
         let artieEmotionalPopupComponent = nextState.artieEmotionalPopupComponent;
         let artiePopupComponent = nextState.artiePopupComponent;
+
+        let flagEmotionalPopup = nextState.flagEmotionalPopup;
         let changes = false;
 
         const currentExercise = this.getCurrentExercise(nextProps.artieExercises);
@@ -193,7 +199,7 @@ class ArtieFlow extends React.Component {
             }
         }
 
-        // 5- Checks if we must show the help popup or not
+        // 5- Checks if we must show the emotional popup or not
         if (!nextState.artieEmotionalPopupComponent && !artieHelpComponent && artieExercisesComponent){
             // If we must show the help and there are any last answer, we show the help popup
             if (nextProps.artieHelp !== null &&
@@ -213,10 +219,10 @@ class ArtieFlow extends React.Component {
                 // If the must show the help and there are a last answer, we calculate the time before the last answer
                 const currentDate = new Date();
                 const lastAnswerDate = new Date(nextProps.artieHelp.lastHelpRequest);
-                const diffInMinutes = Math.abs(currentDate - lastAnswerDate) / (1000 * 60);
+                const diffInMilliseconds = Math.abs(currentDate - lastAnswerDate);
 
                 // If the difference are over 2 minutes, we show the help popup component
-                if (diffInMinutes > 2) {
+                if (diffInMilliseconds > TIME_TO_SHOW_HELP_POPUP) {
                     artieLoginComponent = false;
                     artieStudentDataComponent = false;
                     artieExercisesComponent = false;
@@ -431,11 +437,13 @@ class ArtieFlow extends React.Component {
     }
     // ------------------------------------
 
+    // -----3- Flag Handlers---------
     renderArtieEmotionalPopupFeatureFlag (treatmentWithConfig) {
+        
         const {treatment, config} = treatmentWithConfig;
-        if (treatment === 'on') return (<ArtieEmotionalPopup />);
-        return (null);
+        this.setState({flagEmotionalPopup: treatment === 'on'});
     }
+    // ------------------------------------
 
     render (){
 
