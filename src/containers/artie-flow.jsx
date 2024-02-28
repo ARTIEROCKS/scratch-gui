@@ -282,7 +282,7 @@ class ArtieFlow extends React.Component {
      * @returns {null|*|null} The current student or null if it doesn't exist.
      */
     getCurrentStudent (artieLogin){
-        if (artieLogin !== undefined && artieLogin !== null){
+        if (typeof artieLogin !== 'undefined' && artieLogin !== null){
             return artieLogin.currentStudent;
         }
 
@@ -295,7 +295,7 @@ class ArtieFlow extends React.Component {
      * @returns {object|null} - The current exercise or null if it doesn't exist.
      */
     getCurrentExercise (artieExercises){
-        if (artieExercises !== undefined && artieExercises !== null){
+        if (typeof artieExercises !== 'undefined' && artieExercises !== null){
             return artieExercises.currentExercise;
         }
         return null;
@@ -308,7 +308,7 @@ class ArtieFlow extends React.Component {
      * @returns {boolean} - True if the popup should be activated, false otherwise.
      */
     getPopupActivation (artieExercises){
-        return (artieExercises !== undefined && artieExercises !== null &&
+        return (typeof artieExercises !== 'undefined' && artieExercises !== null &&
                     (
                         artieExercises.evaluationStop ||
                         artieExercises.popupEvaluation || artieExercises.popupExercise ||
@@ -452,7 +452,7 @@ class ArtieFlow extends React.Component {
     // -----3- Flag Handlers---------
     renderArtieEmotionalPopupFeatureFlag (treatmentWithConfig) {
         
-        const {treatment, config} = treatmentWithConfig;
+        const {treatment, _config} = treatmentWithConfig;
         this.setState({flagEmotionalPopup: treatment === 'on'});
     }
     // ------------------------------------
