@@ -9,25 +9,20 @@ import Select from '../forms/select.jsx';
 
 class ArtieExercisesComponent extends React.Component {
 
-    constructor (props) {
-        super(props);
-    }
-
-    exerciseMapper(exercises){
-        var tmpExercises = [{id: "", value: ""}]
+    exerciseMapper (exercises){
+        const tmpExercises = [{id: '', value: ''}];
         exercises.exercises.forEach(exercise => tmpExercises.push({id: exercise.id, value: exercise.name}));
         return tmpExercises;
     }
 
-    cancelManager(currentExercise, role){
-        if(currentExercise === null && role === 0){
+    cancelManager (currentExercise, role){
+        if (currentExercise === null && role === 0){
             return this.props.onLogout;
-        }else{
-            return this.props.onDeactivate;
         }
+        return this.props.onDeactivate;
     }
 
-    render(){
+    render (){
         if((this.props.artieLogin !== undefined && this.props.artieLogin.user !== null && this.props.artieLogin.user.role === 0 &&
             this.props.artieLogin.currentStudent !== null && this.props.artieExercises !== undefined && this.props.artieExercises.currentExercise === null &&
             this.props.artieLogin.currentStudent !== null && this.props.artieLogin.currentStudent.competence !== undefined && this.props.artieLogin.currentStudent.competence > 0) ||

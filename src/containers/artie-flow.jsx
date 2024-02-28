@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import bindAll from 'lodash.bindall';
 import {connect} from 'react-redux';
 
@@ -35,6 +36,15 @@ import {
     artieHelpReceived,
     artiePopupStatement
 } from '../reducers/artie-exercises';
+import {
+    ARTIE_LOGIN_STATE,
+    ARTIE_EXERCISES_STATE,
+    ARTIE_EXERCISE_STATEMENT_STATE,
+    ARTIE_STUDENT_DATA_STATE,
+    artieExercisesState,
+    artieExerciseStatementState,
+    artieStudentDataState
+} from '../reducers/artie-flow';
 import {changeArtieWebcamRecording} from '../reducers/artie-webcam';
 import {compose} from 'redux';
 import {injectIntl} from 'react-intl';
@@ -78,15 +88,6 @@ class ArtieFlow extends React.Component {
             'handleArtieExerciseChange',
             'handleClickArtieExercisesOk'
         ]);
-    }
-
-    componentWillMount () {
-        this.flow(this.props, this.state);
-    }
-
-    shouldComponentUpdate (nextProps, nextState) {
-        this.flow(nextProps, nextState);
-        return true;
     }
 
     flow (nextProps, nextState){
@@ -303,7 +304,8 @@ class ArtieFlow extends React.Component {
 
     /**
      * Function to get if there must be the popup activated or not
-     * @param artieExercises
+     * @param {object} artieExercises - The artieExercises object.
+     * @returns {boolean} - True if the popup should be activated, false otherwise.
      */
     getPopupActivation (artieExercises){
         return (artieExercises !== undefined && artieExercises !== null &&
@@ -334,7 +336,7 @@ class ArtieFlow extends React.Component {
 
         // If the user is not yet logged
         if (this.props.artieLogin.user === null || (this.props.artieLogin.user.role === 0 &&
-            this.props.artieLogin.students === [])){
+            this.props.artieLogin.students.length === 0)){
             loginArtie(userLogin, passwordLogin)
                 .then(user => {
                     this.handleArtieLogged(user);
@@ -344,16 +346,20 @@ class ArtieFlow extends React.Component {
                 });
         } else {
             if (studentLogin !== ''){
-                const tempStudent = this.props.artieLogin.students.filter(s => s.id == studentLogin)[0];
+                const tempStudent = this.props.artieLogin.students.filter(s => s.id === studentLogin)[0];
                 this.props.onArtieSetCurrentStudent(tempStudent);
 
                 // Once the student has been selected, we start recording
                 this.props.onChangeArtieWebcamRecording(true);
 
-                // If the current user is not null and the competence is already set, we show the exercises
-                if (tempStudent.competence !== undefined && tempStudent.competence !== null &&
+                // If the student does not have the age, gender or mother tongue, we show the student data component
+                if (tempStudent.age === 0 || tempStudent.gender === 0 || tempStudent.motherTongue === 0){
+                    // FLOW Changes to show the student data component
+                    this.props.onArtieStudentDataState();
+                } else if (typeof tempStudent.competence !== 'undefined' && tempStudent.competence !== null &&
                     tempStudent.competence > 0){
 
+                    // If the current user is not null and the competence is already set, we show the exercises
                     // Updates the list of exercises that the student has completed
                     getFinishedExercisesByStudentId(tempStudent.id)
                         .then(finishedExercises => {
@@ -364,6 +370,9 @@ class ArtieFlow extends React.Component {
                     getArtieExercises(userLogin, passwordLogin, false)
                         .then(exercises => {
                             this.props.onArtieSetExercises(exercises);
+                            
+                            // FLOW Changes to show the exercise list
+                            this.props.onArtieExerciseState();
                         });
                 } else {
                     // Get the evaluations
@@ -432,7 +441,8 @@ class ArtieFlow extends React.Component {
         this.props.onArtieSetCurrentExercise(exercise, date);
         this.props.onDeactivateArtieExercises();
 
-        // Shows the popup with the statement
+        // FLOW changes to show the popup with the statement
+        this.props.onArtieExerciseStatementState();
         this.props.onArtiePopupStatement(true);
     }
     // ------------------------------------
@@ -448,7 +458,7 @@ class ArtieFlow extends React.Component {
     render (){
 
         // 1- Checks if the component must show the login component or not
-        if (this.state.artieLoginComponent){
+        if (this.props.artieFlow.flowState === ARTIE_LOGIN_STATE){
             return (<ArtieLogin
                 onUserChange={this.handleArtieUserChange}
                 onPasswordChange={this.handleArtiePasswordChange}
@@ -461,12 +471,12 @@ class ArtieFlow extends React.Component {
         }
 
         // 2- Checks if the component must show the student data component or not
-        if (this.state.artieStudentDataComponent){
+        if (this.props.artieFlow.flowState === ARTIE_STUDENT_DATA_STATE){
             return <ArtieStudentData student={this.props.artieLogin.currentStudent} />;
         }
 
         // 3- Checks if the component must show the exercise component or not
-        if (this.state.artieExercisesComponent){
+        if (this.props.artieFlow.flowState === ARTIE_EXERCISES_STATE){
             return (<ArtieExercises
                 title="Exercise Selector"
                 onExerciseChange={this.handleArtieExerciseChange}
@@ -490,7 +500,7 @@ class ArtieFlow extends React.Component {
 
 
         // 5- Checks if the component must show the popup or not
-        if (this.state.artiePopupComponent){
+        if (this.props.artieFlow.flowState === ARTIE_EXERCISE_STATEMENT_STATE){
             return (<ArtieExercisePopup
                 userLogin={userLogin}
                 passwordLogin={passwordLogin}
@@ -516,7 +526,8 @@ class ArtieFlow extends React.Component {
 const mapStateToProps = state => ({
     artieLogin: state.scratchGui.artieLogin,
     artieExercises: state.scratchGui.artieExercises,
-    artieHelp: state.scratchGui.artieHelp
+    artieHelp: state.scratchGui.artieHelp,
+    artieFlow: state.scratchGui.artieFlow
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -541,9 +552,49 @@ const mapDispatchToProps = dispatch => ({
     onArtieHelpReceived: help => dispatch(artieHelpReceived(help)),
 
     // 4- Webcam properties
-    onChangeArtieWebcamRecording: recording => dispatch(changeArtieWebcamRecording(recording))
+    onChangeArtieWebcamRecording: recording => dispatch(changeArtieWebcamRecording(recording)),
 
+    // 5- Flow properties
+    onArtieExerciseState: () => dispatch(artieExercisesState()),
+    onArtieExerciseStatementState: () => dispatch(artieExerciseStatementState()),
+    onArtieStudentDataState: () => dispatch(artieStudentDataState())
 });
+
+ArtieFlow.propTypes = {
+    artieFlow: PropTypes.shape({
+        flowState: PropTypes.string.isRequired
+    }).isRequired,
+
+    artieLogin: PropTypes.object.isRequired,
+    onArtieLogout: PropTypes.func.isRequired,
+    onArtieError: PropTypes.func.isRequired,
+    onDeactivateArtieLogin: PropTypes.func.isRequired,
+    onArtieSetCurrentStudent: PropTypes.func.isRequired,
+    onChangeArtieWebcamRecording: PropTypes.func.isRequired,
+    onArtieLogged: PropTypes.func.isRequired,
+
+    artieExercises: PropTypes.object.isRequired,
+    onDeactivateArtieExercises: PropTypes.func.isRequired,
+    onArtieSetCurrentExercise: PropTypes.func.isRequired,
+    onArtiePopupStatement: PropTypes.func.isRequired,
+    onArtieSetExercises: PropTypes.func.isRequired,
+    onArtieSetFinishedExercises: PropTypes.func.isRequired,
+
+    // Flow functions
+    onArtieExerciseState: PropTypes.func.isRequired,
+    onArtieExerciseStatementState: PropTypes.func.isRequired,
+    onArtieStudentDataState: PropTypes.func.isRequired
+};
+
+ArtieLogin.propTypes = {
+    onUserChange: PropTypes.func.isRequired,
+    onPasswordChange: PropTypes.func.isRequired,
+    onStudentChange: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired, // Add this line
+    onOk: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
+    artieLogin: PropTypes.object.isRequired
+};
 
 export default compose(
     injectIntl,

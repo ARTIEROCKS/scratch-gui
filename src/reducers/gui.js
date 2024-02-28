@@ -37,6 +37,7 @@ import artieLoginReducer, {artieLoginInitialState} from './artie-login';
 import artieExercisesReducer, {artieExercisesInitialState} from './artie-exercises';
 import artieHelpReducer, {artieHelpInitialState} from './artie-help';
 import artieWebcamReducer, {artieWebcamInitialState} from './artie-webcam';
+import artieFlowReducer, {artieFlowInitialState} from './artie-flow';
 
 const guiMiddleware = compose(applyMiddleware(logger, throttle(300, {leading: true, trailing: true})));
 
@@ -73,7 +74,8 @@ const guiInitialState = {
     artieLogin: artieLoginInitialState,
     artieExercises: artieExercisesInitialState,
     artieHelp: artieHelpInitialState,
-    artieWebcam: artieWebcamInitialState
+    artieWebcam: artieWebcamInitialState,
+    artieFlow: artieFlowInitialState
 };
 
 const initPlayer = function (currentState) {
@@ -178,7 +180,8 @@ const guiReducer = combineReducers({
     artieLogin: artieLoginReducer,
     artieExercises: artieExercisesReducer,
     artieHelp: artieHelpReducer,
-    artieWebcam: artieWebcamReducer
+    artieWebcam: artieWebcamReducer,
+    artieFlow: artieFlowReducer
 });
 
 export {
