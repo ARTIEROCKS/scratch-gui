@@ -37,13 +37,13 @@ import {
     artiePopupStatement
 } from '../reducers/artie-exercises';
 import {
-    ARTIE_LOGIN_STATE,
-    ARTIE_EXERCISES_STATE,
-    ARTIE_EXERCISE_STATEMENT_STATE,
-    ARTIE_STUDENT_DATA_STATE,
-    artieExercisesState,
-    artieExerciseStatementState,
-    artieStudentDataState
+    ARTIE_FLOW_LOGIN_STATE,
+    ARTIE_FLOW_EXERCISES_STATE,
+    ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
+    ARTIE_FLOW_STUDENT_DATA_STATE,
+    artieFlowExercisesState,
+    artieFlowExerciseStatementState,
+    artieFlowStudentDataState
 } from '../reducers/artie-flow';
 import {changeArtieWebcamRecording} from '../reducers/artie-webcam';
 import {compose} from 'redux';
@@ -355,7 +355,7 @@ class ArtieFlow extends React.Component {
                 // If the student does not have the age, gender or mother tongue, we show the student data component
                 if (tempStudent.age === 0 || tempStudent.gender === 0 || tempStudent.motherTongue === 0){
                     // FLOW Changes to show the student data component
-                    this.props.onArtieStudentDataState();
+                    this.props.onArtieFlowStudentDataState();
                 } else if (typeof tempStudent.competence !== 'undefined' && tempStudent.competence !== null &&
                     tempStudent.competence > 0){
 
@@ -380,6 +380,8 @@ class ArtieFlow extends React.Component {
                         .then(exercises => {
                             this.props.onArtieSetExercises(exercises);
                         });
+                    // FLOW Changes to show the exercise list
+                    this.props.onArtieFlowExerciseStatementState();
                 }
             }
 
@@ -442,7 +444,7 @@ class ArtieFlow extends React.Component {
         this.props.onDeactivateArtieExercises();
 
         // FLOW changes to show the popup with the statement
-        this.props.onArtieExerciseStatementState();
+        this.props.onArtieFlowExerciseStatementState();
         this.props.onArtiePopupStatement(true);
     }
     // ------------------------------------
@@ -458,7 +460,7 @@ class ArtieFlow extends React.Component {
     render (){
 
         // 1- Checks if the component must show the login component or not
-        if (this.props.artieFlow.flowState === ARTIE_LOGIN_STATE){
+        if (this.props.artieFlow.flowState === ARTIE_FLOW_LOGIN_STATE){
             return (<ArtieLogin
                 onUserChange={this.handleArtieUserChange}
                 onPasswordChange={this.handleArtiePasswordChange}
@@ -471,12 +473,12 @@ class ArtieFlow extends React.Component {
         }
 
         // 2- Checks if the component must show the student data component or not
-        if (this.props.artieFlow.flowState === ARTIE_STUDENT_DATA_STATE){
+        if (this.props.artieFlow.flowState === ARTIE_FLOW_STUDENT_DATA_STATE){
             return <ArtieStudentData student={this.props.artieLogin.currentStudent} />;
         }
 
         // 3- Checks if the component must show the exercise component or not
-        if (this.props.artieFlow.flowState === ARTIE_EXERCISES_STATE){
+        if (this.props.artieFlow.flowState === ARTIE_FLOW_EXERCISES_STATE){
             return (<ArtieExercises
                 title="Exercise Selector"
                 onExerciseChange={this.handleArtieExerciseChange}
@@ -500,7 +502,7 @@ class ArtieFlow extends React.Component {
 
 
         // 5- Checks if the component must show the popup or not
-        if (this.props.artieFlow.flowState === ARTIE_EXERCISE_STATEMENT_STATE){
+        if (this.props.artieFlow.flowState === ARTIE_FLOW_EXERCISE_STATEMENT_STATE){
             return (<ArtieExercisePopup
                 userLogin={userLogin}
                 passwordLogin={passwordLogin}
@@ -555,9 +557,9 @@ const mapDispatchToProps = dispatch => ({
     onChangeArtieWebcamRecording: recording => dispatch(changeArtieWebcamRecording(recording)),
 
     // 5- Flow properties
-    onArtieExerciseState: () => dispatch(artieExercisesState()),
-    onArtieExerciseStatementState: () => dispatch(artieExerciseStatementState()),
-    onArtieStudentDataState: () => dispatch(artieStudentDataState())
+    onArtieExerciseState: () => dispatch(artieFlowExercisesState()),
+    onArtieFlowExerciseStatementState: () => dispatch(artieFlowExerciseStatementState()),
+    onArtieFlowStudentDataState: () => dispatch(artieFlowStudentDataState())
 });
 
 ArtieFlow.propTypes = {
@@ -582,8 +584,8 @@ ArtieFlow.propTypes = {
 
     // Flow functions
     onArtieExerciseState: PropTypes.func.isRequired,
-    onArtieExerciseStatementState: PropTypes.func.isRequired,
-    onArtieStudentDataState: PropTypes.func.isRequired
+    onArtieFlowExerciseStatementState: PropTypes.func.isRequired,
+    onArtieFlowStudentDataState: PropTypes.func.isRequired
 };
 
 ArtieLogin.propTypes = {

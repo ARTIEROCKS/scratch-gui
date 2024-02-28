@@ -23,15 +23,19 @@ class ArtieExercisesComponent extends React.Component {
     }
 
     render (){
-        if((this.props.artieLogin !== undefined && this.props.artieLogin.user !== null && this.props.artieLogin.user.role === 0 &&
-            this.props.artieLogin.currentStudent !== null && this.props.artieExercises !== undefined && this.props.artieExercises.currentExercise === null &&
-            this.props.artieLogin.currentStudent !== null && this.props.artieLogin.currentStudent.competence !== undefined && this.props.artieLogin.currentStudent.competence > 0) ||
+        if ((typeof this.props.artieLogin !== 'undefined' && this.props.artieLogin.user !== null &&
+            this.props.artieLogin.user.role === 0 && this.props.artieLogin.currentStudent !== null &&
+            typeof this.props.artieExercises !== 'undefined' && this.props.artieExercises.currentExercise === null &&
+            this.props.artieLogin.currentStudent !== null &&
+            typeof this.props.artieLogin.currentStudent.competence !== 'undefined' &&
+            this.props.artieLogin.currentStudent.competence > 0) ||
             this.props.artieExercises.active){
 
-            var exercises = this.exerciseMapper(this.props.artieExercises);
-            var onCancel = this.cancelManager(this.props.artieExercises.currentExercise, this.props.artieLogin.user.role);
+            const exercises = this.exerciseMapper(this.props.artieExercises);
+            const onCancel = this.cancelManager(this.props.artieExercises.currentExercise,
+                this.props.artieLogin.user.role);
 
-            return(
+            return (
                 <Modal
                     onRequestClose={onCancel}
                     className={styles.modalContent}
@@ -47,7 +51,7 @@ class ArtieExercisesComponent extends React.Component {
                                     id="gui.menuBar.artie.exercises.exercises"
                                 />
                                 <Select
-                                    autofocus={true}
+                                    autofocus
                                     data={exercises}
                                     starred={this.props.artieExercises.finishedExercises}
                                     onChange={this.props.onExerciseChange}
@@ -56,28 +60,35 @@ class ArtieExercisesComponent extends React.Component {
                         </Box>
 
                         <Box className={styles.buttonRow}>
-                            <button className={styles.cancelButton} onClick={onCancel}>
+                            <button
+                                className={styles.cancelButton}
+                                onClick={onCancel}
+                            >
                                 <FormattedMessage
-                                        defaultMessage="Cancel"
-                                        description="Button in prompt for cancelling the dialog"
-                                        id="gui.menuBar.artie.exercises.cancel"
-                                    />
+                                    defaultMessage="Cancel"
+                                    description="Button in prompt for cancelling the dialog"
+                                    id="gui.menuBar.artie.exercises.cancel"
+                                />
                             </button>
-                            <button className={styles.okButton} onClick={this.props.onOk}>
+                            <button
+                                className={styles.okButton}
+                                onClick={this.props.onOk}
+                            >
                                 <FormattedMessage
-                                        defaultMessage="OK"
-                                        description="Button in prompt for confirming the dialog"
-                                        id="gui.menuBar.artie.exercises.ok"
-                                    />
+                                    defaultMessage="OK"
+                                    description="Button in prompt for confirming the dialog"
+                                    id="gui.menuBar.artie.exercises.ok"
+                                />
                             </button>
                         </Box>
                     </Box>
                 </Modal>
             );
 
-        }else{
-            return null;
         }
+        
+        return null;
+        
     }
 }
 
@@ -86,6 +97,8 @@ ArtieExercisesComponent.propTypes = {
     onLogout: PropTypes.func,
     onDeactivate: PropTypes.func,
     title: PropTypes.string.isRequired,
-    artieExercises: PropTypes.object
+    artieExercises: PropTypes.object,
+    artieLogin: PropTypes.object,
+    onOk: PropTypes.func.isRequired
 };
 export default ArtieExercisesComponent;

@@ -1,30 +1,35 @@
-const ARTIE_LOGIN_STATE = 'scratch-gui/artie-flow/ARTIE_LOGIN_STATE';
-const ARTIE_STUDENT_DATA_STATE = 'scratch-gui/artie-flow/ARTIE_STUDENT_DATA_STATE';
-const ARTIE_EXERCISES_STATE = 'scratch-gui/artie-flow/ARTIE_EXERCISES_STATE';
-const ARTIE_EXERCISE_STATEMENT_STATE = 'scratch-gui/artie-flow/ARTIE_EXERCISE_STATEMENT_STATE';
+const ARTIE_FLOW_LOGIN_STATE = 'scratch-gui/artie-flow/ARTIE_FLOW_LOGIN_STATE';
+const ARTIE_FLOW_STUDENT_DATA_STATE = 'scratch-gui/artie-flow/ARTIE_FLOW_STUDENT_DATA_STATE';
+const ARTIE_FLOW_EXERCISES_STATE = 'scratch-gui/artie-flow/ARTIE_FLOW_EXERCISES_STATE';
+const ARTIE_FLOW_EXERCISE_STATEMENT_STATE = 'scratch-gui/artie-flow/ARTIE_FLOW_EXERCISE_STATEMENT_STATE';
+const ARTIE_FLOW_WORKSPACE_STATE = 'scratch-gui/artie-flow/ARTIE_FLOW_WORKSPACE_STATE';
 
 
 const initialState = {
-    flowState: ARTIE_LOGIN_STATE
+    flowState: ARTIE_FLOW_LOGIN_STATE
 };
 
 const reducer = function (state, action) {
     if (typeof state === 'undefined') state = initialState;
     switch (action.type) {
 
-    case ARTIE_LOGIN_STATE:
+    case ARTIE_FLOW_LOGIN_STATE:
         return Object.assign({}, state, {
             flowState: action.type
         });
-    case ARTIE_STUDENT_DATA_STATE:
+    case ARTIE_FLOW_STUDENT_DATA_STATE:
         return Object.assign({}, state, {
             flowState: action.type
         });
-    case ARTIE_EXERCISES_STATE:
+    case ARTIE_FLOW_EXERCISES_STATE:
         return Object.assign({}, state, {
             flowState: action.type
         });
-    case ARTIE_EXERCISE_STATEMENT_STATE:
+    case ARTIE_FLOW_EXERCISE_STATEMENT_STATE:
+        return Object.assign({}, state, {
+            flowState: action.type
+        });
+    case ARTIE_FLOW_WORKSPACE_STATE:
         return Object.assign({}, state, {
             flowState: action.type
         });
@@ -33,31 +38,37 @@ const reducer = function (state, action) {
     }
 };
 
-const artieLoginState = () => ({
-    type: ARTIE_LOGIN_STATE
+const artieFlowLoginState = () => ({
+    type: ARTIE_FLOW_LOGIN_STATE
 });
 
-const artieStudentDataState = () => ({
-    type: ARTIE_STUDENT_DATA_STATE
+const artieFlowStudentDataState = () => ({
+    type: ARTIE_FLOW_STUDENT_DATA_STATE
 });
 
-const artieExercisesState = () => ({
-    type: ARTIE_EXERCISES_STATE
+const artieFlowExercisesState = () => ({
+    type: ARTIE_FLOW_EXERCISES_STATE
 });
 
-const artieExerciseStatementState = () => ({
-    type: ARTIE_EXERCISE_STATEMENT_STATE
+const artieFlowExerciseStatementState = () => ({
+    type: ARTIE_FLOW_EXERCISE_STATEMENT_STATE
+});
+
+const artieFlowWorkspaceState = () => ({
+    type: ARTIE_FLOW_WORKSPACE_STATE
 });
 
 export {
     reducer as default,
     initialState as artieFlowInitialState,
-    artieLoginState,
-    artieStudentDataState,
-    artieExercisesState,
-    artieExerciseStatementState,
-    ARTIE_LOGIN_STATE,
-    ARTIE_STUDENT_DATA_STATE,
-    ARTIE_EXERCISES_STATE,
-    ARTIE_EXERCISE_STATEMENT_STATE
+    artieFlowLoginState,
+    artieFlowStudentDataState,
+    artieFlowExercisesState,
+    artieFlowExerciseStatementState,
+    artieFlowWorkspaceState,
+    ARTIE_FLOW_LOGIN_STATE,
+    ARTIE_FLOW_STUDENT_DATA_STATE,
+    ARTIE_FLOW_EXERCISES_STATE,
+    ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
+    ARTIE_FLOW_WORKSPACE_STATE
 };

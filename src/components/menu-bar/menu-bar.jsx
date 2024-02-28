@@ -939,8 +939,8 @@ class MenuBar extends React.Component {
                                                     enable
                                                     tooltipId="artie-exercise"
                                                     place="bottom"
-                                                    className={classNames(styles.artieExercisesStatement)}
-                                                    tooltipClassName={styles.artieExercisesStatementTooltip}
+                                                    className={classNames(styles.artieFlowExercisesStatement)}
+                                                    tooltipClassName={styles.artieFlowExercisesStatementTooltip}
                                                     message={this.props.artieExercises.currentExercise.description}
                                                 >
                                                     <FormattedMessage
