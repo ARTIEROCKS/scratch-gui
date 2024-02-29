@@ -41,9 +41,7 @@ import {
     ARTIE_FLOW_EXERCISES_STATE,
     ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
     ARTIE_FLOW_STUDENT_DATA_STATE,
-    artieFlowExercisesState,
-    artieFlowExerciseStatementState,
-    artieFlowStudentDataState
+    artieChangeFlowState
 } from '../reducers/artie-flow';
 import {changeArtieWebcamRecording} from '../reducers/artie-webcam';
 import {compose} from 'redux';
@@ -355,7 +353,7 @@ class ArtieFlow extends React.Component {
                 // If the student does not have the age, gender or mother tongue, we show the student data component
                 if (tempStudent.age === 0 || tempStudent.gender === 0 || tempStudent.motherTongue === 0){
                     // FLOW Changes to show the student data component
-                    this.props.onArtieFlowStudentDataState();
+                    this.props.onArtieStateFlowChange(ARTIE_FLOW_STUDENT_DATA_STATE);
                 } else if (typeof tempStudent.competence !== 'undefined' && tempStudent.competence !== null &&
                     tempStudent.competence > 0){
 
@@ -372,7 +370,7 @@ class ArtieFlow extends React.Component {
                             this.props.onArtieSetExercises(exercises);
                             
                             // FLOW Changes to show the exercise list
-                            this.props.onArtieExerciseState();
+                            this.props.onArtieStateFlowChange(ARTIE_FLOW_EXERCISES_STATE);
                         });
                 } else {
                     // Get the evaluations
@@ -381,7 +379,7 @@ class ArtieFlow extends React.Component {
                             this.props.onArtieSetExercises(exercises);
                         });
                     // FLOW Changes to show the exercise list
-                    this.props.onArtieFlowExerciseStatementState();
+                    this.props.onArtieStateFlowChange(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
                 }
             }
 
@@ -444,7 +442,7 @@ class ArtieFlow extends React.Component {
         this.props.onDeactivateArtieExercises();
 
         // FLOW changes to show the popup with the statement
-        this.props.onArtieFlowExerciseStatementState();
+        this.props.onArtieStateFlowChange(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
         this.props.onArtiePopupStatement(true);
     }
     // ------------------------------------
@@ -557,9 +555,7 @@ const mapDispatchToProps = dispatch => ({
     onChangeArtieWebcamRecording: recording => dispatch(changeArtieWebcamRecording(recording)),
 
     // 5- Flow properties
-    onArtieExerciseState: () => dispatch(artieFlowExercisesState()),
-    onArtieFlowExerciseStatementState: () => dispatch(artieFlowExerciseStatementState()),
-    onArtieFlowStudentDataState: () => dispatch(artieFlowStudentDataState())
+    onArtieStateFlowChange: state => dispatch(artieChangeFlowState(state))
 });
 
 ArtieFlow.propTypes = {
@@ -583,9 +579,7 @@ ArtieFlow.propTypes = {
     onArtieSetFinishedExercises: PropTypes.func.isRequired,
 
     // Flow functions
-    onArtieExerciseState: PropTypes.func.isRequired,
-    onArtieFlowExerciseStatementState: PropTypes.func.isRequired,
-    onArtieFlowStudentDataState: PropTypes.func.isRequired
+    onArtieStateFlowChange: PropTypes.func.isRequired
 };
 
 ArtieLogin.propTypes = {

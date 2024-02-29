@@ -38,34 +38,14 @@ const reducer = function (state, action) {
     }
 };
 
-const artieFlowLoginState = () => ({
-    type: ARTIE_FLOW_LOGIN_STATE
-});
-
-const artieFlowStudentDataState = () => ({
-    type: ARTIE_FLOW_STUDENT_DATA_STATE
-});
-
-const artieFlowExercisesState = () => ({
-    type: ARTIE_FLOW_EXERCISES_STATE
-});
-
-const artieFlowExerciseStatementState = () => ({
-    type: ARTIE_FLOW_EXERCISE_STATEMENT_STATE
-});
-
-const artieFlowWorkspaceState = () => ({
-    type: ARTIE_FLOW_WORKSPACE_STATE
+const artieChangeFlowState = state => ({
+    type: state
 });
 
 export {
     reducer as default,
     initialState as artieFlowInitialState,
-    artieFlowLoginState,
-    artieFlowStudentDataState,
-    artieFlowExercisesState,
-    artieFlowExerciseStatementState,
-    artieFlowWorkspaceState,
+    artieChangeFlowState,
     ARTIE_FLOW_LOGIN_STATE,
     ARTIE_FLOW_STUDENT_DATA_STATE,
     ARTIE_FLOW_EXERCISES_STATE,

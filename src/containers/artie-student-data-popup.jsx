@@ -9,8 +9,9 @@ import ArtieStudentDataPopupComponent from '../components/artie-student-data/art
 import {updateStudentData} from '../lib/artie-api';
 import {artieSetCurrentStudent} from '../reducers/artie-login';
 import {
-    artieFlowExercisesState,
-    artieFlowExerciseStatementState
+    ARTIE_FLOW_EXERCISES_STATE,
+    ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
+    artieChangeFlowState
 } from '../reducers/artie-flow';
 
 const gender = defineMessages({
@@ -100,10 +101,10 @@ class ArtieStudentDataPopup extends React.Component {
         // Once the student data has been updated, we can move to the next state
         if (this.props.student.competence > 0){
             // We show the exercises
-            this.props.onArtieFlowExercisesState();
+            this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISES_STATE);
         } else {
             // we show the evaluation
-            this.props.onArtieFlowExerciseStatementState();
+            this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
         }
     }
 
@@ -142,8 +143,7 @@ class ArtieStudentDataPopup extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
     onArtieSetCurrentStudent: currentStudent => dispatch(artieSetCurrentStudent(currentStudent)),
-    onArtieFlowExercisesState: () => dispatch(artieFlowExercisesState()),
-    onArtieFlowExerciseStatementState: () => dispatch(artieFlowExerciseStatementState())
+    onArtieChangeFlowState: state => dispatch(artieChangeFlowState(state))
 });
 
 
@@ -153,8 +153,7 @@ ArtieStudentDataPopup.propTypes = {
         formatMessage: PropTypes.func.isRequired
     }).isRequired,
     onArtieSetCurrentStudent: PropTypes.func.isRequired,
-    onArtieFlowExercisesState: PropTypes.func.isRequired,
-    onArtieFlowExerciseStatementState: PropTypes.func.isRequired
+    onArtieChangeFlowState: PropTypes.func.isRequired
 };
 
 export default compose(

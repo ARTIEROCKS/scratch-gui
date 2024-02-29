@@ -114,6 +114,10 @@ import {
     artieResetSecondsHelpOpen
 } from '../../reducers/artie-exercises';
 import {artieShowHelpPopup} from '../../reducers/artie-help';
+import {
+    ARTIE_FLOW_LOGIN_STATE,
+    artieChangeFlowState
+} from '../../reducers/artie-flow.js';
 import ArtieFlow from '../../containers/artie-flow.jsx';
 import ArtieWebcamRecorder from '../../containers/artie-webcam-recorder.jsx';
 import {ArtieExerciseStatementTooltip} from '../artie-exercises/artie-exercises-statement.jsx';
@@ -492,6 +496,7 @@ class MenuBar extends React.Component {
     handleArtieLogout (){
         this.props.onArtieLogout();
         this.props.onArtieClearExercises();
+        this.props.onArtieChangeFlowState(ARTIE_FLOW_LOGIN_STATE);
     }
     handleArtieExerciseChange (e){
         exerciseId = e.target.value;
@@ -1333,7 +1338,8 @@ const mapDispatchToProps = dispatch => ({
     onArtiePopupStatement: active => dispatch(artiePopupStatement(active)),
     onArtieShowHelpPopup: (id, showHelpPopup) => dispatch(artieShowHelpPopup(id, showHelpPopup)),
     onClickArtie: () => dispatch(openArtieMenu()),
-    onRequestCloseArtie: () => dispatch(closeArtieMenu())
+    onRequestCloseArtie: () => dispatch(closeArtieMenu()),
+    onArtieChangeFlowState: state => dispatch(artieChangeFlowState(state))
 });
 
 export default compose(
