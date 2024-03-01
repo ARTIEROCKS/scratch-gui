@@ -116,6 +116,8 @@ import {
 import {artieShowHelpPopup} from '../../reducers/artie-help';
 import {
     ARTIE_FLOW_LOGIN_STATE,
+    ARTIE_FLOW_EXERCISES_STATE,
+    ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
     artieChangeFlowState
 } from '../../reducers/artie-flow.js';
 import ArtieFlow from '../../containers/artie-flow.jsx';
@@ -229,6 +231,7 @@ class MenuBar extends React.Component {
             'restoreOptionMessage',
             'handleClickRegisterSolution',
             'handleArtieLogout',
+            'handleActivateArtieExerciseSelector',
             'handleArtieExerciseChange',
             'handleClickFinishExercise',
             'handleStopEvaluation',
@@ -501,11 +504,16 @@ class MenuBar extends React.Component {
     handleArtieExerciseChange (e){
         exerciseId = e.target.value;
     }
+    handleActivateArtieExerciseSelector (){
+        this.props.onActivateArtieExercises();
+        this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISES_STATE);
+    }
     handleStopEvaluation (){
         this.props.onArtieEvaluationStop(true);
     }
     handleShowPopupStatement (){
         this.props.onArtiePopupStatement(true);
+        this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
     }
     handleClickRequestEmotionalHelp (){
         this.props.onArtieShowHelpPopup(null, true);
@@ -998,7 +1006,7 @@ class MenuBar extends React.Component {
                                         <Divider className={classNames(styles.divider)} />
                                         <SelectExerciseButton
                                             className={styles.menuBarButton}
-                                            onClick={this.props.onActivateArtieExercises}
+                                            onClick={this.handleActivateArtieExerciseSelector}
                                             isExerciseSelected={this.props.artieExercises.currentExercise !== null}
                                             evaluation={false}
                                         />
@@ -1256,7 +1264,8 @@ MenuBar.propTypes = {
     showComingSoon: PropTypes.bool,
     username: PropTypes.string,
     userOwnsProject: PropTypes.bool,
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
+    onActivateArtieExercises: PropTypes.func.isRequired
 };
 
 MenuBar.defaultProps = {

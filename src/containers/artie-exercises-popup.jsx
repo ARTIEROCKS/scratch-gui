@@ -17,6 +17,11 @@ import {
     activateArtieExercises
 } from '../reducers/artie-exercises';
 import {artieSetCurrentStudent} from '../reducers/artie-login';
+import {
+        artieChangeFlowState,
+        ARTIE_FLOW_WORKSPACE_STATE,
+        ARTIE_FLOW_EXERCISES_STATE
+    } from '../reducers/artie-flow.js';
 
 const statementMessages = defineMessages({
     popupModalTitle: {
@@ -328,6 +333,7 @@ class ArtieExercisePopup extends React.Component {
         this.props.onArtieSetExercises(exercises);
         this.props.onArtieEvaluationStop(false);
         this.props.onArtieSetCurrentExercise(null, null);
+        this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISES_STATE);
     }
 
     handleEvaluationStopCancelClick (){
@@ -479,7 +485,8 @@ ArtieExercisePopup.propTypes = {
     onArtieClearHelp: PropTypes.func,
     onArtiePopupStatement: PropTypes.func,
     onArtiePopupEvaluation: PropTypes.func,
-    onArtieEvaluationStop: PropTypes.func
+    onArtieEvaluationStop: PropTypes.func,
+    onArtieChangeFlowState: PropTypes.func
 };
 
 const mapStateToProps = state => ({
@@ -498,7 +505,8 @@ const mapDispatchToProps = dispatch => ({
     onArtieSetFinishedExercises: finishedExercises => dispatch(artieSetFinishedExercises(finishedExercises)),
     onArtieClearHelp: () => dispatch(artieClearHelp(new Date())),
     onArtiePopupStatement: active => dispatch(artiePopupStatement(active)),
-    onArtieActivateExercises: () => dispatch(activateArtieExercises())
+    onArtieActivateExercises: () => dispatch(activateArtieExercises()),
+    onArtieChangeFlowState: state => dispatch(artieChangeFlowState(state))
 });
 
 export default compose(

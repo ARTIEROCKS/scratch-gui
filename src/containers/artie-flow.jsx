@@ -84,7 +84,8 @@ class ArtieFlow extends React.Component {
             'handleClickArtieLoginOk',
             'handleArtieLogged',
             'handleArtieExerciseChange',
-            'handleClickArtieExercisesOk'
+            'handleClickArtieExercisesOk',
+            'handleLogout'
         ]);
     }
 
@@ -103,55 +104,6 @@ class ArtieFlow extends React.Component {
         const currentExercise = this.getCurrentExercise(nextProps.artieExercises);
         const currentStudent = this.getCurrentStudent(nextProps.artieLogin);
         const popupActivation = this.getPopupActivation(nextProps.artieExercises);
-
-
-        // 1- Checks if we must show the login component or not
-        if (!nextState.artieLoginComponent){
-            if (nextProps.artieLogin !== undefined &&
-                (nextProps.artieLogin.user === undefined || nextProps.artieLogin.user === null ||
-                    (nextProps.artieLogin.user.role === 0 && nextProps.artieLogin.students === []))) {
-
-                artieLoginComponent = true;
-                artieStudentDataComponent = false;
-                artieExercisesComponent = false;
-                artieHelpComponent = false;
-                artieEmotionalPopupComponent = false;
-                artiePopupComponent = false;
-                changes = true;
-
-                // If the user is logged out, we stop recording
-                this.props.onChangeArtieWebcamRecording(false);
-            }
-        } else if (nextState.artieLoginComponent &&
-                (nextProps.artieLogin.user !== undefined &&
-                    nextProps.artieLogin.user !== null &&
-                    (nextProps.artieLogin.user.role === 1 || nextProps.artieLogin.currentStudent !== null))) {
-            artieLoginComponent = false;
-            changes = true;
-        }
-
-        // 2- Checks if we must show the student data component or not
-        if (!nextState.artieStudentDataComponent && !nextState.artieLoginComponent){
-            if (currentStudent !== null && currentStudent !== undefined &&
-                (currentStudent.gender === undefined || currentStudent.gender === 0 ||
-                    currentStudent.motherTongue === 0 || currentStudent.age === undefined || currentStudent.age === 0)){
-
-                artieLoginComponent = false;
-                artieStudentDataComponent = true;
-                artieExercisesComponent = false;
-                artieHelpComponent = false;
-                artieEmotionalPopupComponent = false;
-                artiePopupComponent = false;
-                changes = true;
-            }
-        } else if (nextState.artieStudentDataComponent){
-            if (currentStudent !== null && currentStudent !== undefined && currentStudent.gender !== undefined &&
-                currentStudent.gender > 0 && currentStudent.motherTongue !== undefined &&
-                currentStudent.motherTongue > 0 && currentStudent.age !== undefined && currentStudent.age > 0){
-                artieStudentDataComponent = false;
-                changes = true;
-            }
-        }
 
         // 3- Checks if we must show the exercises component or not
         if (!nextState.artieExercisesComponent && !nextState.artieHelpComponent &&
@@ -317,6 +269,12 @@ class ArtieFlow extends React.Component {
         );
     }
 
+    // -----1- Generic Component Handlers---------
+    handleLogout (){
+        this.props.onArtieLogout();
+        this.props.onArtieStateFlowChange(ARTIE_FLOW_LOGIN_STATE);
+    }
+
     // -----1- Login Component Handlers---------
     handleArtieUserChange (e){
         userLogin = e.target.value;
@@ -430,7 +388,7 @@ class ArtieFlow extends React.Component {
 
     handleClickArtieExercisesOk (){
         // Searches for the exercise object in base of the exerciseId selected
-        const exercise = this.props.artieExercises.exercises.filter(e => e.id == exerciseId)[0];
+        const exercise = this.props.artieExercises.exercises.filter(e => e.id === exerciseId)[0];
         const options = {year: 'numeric',
             month: '2-digit',
             day: '2-digit',
@@ -463,7 +421,7 @@ class ArtieFlow extends React.Component {
                 onUserChange={this.handleArtieUserChange}
                 onPasswordChange={this.handleArtiePasswordChange}
                 onStudentChange={this.handleArtieStudentChange}
-                onCancel={this.props.onArtieLogout}
+                onCancel={this.handleLogout}
                 onOk={this.handleClickArtieLoginOk}
                 title="Login"
                 artieLogin={this.props.artieLogin}
@@ -480,7 +438,7 @@ class ArtieFlow extends React.Component {
             return (<ArtieExercises
                 title="Exercise Selector"
                 onExerciseChange={this.handleArtieExerciseChange}
-                onLogout={this.props.onArtieLogout}
+                onLogout={this.handleLogout}
                 onDeactivate={this.props.onDeactivateArtieExercises}
                 onOk={this.handleClickArtieExercisesOk}
                 artieExercises={this.props.artieExercises}
