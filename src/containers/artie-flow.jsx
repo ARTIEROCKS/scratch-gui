@@ -56,9 +56,6 @@ let passwordLogin = null;
 let studentLogin = null;
 let exerciseId = null;
 
-// --- ARTIE flow configuration constants
-const TIME_TO_SHOW_HELP_POPUP = 120000; // 2 minutes
-
 // --- Split IO variables
 const emotionalPopupFeatureName = 'Emotional_Popup';
 
@@ -66,15 +63,6 @@ class ArtieFlow extends React.Component {
 
     constructor (props) {
         super(props);
-        this.state = {
-            artieLoginComponent: false,
-            artieStudentDataComponent: false,
-            artieExercisesComponent: false,
-            artieHelpComponent: false,
-            artiePopupComponent: false,
-            artieEmotionalPopupComponent: false,
-            flagEmotionalPopup: true
-        };
         bindAll(this, [
             'flow',
             'getCurrentStudent',
@@ -91,142 +79,6 @@ class ArtieFlow extends React.Component {
         ]);
     }
 
-    flow (nextProps, nextState){
-
-        let artieLoginComponent = nextState.artieLoginComponent;
-        let artieStudentDataComponent = nextState.artieStudentDataComponent;
-        let artieExercisesComponent = nextState.artieExercisesComponent;
-        let artieHelpComponent = nextState.artieHelpComponent;
-        let artieEmotionalPopupComponent = nextState.artieEmotionalPopupComponent;
-        let artiePopupComponent = nextState.artiePopupComponent;
-
-        let flagEmotionalPopup = nextState.flagEmotionalPopup;
-        let changes = false;
-
-        const currentExercise = this.getCurrentExercise(nextProps.artieExercises);
-        const currentStudent = this.getCurrentStudent(nextProps.artieLogin);
-        const popupActivation = this.getPopupActivation(nextProps.artieExercises);
-
-        // 3- Checks if we must show the exercises component or not
-        if (!nextState.artieExercisesComponent && !nextState.artieHelpComponent &&
-            !nextState.artieStudentDataComponent && !nextState.artieEmotionalPopupComponent){
-            if (((currentStudent !== null && currentStudent.competence > 0) || nextProps.artieExercises.active) &&
-                !popupActivation){
-
-                artieLoginComponent = false;
-                artieStudentDataComponent = false;
-                artieExercisesComponent = true;
-                artieHelpComponent = false;
-                artieEmotionalPopupComponent = false;
-                artiePopupComponent = false;
-                changes = true;
-            }
-        } else if (nextState.artieExercisesComponent){
-            if (((currentStudent === null || currentStudent.competence === 0) && !nextProps.artieExercises.active) ||
-                popupActivation) {
-                artieExercisesComponent = false;
-                changes = true;
-            }
-        }
-
-        // 4- Checks if we must show the help component or not
-        if (!nextState.artieHelpComponent && !nextState.artieEmotionalPopupComponent){
-            if (currentStudent !== null && currentExercise !== null && nextProps.artieExercises.help !== undefined &&
-                nextProps.artieExercises.help !== null && nextProps.artieExercises.help.nextSteps !== null &&
-                nextProps.artieExercises.help.totalDistance > 0){
-
-                artieLoginComponent = false;
-                artieStudentDataComponent = false;
-                artieExercisesComponent = false;
-                artieHelpComponent = true;
-                artieEmotionalPopupComponent = false;
-                artiePopupComponent = false;
-                changes = true;
-            }
-        } else if (nextState.artieHelpComponent){
-            if (currentStudent === null || currentExercise === null || nextProps.artieExercises.help === undefined ||
-                nextProps.artieExercises.help === null || nextProps.artieExercises.help.nextSteps === null){
-
-                artieHelpComponent = false;
-                changes = true;
-            }
-        }
-
-        // 5- Checks if we must show the emotional popup or not
-        if (!nextState.artieEmotionalPopupComponent && !artieHelpComponent && artieExercisesComponent){
-            // If we must show the help and there are any last answer, we show the help popup
-            if (nextProps.artieHelp !== null &&
-                nextProps.artieHelp.showHelpPopup &&
-                nextProps.artieHelp.lastHelpRequest === null){
-
-                artieLoginComponent = false;
-                artieStudentDataComponent = false;
-                artieExercisesComponent = false;
-                artieHelpComponent = false;
-                artieEmotionalPopupComponent = true;
-                artiePopupComponent = false;
-                changes = true;
-            } else if (nextProps.artieHelp !== null &&
-                        nextProps.artieHelp.showHelpPopup){
-
-                // If the must show the help and there are a last answer, we calculate the time before the last answer
-                const currentDate = new Date();
-                const lastAnswerDate = new Date(nextProps.artieHelp.lastHelpRequest);
-                const diffInMilliseconds = Math.abs(currentDate - lastAnswerDate);
-
-                // If the difference are over 2 minutes, we show the help popup component
-                if (diffInMilliseconds > TIME_TO_SHOW_HELP_POPUP) {
-                    artieLoginComponent = false;
-                    artieStudentDataComponent = false;
-                    artieExercisesComponent = false;
-                    artieHelpComponent = false;
-                    artieEmotionalPopupComponent = true;
-                    artiePopupComponent = false;
-                    changes = true;
-                }
-            }
-        } else if (nextState.artieEmotionalPopupComponent){
-            if (!nextProps.artieHelp.showHelpPopup) {
-                artieEmotionalPopupComponent = false;
-                changes = true;
-            }
-        }
-
-        // 6- Checks if we must show the popup component or not
-        if (!nextState.artiePopupComponent && !nextState.artieExercisesComponent &&
-            !nextState.artieEmotionalPopupComponent && !nextState.artieHelpComponent &&
-            !nextState.artieStudentDataComponent){
-            if ((currentStudent !== null &&
-                (currentStudent.competence === undefined || currentStudent.competence === 0)) ||
-                popupActivation) {
-
-                artieLoginComponent = false;
-                artieStudentDataComponent = false;
-                artieExercisesComponent = false;
-                artieHelpComponent = false;
-                artieEmotionalPopupComponent = false;
-                artiePopupComponent = true;
-                changes = true;
-
-            } else if (nextState.artiePopupComponent){
-                if ((currentStudent === null ||
-                    (currentStudent.competence !== undefined && currentStudent.competence !== 0)) && !popupActivation) {
-                    artiePopupComponent = false;
-                }
-            }
-        }
-
-        // Checks if we must do changes
-        if (changes){
-            this.setState({artieLoginComponent: artieLoginComponent,
-                artieStudentDataComponent: artieStudentDataComponent,
-                artieExercisesComponent: artieExercisesComponent,
-                artieHelpComponent: artieHelpComponent,
-                artieEmotionalPopupComponent: artieEmotionalPopupComponent,
-                artiePopupComponent: artiePopupComponent
-            });
-        }
-    }
 
     /**
      * Function to get the current student
@@ -470,6 +322,7 @@ class ArtieFlow extends React.Component {
         }
 
         // 6- Checks if the component must show the help popup or not
+        // ARTIE-TODO: lastHelpRequest > 2 minutes
         if (this.props.artieFlow.flowState === ARTIE_FLOW_EMOTIONAL_STATE){
             return (
                 <SplitTreatments names={[emotionalPopupFeatureName]}>
