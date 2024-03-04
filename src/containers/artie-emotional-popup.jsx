@@ -1,12 +1,18 @@
 import ArtieEmotionalPopupComponent from '../components/artie-help/artie-emotional-popup.jsx';
 import {artieShowHelpPopup, artieAnswerHelpPopup, artieEmotionalStateChangeHelpPopup} from '../reducers/artie-help.js';
 import {artieHelpReceived, artieLoadingHelp, artieResetSecondsHelpOpen} from '../reducers/artie-exercises.js';
+import {
+    artieChangeFlowState,
+    ARTIE_FLOW_WORKSPACE_STATE,
+    ARTIE_FLOW_HELP_POPUP_STATE
+} from '../reducers/artie-flow.js';
 import React from 'react';
 import bindAll from 'lodash.bindall';
 import {compose} from 'redux';
 import {injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
 import {sendBlockArtie, updateAnsweredNeedHelp} from '../lib/artie-api.js';
+import PropTypes from 'prop-types';
 
 class ArtieEmotionalPopup extends React.Component {
 
@@ -27,7 +33,8 @@ class ArtieEmotionalPopup extends React.Component {
         // 1- Loading help
         this.props.onArtieLoadingHelp(true);
 
-        if (this.props.artieHelp.id !== null){
+        // eslint-disable-next-line no-negated-condition
+        if (this.props.artieHelp.id !== null) {
 
             // 2.1- Automatic help request
             // We register the user option
@@ -37,10 +44,12 @@ class ArtieEmotionalPopup extends React.Component {
 
                 // We hide the popup once the user has been selected the desired option
                 this.props.onHideHelpPopup(this.props.artieHelp.id);
+                this.props.onArtieChangeFlowState(ARTIE_FLOW_WORKSPACE_STATE);
 
                 if (psd.solutionDistance !== null) {
                     // We show the help popup
                     this.props.onArtieHelpReceived(psd.solutionDistance, new Date());
+                    this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
                 }
 
                 this.props.onArtieLoadingHelp(false);
@@ -56,10 +65,12 @@ class ArtieEmotionalPopup extends React.Component {
 
                     // We hide the popup once the user has been selected the desired option
                     this.props.onHideHelpPopup(this.props.artieHelp.id);
+                    this.props.onArtieChangeFlowState(ARTIE_FLOW_WORKSPACE_STATE);
 
                     // If the response has a solution distance object
                     if (responseBodyObject !== null && responseBodyObject.solutionDistance !== null){
                         this.props.onArtieHelpReceived(responseBodyObject.solutionDistance);
+                        this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
                     }
 
                     // Stops the loading help
@@ -79,6 +90,7 @@ class ArtieEmotionalPopup extends React.Component {
         this.props.onAnswerHelpPopup(false, this.state.currentDateTime);
         // We hide the popup once the user has been selected the desired option
         this.props.onHideHelpPopup(this.props.artieHelp.id);
+        this.props.onArtieChangeFlowState(ARTIE_FLOW_WORKSPACE_STATE);
     }
 
     handleEmotionalStatusChanged (option) {
@@ -91,7 +103,8 @@ class ArtieEmotionalPopup extends React.Component {
                 onYesClick={this.handleAnswerYes}
                 onNoClick={this.handleAnswerNo}
                 onEmotionalStatusChanged={this.handleEmotionalStatusChanged}
-                emotionalStateChecked={this.props.artieHelp.emotionalState === null || this.props.artieHelp.emotionalState === 'neutral'}
+                emotionalStateChecked={this.props.artieHelp.emotionalState === null ||
+                    this.props.artieHelp.emotionalState === 'neutral'}
             />
         );
     }
@@ -110,8 +123,23 @@ const mapDispatchToProps = dispatch => ({
     onArtieHelpReceived: (help, date) => dispatch(artieHelpReceived(help, date)),
     onEmotionalStatusChanged: emotionalState => dispatch(artieEmotionalStateChangeHelpPopup(emotionalState)),
     onArtieLoadingHelp: loading => dispatch(artieLoadingHelp(loading)),
-    onArtieResetSecondsHelpOpen: () => dispatch(artieResetSecondsHelpOpen())
+    onArtieResetSecondsHelpOpen: () => dispatch(artieResetSecondsHelpOpen()),
+    onArtieChangeFlowState: state => dispatch(artieChangeFlowState(state))
 });
+
+ArtieEmotionalPopup.propTypes = {
+    artieHelp: PropTypes.object.isRequired,
+    artieExercises: PropTypes.object.isRequired,
+    artieLogin: PropTypes.object.isRequired,
+    sprites: PropTypes.object.isRequired,
+    onAnswerHelpPopup: PropTypes.func.isRequired,
+    onHideHelpPopup: PropTypes.func.isRequired,
+    onArtieHelpReceived: PropTypes.func.isRequired,
+    onEmotionalStatusChanged: PropTypes.func.isRequired,
+    onArtieLoadingHelp: PropTypes.func.isRequired,
+    onArtieResetSecondsHelpOpen: PropTypes.func.isRequired,
+    onArtieChangeFlowState: PropTypes.func.isRequired
+};
 
 export default compose(
     injectIntl,

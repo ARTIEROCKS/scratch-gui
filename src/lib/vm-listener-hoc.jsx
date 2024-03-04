@@ -15,6 +15,7 @@ import {showExtensionAlert} from '../reducers/alerts';
 import {updateMicIndicator} from '../reducers/mic-indicator';
 import {artieBlocksUpdated, artieHelpReceived, artieResetSecondsHelpOpen} from '../reducers/artie-exercises';
 import {artieShowHelpPopup} from '../reducers/artie-help';
+import {artieChangeFlowState, ARTIE_FLOW_HELP_POPUP_STATE} from '../reducers/artie-flow';
 import {sendBlockArtie} from '../lib/artie-api';
 
 /*
@@ -131,7 +132,9 @@ const vmListenerHOC = function (WrappedComponent) {
                         this.props.artieExercises.lastExerciseChange,null, null)
                         .then(responseBodyObject => {
                             if (responseBodyObject !== null && responseBodyObject.predictedNeedHelp !== null){
-                                this.props.onArtieShowHelpPopup(responseBodyObject.id, responseBodyObject.predictedNeedHelp);
+                                this.props.onArtieShowHelpPopup(responseBodyObject.id,
+                                    responseBodyObject.predictedNeedHelp);
+                                this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
                             }
                         });
 
@@ -163,6 +166,7 @@ const vmListenerHOC = function (WrappedComponent) {
                                 // We show the help popup
                                 this.props.onArtieShowHelpPopup(responseBodyObject.id,
                                     responseBodyObject.predictedNeedHelp);
+                                this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
                             }
                         });
                     if (this.props.artieExercises.secondsHelpOpen > 0) {
@@ -194,6 +198,7 @@ const vmListenerHOC = function (WrappedComponent) {
                                 // We show the help popup
                                 this.props.onArtieShowHelpPopup(responseBodyObject.id,
                                     responseBodyObject.predictedNeedHelp);
+                                this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
                             }
                         });
                     if (this.props.artieExercises.secondsHelpOpen > 0) {
@@ -255,7 +260,12 @@ const vmListenerHOC = function (WrappedComponent) {
         shouldUpdateProjectChanged: PropTypes.bool,
         username: PropTypes.string,
         vm: PropTypes.instanceOf(VM).isRequired,
-        projectTitle: PropTypes.string
+        projectTitle: PropTypes.string,
+        onArtieBlocksUpdated: PropTypes.func,
+        onArtieHelpReceived: PropTypes.func,
+        onArtieResetSecondsHelpOpen: PropTypes.func,
+        onArtieShowHelpPopup: PropTypes.func,
+        onArtieChangeFlowState: PropTypes.func
     };
     VMListener.defaultProps = {
         attachKeyboardEvents: true,
@@ -298,6 +308,7 @@ const vmListenerHOC = function (WrappedComponent) {
             dispatch(artieResetSecondsHelpOpen());
         },
         onArtieShowHelpPopup: (id, showHelpPopup) => dispatch(artieShowHelpPopup(id, showHelpPopup)),
+        onArtieChangeFlowState: state => dispatch(artieChangeFlowState(state)),
         onProjectRunStart: () => dispatch(setRunningState(true)),
         onProjectRunStop: () => dispatch(setRunningState(false)),
         onProjectChanged: () => dispatch(setProjectChanged()),

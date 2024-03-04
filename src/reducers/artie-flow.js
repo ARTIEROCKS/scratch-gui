@@ -3,6 +3,8 @@ const ARTIE_FLOW_STUDENT_DATA_STATE = 'scratch-gui/artie-flow/ARTIE_FLOW_STUDENT
 const ARTIE_FLOW_EXERCISES_STATE = 'scratch-gui/artie-flow/ARTIE_FLOW_EXERCISES_STATE';
 const ARTIE_FLOW_EXERCISE_STATEMENT_STATE = 'scratch-gui/artie-flow/ARTIE_FLOW_EXERCISE_STATEMENT_STATE';
 const ARTIE_FLOW_WORKSPACE_STATE = 'scratch-gui/artie-flow/ARTIE_FLOW_WORKSPACE_STATE';
+const ARTIE_FLOW_EMOTIONAL_STATE = 'scratch-gui/artie-flow/ARTIE_FLOW_EMOTIONAL_STATE';
+const ARTIE_FLOW_HELP_POPUP_STATE = 'scratch-gui/artie-flow/ARTIE_FLOW_HELP_POPUP_STATE';
 
 
 const initialState = {
@@ -33,6 +35,14 @@ const reducer = function (state, action) {
         return Object.assign({}, state, {
             flowState: action.type
         });
+    case ARTIE_FLOW_EMOTIONAL_STATE:
+        return Object.assign({}, state, {
+            flowState: action.type
+        });
+    case ARTIE_FLOW_HELP_POPUP_STATE:
+        return Object.assign({}, state, {
+            flowState: action.type
+        });
     default:
         return state;
     }
@@ -50,5 +60,7 @@ export {
     ARTIE_FLOW_STUDENT_DATA_STATE,
     ARTIE_FLOW_EXERCISES_STATE,
     ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
-    ARTIE_FLOW_WORKSPACE_STATE
+    ARTIE_FLOW_WORKSPACE_STATE,
+    ARTIE_FLOW_EMOTIONAL_STATE,
+    ARTIE_FLOW_HELP_POPUP_STATE
 };

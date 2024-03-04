@@ -41,6 +41,8 @@ import {
     ARTIE_FLOW_EXERCISES_STATE,
     ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
     ARTIE_FLOW_STUDENT_DATA_STATE,
+    ARTIE_FLOW_EMOTIONAL_STATE,
+    ARTIE_FLOW_HELP_POPUP_STATE,
     artieChangeFlowState
 } from '../reducers/artie-flow';
 import {changeArtieWebcamRecording} from '../reducers/artie-webcam';
@@ -409,7 +411,9 @@ class ArtieFlow extends React.Component {
     renderArtieEmotionalPopupFeatureFlag (treatmentWithConfig) {
         
         const {treatment, _config} = treatmentWithConfig;
-        this.setState({flagEmotionalPopup: treatment === 'on'});
+        if (treatment === 'on'){
+            return (<ArtieEmotionalPopup />);
+        }
     }
     // ------------------------------------
 
@@ -447,7 +451,7 @@ class ArtieFlow extends React.Component {
         }
 
         // 4- Checks if the component must show the help component or not
-        if (this.state.artieHelpComponent){
+        if (this.props.artieFlow.flowState === ARTIE_FLOW_HELP_POPUP_STATE){
             return (<ArtieHelp
                 onRequestClose={this.props.onArtieClearHelp}
                 artieLogin={this.props.artieLogin}
@@ -466,7 +470,7 @@ class ArtieFlow extends React.Component {
         }
 
         // 6- Checks if the component must show the help popup or not
-        if (this.state.artieEmotionalPopupComponent){
+        if (this.props.artieFlow.flowState === ARTIE_FLOW_EMOTIONAL_STATE){
             return (
                 <SplitTreatments names={[emotionalPopupFeatureName]}>
                     {({treatments, isReady}) => (isReady ?
@@ -535,6 +539,7 @@ ArtieFlow.propTypes = {
     onArtiePopupStatement: PropTypes.func.isRequired,
     onArtieSetExercises: PropTypes.func.isRequired,
     onArtieSetFinishedExercises: PropTypes.func.isRequired,
+    onArtieClearHelp: PropTypes.func.isRequired,
 
     // Flow functions
     onArtieStateFlowChange: PropTypes.func.isRequired

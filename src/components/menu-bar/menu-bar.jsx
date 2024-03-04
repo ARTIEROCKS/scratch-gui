@@ -118,7 +118,9 @@ import {
     ARTIE_FLOW_LOGIN_STATE,
     ARTIE_FLOW_EXERCISES_STATE,
     ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
-    artieChangeFlowState
+    ARTIE_FLOW_EMOTIONAL_STATE,
+    artieChangeFlowState,
+    ARTIE_FLOW_HELP_POPUP_STATE
 } from '../../reducers/artie-flow.js';
 import ArtieFlow from '../../containers/artie-flow.jsx';
 import ArtieWebcamRecorder from '../../containers/artie-webcam-recorder.jsx';
@@ -474,6 +476,7 @@ class MenuBar extends React.Component {
             const fOnArtieLoadingExercise = this.props.onArtieLoadingExercise;
             const fOnArtieExerciseSentPopupOpen = this.props.onArtieExerciseSentPopupOpen;
             const fOnArtieResetSecondsHelpOpen = this.props.onArtieResetSecondsHelpOpen;
+            const fOnArtieChangeFlowState = this.props.onArtieChangeFlowState;
             const emotionalState = this.props.artieHelp.emotionalState;
 
             reader.readAsDataURL(content);
@@ -488,6 +491,7 @@ class MenuBar extends React.Component {
                             // Stops the loading help and shows the popup
                             fOnArtieLoadingExercise(false);
                             fOnArtieExerciseSentPopupOpen(true);
+                            fOnArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
                         });
                     if (secondsHelpOpen > 0) {
                         fOnArtieResetSecondsHelpOpen();
@@ -517,6 +521,7 @@ class MenuBar extends React.Component {
     }
     handleClickRequestEmotionalHelp (){
         this.props.onArtieShowHelpPopup(null, true);
+        this.props.onArtieChangeFlowState(ARTIE_FLOW_EMOTIONAL_STATE);
     }
     render () {
         const saveNowMessage = (
