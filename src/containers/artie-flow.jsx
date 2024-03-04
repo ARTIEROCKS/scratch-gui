@@ -393,6 +393,7 @@ ArtieFlow.propTypes = {
     onArtieSetExercises: PropTypes.func.isRequired,
     onArtieSetFinishedExercises: PropTypes.func.isRequired,
     onArtieClearHelp: PropTypes.func.isRequired,
+    onArtieSetStudents: PropTypes.func.isRequired,
 
     // Flow functions
     onArtieStateFlowChange: PropTypes.func.isRequired
