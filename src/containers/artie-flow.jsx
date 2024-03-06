@@ -10,9 +10,6 @@ import ArtieHelp from './artie-help.jsx';
 import ArtieEmotionalPopup from './artie-emotional-popup.jsx';
 import ArtieExercisePopup from './artie-exercises-popup.jsx';
 
-import {SplitSdk} from '@splitsoftware/splitio-react';
-import {sendBlockArtie} from '../lib/artie-api.js';
-
 import {
     artieError,
     artieLogged,

@@ -1307,7 +1307,10 @@ MenuBar.propTypes = {
     onArtieClearExercises: PropTypes.func.isRequired,
     onArtieLoadingExercise: PropTypes.func.isRequired,
     onArtiePopupStatement: PropTypes.func.isRequired,
-    onArtieEvaluationStop: PropTypes.func.isRequired
+    onArtieEvaluationStop: PropTypes.func.isRequired,
+    onArtieHelpReceived: PropTypes.func.isRequired,
+    onArtieLoadingHelp: PropTypes.func.isRequired,
+    onArtieResetSecondsHelpOpen: PropTypes.func.isRequired
 };
 
 MenuBar.defaultProps = {
