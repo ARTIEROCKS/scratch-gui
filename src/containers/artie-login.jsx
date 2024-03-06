@@ -19,7 +19,7 @@ class ArtieLogin extends React.Component {
             });
         }
 
-        if(this.state.students !== newProps.artieLogin.students){
+        if (this.state.students !== newProps.artieLogin.students){
             this.setState({
                 students: newProps.artieLogin.students
             });
@@ -33,7 +33,7 @@ class ArtieLogin extends React.Component {
     }
 
     render () {
-        return(
+        return (
             <ArtieLoginComponent
                 onOk={this.props.onOk}
                 onCancel={this.props.onCancel}
@@ -55,8 +55,7 @@ ArtieLogin.propTypes = {
     onStudentChange: PropTypes.func,
     onCancel: PropTypes.func.isRequired,
     onOk: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired,
-    artieLogin: PropTypes.object
-}
+    title: PropTypes.string.isRequired
+};
 
 export default ArtieLogin;

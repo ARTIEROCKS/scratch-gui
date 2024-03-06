@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from '../../containers/modal.jsx';
 import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
-import styles from './artie-help-popup.css';
+import styles from './artie-emotional-popup.css';
 import Box from '../box/box.jsx';
 import PropTypes from 'prop-types';
 import IconText from '../icon-text/icon-text.jsx';
@@ -44,7 +44,7 @@ const messages = defineMessages({
     }
 });
 
-const ArtieHelpPopupComponent = props => (
+const ArtieEmotionalPopupComponent = props => (
     <Modal
         className={styles.modalContent}
         onRequestClose={props.onNoClick}
@@ -171,11 +171,11 @@ const ArtieHelpPopupComponent = props => (
     </Modal>
 );
 
-ArtieHelpPopupComponent.propTypes = {
+ArtieEmotionalPopupComponent.propTypes = {
     onYesClick: PropTypes.func,
     onNoClick: PropTypes.func.isRequired,
     onEmotionalStatusChanged: PropTypes.func.isRequired,
     emotionalStateChecked: PropTypes.bool.isRequired
 };
 
-export default injectIntl(ArtieHelpPopupComponent);
+export default injectIntl(ArtieEmotionalPopupComponent);
