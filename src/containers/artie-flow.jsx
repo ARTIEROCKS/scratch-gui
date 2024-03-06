@@ -46,6 +46,7 @@ import {
 import {changeArtieWebcamRecording} from '../reducers/artie-webcam';
 import {compose} from 'redux';
 import {injectIntl} from 'react-intl';
+import {SplitSdk} from '@splitsoftware/splitio-react';
 
 
 // --- Login Component variables
@@ -116,10 +117,23 @@ class ArtieFlow extends React.Component {
         );
     }
 
-    // -----1- Generic Component Handlers---------
+    // -----0- Generic Component Handlers---------
     handleLogout (){
         this.props.onArtieLogout();
         this.props.onArtieStateFlowChange(ARTIE_FLOW_LOGIN_STATE);
+    }
+
+    handleSplitIO (userId, featureFlag){
+        const splitFactory = SplitSdk({
+            core: {
+                authorizationKey: 'aabooomno9lpi60pp8rp29i3jdacfo0ve40',
+                key: '1c3b0c90-9d15-11ee-9115-1afcd9bd52af'
+            }
+        });
+        const splitClient = splitFactory.client(userId);
+        splitClient.on(splitClient.Event.SDK_READY, () => {
+            this.props.onArtieFeatureFlagLoaded('Emotional_Popup', splitClient.getTreatment(featureFlag));
+        });
     }
 
     // -----1- Login Component Handlers---------
@@ -151,6 +165,9 @@ class ArtieFlow extends React.Component {
             if (studentLogin !== ''){
                 const tempStudent = this.props.artieLogin.students.filter(s => s.id === studentLogin)[0];
                 this.props.onArtieSetCurrentStudent(tempStudent);
+
+                // We get the feature flag
+                this.handleSplitIO(tempStudent.id, 'Emotional_Popup');
 
                 // Once the student has been selected, we start recording
                 this.props.onChangeArtieWebcamRecording(true);
@@ -307,10 +324,7 @@ class ArtieFlow extends React.Component {
         // 6- Checks if the component must show the help popup or not
         // ARTIE-TODO: lastHelpRequest > 2 minutes
         if (this.props.artieFlow.flowState === ARTIE_FLOW_EMOTIONAL_STATE){
-            // We check if the feature is enabled
-            if (this.props.artieEmotionalPopupFeatureFlag === 'on'){
-                return (<ArtieEmotionalPopup />);
-            }
+            return (<ArtieEmotionalPopup />);
         }
 
         return null;
@@ -360,7 +374,6 @@ ArtieFlow.propTypes = {
     }).isRequired,
 
     artieLogin: PropTypes.object.isRequired,
-    artieEmotionalPopupFeatureFlag: PropTypes.string.isRequired,
 
     onArtieLogout: PropTypes.func.isRequired,
     onArtieError: PropTypes.func.isRequired,
@@ -379,7 +392,10 @@ ArtieFlow.propTypes = {
     onArtieSetStudents: PropTypes.func.isRequired,
 
     // Flow functions
-    onArtieStateFlowChange: PropTypes.func.isRequired
+    onArtieStateFlowChange: PropTypes.func.isRequired,
+
+    // Split IO Functions
+    onArtieFeatureFlagLoaded: PropTypes.func
 };
 
 ArtieLogin.propTypes = {

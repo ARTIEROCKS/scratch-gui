@@ -125,7 +125,6 @@ import {
 import ArtieFlow from '../../containers/artie-flow.jsx';
 import ArtieWebcamRecorder from '../../containers/artie-webcam-recorder.jsx';
 import {ArtieExerciseStatementTooltip} from '../artie-exercises/artie-exercises-statement.jsx';
-import {SplitSdk} from '@splitsoftware/splitio-react';
 
 import html2canvas from 'html2canvas';
 import Spinner from '../spinner/spinner.jsx';
@@ -209,7 +208,6 @@ AboutButton.propTypes = {
 let exerciseId = null;
 
 
-
 class MenuBar extends React.Component {
     constructor (props) {
         super(props);
@@ -232,21 +230,12 @@ class MenuBar extends React.Component {
             'handleClickFinishExercise',
             'handleStopEvaluation',
             'handleShowPopupStatement',
-            'handleClickRequestEmotionalHelp'
+            'handleClickRequestEmotionalHelp',
+            'handleArtieFeatureFlagLoaded'
         ]);
 
-        // Getting the SPLIT IO Flags
-        this.splitFactory = SplitSdk({
-            core: {
-                authorizationKey: 'aabooomno9lpi60pp8rp29i3jdacfo0ve40',
-                key: '1c3b0c90-9d15-11ee-9115-1afcd9bd52af'
-            }
-        });
+        // Setting the default SPLIT IO Flags values
         this.artieEmotionalPopupFeature = '';
-        this.splitClient = this.splitFactory.client('ub088dbd0-9d14-11ee-bead-7618ee71d4b2');
-        this.splitClient.on(this.splitClient.Event.SDK_READY, () => {
-            this.artieEmotionalPopupFeature = this.splitClient.getTreatment('Emotional_Popup');
-        });
     }
     componentDidMount () {
         document.addEventListener('keydown', this.handleKeyPress);
@@ -553,6 +542,11 @@ class MenuBar extends React.Component {
             if (this.props.artieExercises.secondsHelpOpen > 0) {
                 this.props.onArtieResetSecondsHelpOpen();
             }
+        }
+    }
+    handleArtieFeatureFlagLoaded (featureFlag, value){
+        if (featureFlag === 'Emotional_Popup') {
+            this.artieEmotionalPopupFeature = value;
         }
     }
     render () {
@@ -1209,7 +1203,7 @@ class MenuBar extends React.Component {
 
                 {aboutButton}
                 
-                <ArtieFlow artieEmotionalPopupFeatureFlag={this.artieEmotionalPopupFeature} />
+                <ArtieFlow onArtieFeatureFlagLoaded={this.handleArtieFeatureFlagLoaded} />
                 <ArtieWebcamRecorder />
             </Box>
         );
