@@ -10,7 +10,8 @@ import ArtieHelp from './artie-help.jsx';
 import ArtieEmotionalPopup from './artie-emotional-popup.jsx';
 import ArtieExercisePopup from './artie-exercises-popup.jsx';
 
-import {SplitTreatments} from '@splitsoftware/splitio-react';
+import {SplitSdk} from '@splitsoftware/splitio-react';
+import {sendBlockArtie} from '../lib/artie-api.js';
 
 import {
     artieError,
@@ -56,15 +57,11 @@ let passwordLogin = null;
 let studentLogin = null;
 let exerciseId = null;
 
-// --- Split IO variables
-const emotionalPopupFeatureName = 'Emotional_Popup';
-
 class ArtieFlow extends React.Component {
 
     constructor (props) {
         super(props);
         bindAll(this, [
-            'flow',
             'getCurrentStudent',
             'getCurrentExercise',
             'getPopupActivation',
@@ -78,7 +75,6 @@ class ArtieFlow extends React.Component {
             'handleLogout'
         ]);
     }
-
 
     /**
      * Function to get the current student
@@ -259,16 +255,6 @@ class ArtieFlow extends React.Component {
     }
     // ------------------------------------
 
-    // -----3- Flag Handlers---------
-    renderArtieEmotionalPopupFeatureFlag (treatmentWithConfig) {
-        
-        const {treatment, _config} = treatmentWithConfig;
-        if (treatment === 'on'){
-            return (<ArtieEmotionalPopup />);
-        }
-    }
-    // ------------------------------------
-
     render (){
 
         // 1- Checks if the component must show the login component or not
@@ -324,13 +310,10 @@ class ArtieFlow extends React.Component {
         // 6- Checks if the component must show the help popup or not
         // ARTIE-TODO: lastHelpRequest > 2 minutes
         if (this.props.artieFlow.flowState === ARTIE_FLOW_EMOTIONAL_STATE){
-            return (
-                <SplitTreatments names={[emotionalPopupFeatureName]}>
-                    {({treatments, isReady}) => (isReady ?
-                        this.renderArtieEmotionalPopupFeatureFlag(treatments[emotionalPopupFeatureName]) :
-                        null)}
-                </SplitTreatments>
-            );
+            // We check if the feature is enabled
+            if (this.props.artieEmotionalPopupFeatureFlag === 'on'){
+                return (<ArtieEmotionalPopup />);
+            }
         }
 
         return null;
@@ -342,7 +325,8 @@ const mapStateToProps = state => ({
     artieLogin: state.scratchGui.artieLogin,
     artieExercises: state.scratchGui.artieExercises,
     artieHelp: state.scratchGui.artieHelp,
-    artieFlow: state.scratchGui.artieFlow
+    artieFlow: state.scratchGui.artieFlow,
+    sprites: state.scratchGui.targets.sprites
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -379,6 +363,8 @@ ArtieFlow.propTypes = {
     }).isRequired,
 
     artieLogin: PropTypes.object.isRequired,
+    artieEmotionalPopupFeatureFlag: PropTypes.string.isRequired,
+
     onArtieLogout: PropTypes.func.isRequired,
     onArtieError: PropTypes.func.isRequired,
     onDeactivateArtieLogin: PropTypes.func.isRequired,
@@ -403,7 +389,7 @@ ArtieLogin.propTypes = {
     onUserChange: PropTypes.func.isRequired,
     onPasswordChange: PropTypes.func.isRequired,
     onStudentChange: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired, // Add this line
+    onCancel: PropTypes.func.isRequired,
     onOk: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     artieLogin: PropTypes.object.isRequired

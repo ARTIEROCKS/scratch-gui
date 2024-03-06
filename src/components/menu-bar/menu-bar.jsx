@@ -125,10 +125,10 @@ import {
 import ArtieFlow from '../../containers/artie-flow.jsx';
 import ArtieWebcamRecorder from '../../containers/artie-webcam-recorder.jsx';
 import {ArtieExerciseStatementTooltip} from '../artie-exercises/artie-exercises-statement.jsx';
+import {SplitSdk} from '@splitsoftware/splitio-react';
 
 import html2canvas from 'html2canvas';
 import Spinner from '../spinner/spinner.jsx';
-import { SplitFactoryProvider } from '@splitsoftware/splitio-react';
 
 const ariaMessages = defineMessages({
     tutorials: {
@@ -208,13 +208,7 @@ AboutButton.propTypes = {
 // eslint-disable-next-line no-unused-vars
 let exerciseId = null;
 
-// SPLIT_IO Config Object
-const SPLIT_IO_CONFIG = {
-    core: {
-        authorizationKey: 'aabooomno9lpi60pp8rp29i3jdacfo0ve40',
-        key: '1c3b0c90-9d15-11ee-9115-1afcd9bd52af'
-    }
-};
+
 
 class MenuBar extends React.Component {
     constructor (props) {
@@ -240,6 +234,19 @@ class MenuBar extends React.Component {
             'handleShowPopupStatement',
             'handleClickRequestEmotionalHelp'
         ]);
+
+        // Getting the SPLIT IO Flags
+        this.splitFactory = SplitSdk({
+            core: {
+                authorizationKey: 'aabooomno9lpi60pp8rp29i3jdacfo0ve40',
+                key: '1c3b0c90-9d15-11ee-9115-1afcd9bd52af'
+            }
+        });
+        this.artieEmotionalPopupFeature = '';
+        this.splitClient = this.splitFactory.client('ub088dbd0-9d14-11ee-bead-7618ee71d4b2');
+        this.splitClient.on(this.splitClient.Event.SDK_READY, () => {
+            this.artieEmotionalPopupFeature = this.splitClient.getTreatment('Emotional_Popup');
+        });
     }
     componentDidMount () {
         document.addEventListener('keydown', this.handleKeyPress);
@@ -521,7 +528,32 @@ class MenuBar extends React.Component {
     }
     handleClickRequestEmotionalHelp (){
         this.props.onArtieShowHelpPopup(null, true);
-        this.props.onArtieChangeFlowState(ARTIE_FLOW_EMOTIONAL_STATE);
+        
+        if (this.artieEmotionalPopupFeature === 'on') {
+            // We show the emotional just in case the flag is active
+            this.props.onArtieChangeFlowState(ARTIE_FLOW_EMOTIONAL_STATE);
+        } else {
+            
+            // In case the the flag is off we just show the help popup
+            sendBlockArtie(this.props.artieLogin.currentStudent, this.props.sprites,
+                this.props.artieExercises.currentExercise, true, this.props.artieHelp.emotionalState,
+                this.props.artieExercises.secondsHelpOpen, false, this.props.artieLogin.lastLogin,
+                this.props.artieExercises.lastExerciseChange, null, null)
+                .then(responseBodyObject => {
+    
+                    // If the response has a solution distance object
+                    if (responseBodyObject !== null && responseBodyObject.solutionDistance !== null){
+                        this.props.onArtieHelpReceived(responseBodyObject.solutionDistance);
+                        this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
+                    }
+    
+                    // Stops the loading help
+                    this.props.onArtieLoadingHelp(false);
+                });
+            if (this.props.artieExercises.secondsHelpOpen > 0) {
+                this.props.onArtieResetSecondsHelpOpen();
+            }
+        }
     }
     render () {
         const saveNowMessage = (
@@ -1176,10 +1208,8 @@ class MenuBar extends React.Component {
                 </div>
 
                 {aboutButton}
-
-                <SplitFactoryProvider config={SPLIT_IO_CONFIG} >
-                    <ArtieFlow />
-                </SplitFactoryProvider>
+                
+                <ArtieFlow artieEmotionalPopupFeatureFlag={this.artieEmotionalPopupFeature} />
                 <ArtieWebcamRecorder />
             </Box>
         );
@@ -1270,7 +1300,14 @@ MenuBar.propTypes = {
     username: PropTypes.string,
     userOwnsProject: PropTypes.bool,
     vm: PropTypes.instanceOf(VM).isRequired,
-    onActivateArtieExercises: PropTypes.func.isRequired
+    onActivateArtieExercises: PropTypes.func.isRequired,
+    onArtieShowHelpPopup: PropTypes.func.isRequired,
+    onArtieChangeFlowState: PropTypes.func.isRequired,
+    onArtieLogout: PropTypes.func.isRequired,
+    onArtieClearExercises: PropTypes.func.isRequired,
+    onArtieLoadingExercise: PropTypes.func.isRequired,
+    onArtiePopupStatement: PropTypes.func.isRequired,
+    onArtieEvaluationStop: PropTypes.func.isRequired
 };
 
 MenuBar.defaultProps = {
