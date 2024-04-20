@@ -30,7 +30,7 @@ class ArtieLoginComponent extends React.Component {
             const students = [{id: '', value: ''}];
             newProps.artieLogin.students.forEach(student => {
 
-                if (student.studentNumber !== undefined && student.studentNumber !== null &&
+                if (typeof student.studentNumber !== 'undefined' && student.studentNumber !== null &&
                     student.studentNumber !== ''){
                     students.push({id: student.id, value: student.studentNumber});
                 } else {
@@ -53,7 +53,7 @@ class ArtieLoginComponent extends React.Component {
     render (){
 
         // eslint-disable-next-line max-len
-        if (this.props.artieLogin === null || this.props.artieLogin === undefined || this.props.artieLogin.user === null ||
+        if (this.props.artieLogin === null || typeof this.props.artieLogin === 'undefined' || this.props.artieLogin.user === null ||
             (this.props.artieLogin.user.role === 0 && this.props.artieLogin.currentStudent === null) ||
             this.props.artieLogin.active){
             return (
@@ -103,7 +103,7 @@ class ArtieLoginComponent extends React.Component {
                                 />
                             </label>
                         </Box>
-                        {this.state.user !== undefined && this.state.user !== null ?
+                        {typeof this.state.user !== 'undefined' && this.state.user !== null ?
                             <Box>
                                 <label>
                                     <FormattedMessage
@@ -156,6 +156,12 @@ ArtieLoginComponent.propTypes = {
     onUserChange: PropTypes.func,
     onPasswordChange: PropTypes.func,
     onStudentChange: PropTypes.func,
+    onOk: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired
 };
+
+ArtieLoginComponent.propTypes = {
+    artieLogin: PropTypes.object // Add prop validation for 'artieLogin'
+};
+
 export default ArtieLoginComponent;

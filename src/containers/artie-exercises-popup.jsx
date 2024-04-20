@@ -17,6 +17,11 @@ import {
     activateArtieExercises
 } from '../reducers/artie-exercises';
 import {artieSetCurrentStudent} from '../reducers/artie-login';
+import {
+    artieChangeFlowState,
+    ARTIE_FLOW_WORKSPACE_STATE,
+    ARTIE_FLOW_EXERCISES_STATE
+} from '../reducers/artie-flow.js';
 
 const statementMessages = defineMessages({
     popupModalTitle: {
@@ -328,6 +333,7 @@ class ArtieExercisePopup extends React.Component {
         this.props.onArtieSetExercises(exercises);
         this.props.onArtieEvaluationStop(false);
         this.props.onArtieSetCurrentExercise(null, null);
+        this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISES_STATE);
     }
 
     handleEvaluationStopCancelClick (){
@@ -337,7 +343,7 @@ class ArtieExercisePopup extends React.Component {
     handleCongratulationsCloseClick (){
 
         // Checks if the exercise is an evaluation and if the distance is 0 we show the next exercise
-        if (this.props.artieExercises !== undefined && this.props.artieExercises !== null &&
+        if (typeof this.props.artieExercises !== 'undefined' && this.props.artieExercises !== null &&
            this.props.artieExercises.currentExercise !== null &&
             this.props.artieExercises.currentExercise.evaluation && this.props.artieExercises.help !== null &&
             this.props.artieExercises.help.totalDistance === 0){
@@ -388,11 +394,13 @@ class ArtieExercisePopup extends React.Component {
             // If it's not an evaluation, but the distance is 0, we show the popup with the exercises.
             this.props.onArtieClearHelp();
             this.props.onArtieActivateExercises();
+            this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISES_STATE);
         }
     }
 
     handleStatementCloseClick (){
         this.props.onArtiePopupStatement(false);
+        this.props.onArtieChangeFlowState(ARTIE_FLOW_WORKSPACE_STATE);
     }
 
     render () {
@@ -479,7 +487,8 @@ ArtieExercisePopup.propTypes = {
     onArtieClearHelp: PropTypes.func,
     onArtiePopupStatement: PropTypes.func,
     onArtiePopupEvaluation: PropTypes.func,
-    onArtieEvaluationStop: PropTypes.func
+    onArtieEvaluationStop: PropTypes.func,
+    onArtieChangeFlowState: PropTypes.func
 };
 
 const mapStateToProps = state => ({
@@ -498,8 +507,26 @@ const mapDispatchToProps = dispatch => ({
     onArtieSetFinishedExercises: finishedExercises => dispatch(artieSetFinishedExercises(finishedExercises)),
     onArtieClearHelp: () => dispatch(artieClearHelp(new Date())),
     onArtiePopupStatement: active => dispatch(artiePopupStatement(active)),
-    onArtieActivateExercises: () => dispatch(activateArtieExercises())
+    onArtieActivateExercises: () => dispatch(activateArtieExercises()),
+    onArtieChangeFlowState: state => dispatch(artieChangeFlowState(state))
 });
+
+ArtieExercisePopup.propTypes = {
+    artieExercises: PropTypes.object.isRequired,
+    artieLogin: PropTypes.object.isRequired,
+    onCloseSentSolution: PropTypes.func.isRequired,
+    onCloseSentExercise: PropTypes.func.isRequired,
+    onArtieSetCurrentExercise: PropTypes.func.isRequired,
+    onArtiePopupEvaluation: PropTypes.func.isRequired,
+    onArtieEvaluationStop: PropTypes.func.isRequired,
+    onArtieSetCurrentStudent: PropTypes.func.isRequired,
+    onArtieSetExercises: PropTypes.func.isRequired,
+    onArtieSetFinishedExercises: PropTypes.func.isRequired,
+    onArtieClearHelp: PropTypes.func.isRequired,
+    onArtiePopupStatement: PropTypes.func.isRequired,
+    onArtieActivateExercises: PropTypes.func.isRequired,
+    onArtieChangeFlowState: PropTypes.func.isRequired
+};
 
 export default compose(
     injectIntl,

@@ -37,7 +37,7 @@ class ArtieExerciseStatementContent extends React.Component {
                 afterHide={this.setHide}
                 afterShow={this.setShow}
                 className={classNames(
-                    styles.artieExercisesStatement,
+                    styles.artieFlowExercisesStatement,
                     this.props.className,
                     {
                         [styles.show]: (this.state.isShowing),
