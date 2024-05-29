@@ -69,7 +69,9 @@ const initialEvaluationMessages = defineMessages({
         id: 'gui.artie.evaluation.welcome'
     },
     message: {
+        // eslint-disable-next-line max-len
         defaultMessage: "Welcome!In first place we will check your knowledge about Scratch! Let's see if you are a Padawan, Jedi or Master Jedi in Scratch.",
+        // eslint-disable-next-line max-len
         description: "Welcome!In first place we will check your knowledge about Scratch! Let's see if you are a Padawan, Jedi or Master Jedi in Scratch.",
         id: 'gui.artie.evaluation.intro'
     }
@@ -225,7 +227,7 @@ class ArtieExercisePopup extends React.Component {
     }
 
     getCurrentStudent (login){
-        if (login !== undefined && login !== null && login.currentStudent !== undefined &&
+        if (login !== 'undefined' && login !== null && login.currentStudent !== 'undefined' &&
             login.currentStudent !== null){
             return login.currentStudent;
         }
@@ -236,22 +238,22 @@ class ArtieExercisePopup extends React.Component {
     // Function to determine the type of popup to show
     popupType (login, exercises){
 
-        if (exercises !== undefined && exercises !== null && exercises.evaluationStop){
+        if (exercises !== 'undefined' && exercises !== null && exercises.evaluationStop){
             return 'evaluationStop';
-        } else if (login !== undefined && login !== null && login.currentStudent !== undefined &&
+        } else if (login !== 'undefined' && login !== null && login.currentStudent !== 'undefined' &&
             login.currentStudent !== null &&
-            (login.currentStudent.competence === undefined || login.currentStudent.competence === 0) &&
-            (exercises === undefined || exercises === null || exercises.currentExercise === null)) {
+            (login.currentStudent.competence === 'undefined' || login.currentStudent.competence === 0) &&
+            (exercises === 'undefined' || exercises === null || exercises.currentExercise === null)) {
             return 'initialEvaluation';
-        } else if (exercises !== undefined && exercises !== null && exercises.popupEvaluation){
+        } else if (exercises !== 'undefined' && exercises !== null && exercises.popupEvaluation){
             return 'evaluation';
-        } else if (exercises !== undefined && exercises !== null && exercises.popupExercise){
+        } else if (exercises !== 'undefined' && exercises !== null && exercises.popupExercise){
             return 'exercise';
-        } else if (exercises !== undefined && exercises !== null && exercises.popupStatement){
+        } else if (exercises !== 'undefined' && exercises !== null && exercises.popupStatement){
             return 'statement';
-        } else if (exercises !== undefined && exercises !== null && exercises.popupSolution){
+        } else if (exercises !== 'undefined' && exercises !== null && exercises.popupSolution){
             return 'solution';
-        } else if (exercises !== undefined && exercises.help !== null && exercises.help.totalDistance === 0){
+        } else if (exercises !== 'undefined' && exercises.help !== null && exercises.help.totalDistance === 0){
             return 'congratulations';
         }
         return null;
@@ -263,7 +265,7 @@ class ArtieExercisePopup extends React.Component {
         let nextExercise = null;
 
         // 1- If the current exercise is null or undefined, we take the first exercise
-        if ((currentExercise === undefined || currentExercise === null) && exercises.length > 0){
+        if ((currentExercise === 'undefined' || currentExercise === null) && exercises.length > 0){
             // Setting the current exercise
             nextExercise = exercises[0];
         } else {
