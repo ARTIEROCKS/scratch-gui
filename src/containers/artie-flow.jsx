@@ -174,6 +174,11 @@ class ArtieFlow extends React.Component {
 
                 // If the student does not have the age, gender or mother tongue, we show the student data component
                 if (tempStudent.age === 0 || tempStudent.gender === 0 || tempStudent.motherTongue === 0){
+                    // Get the evaluation exercises
+                    getArtieExercises(userLogin, passwordLogin, true)
+                        .then(exercises => {
+                            this.props.onArtieSetExercises(exercises);
+                        });
                     // FLOW Changes to show the student data component
                     this.props.onArtieStateFlowChange(ARTIE_FLOW_STUDENT_DATA_STATE);
                 } else if (typeof tempStudent.competence !== 'undefined' && tempStudent.competence !== null &&
