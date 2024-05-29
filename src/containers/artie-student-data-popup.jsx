@@ -14,6 +14,10 @@ import {
     artieChangeFlowState
 } from '../reducers/artie-flow';
 
+const defaultGender = 1;
+const defaultMotherTongue = 2;
+const defaultAge = 1;
+
 const gender = defineMessages({
     boy: {
         defaultMessage: 'Boy',
@@ -47,12 +51,12 @@ class ArtieStudentDataPopup extends React.Component {
         super(props);
         
         const studentGender = (this.props.student !== null && typeof this.props.student.gender !== 'undefined' &&
-            this.props.student.gender > 0 ? this.props.student.gender : 1);
+            this.props.student.gender > 0 ? this.props.student.gender : defaultGender);
         const studentMotherTongue = (this.props.student !== null &&
             typeof this.props.student.motherTongue !== 'undefined' &&
-            this.props.student.motherTongue > 0 ? this.props.student.motherTongue : 2);
+            this.props.student.motherTongue > 0 ? this.props.student.motherTongue : defaultMotherTongue);
         const studentAge = (this.props.student !== null && typeof this.props.student.age !== 'undefined' &&
-            this.props.student.age > 0 ? this.props.student.age : 1);
+            this.props.student.age > 0 ? this.props.student.age : defaultAge);
 
         bindAll(this, [
             'handleOnGenderChange',
@@ -85,6 +89,11 @@ class ArtieStudentDataPopup extends React.Component {
     }
 
     handleOnOkClick (){
+
+        this.studentGender = this.studentGender ?? defaultGender;
+        this.studentMotherTongue = this.studentMotherTongue ?? defaultMotherTongue;
+        this.studentAge = this.studentAge ?? defaultAge;
+
         if (this.studentGender !== null || this.studentMotherTongue !== null) {
             updateStudentData(this.props.student.id, this.studentGender, this.studentMotherTongue, this.studentAge)
                 .then(() => {
