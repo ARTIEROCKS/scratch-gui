@@ -533,7 +533,11 @@ class MenuBar extends React.Component {
                     // If the response has a solution distance object
                     if (responseBodyObject !== null && responseBodyObject.solutionDistance !== null){
                         this.props.onArtieHelpReceived(responseBodyObject.solutionDistance);
-                        this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
+                        if (responseBodyObject.solutionDistance.totalDistance === 0){
+                            this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
+                        } else {
+                            this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
+                        }
                     }
     
                     // Stops the loading help

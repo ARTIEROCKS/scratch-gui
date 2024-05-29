@@ -4,7 +4,8 @@ import {artieHelpReceived, artieLoadingHelp, artieResetSecondsHelpOpen} from '..
 import {
     artieChangeFlowState,
     ARTIE_FLOW_WORKSPACE_STATE,
-    ARTIE_FLOW_HELP_POPUP_STATE
+    ARTIE_FLOW_HELP_POPUP_STATE,
+    ARTIE_FLOW_EXERCISE_STATEMENT_STATE
 } from '../reducers/artie-flow.js';
 import React from 'react';
 import bindAll from 'lodash.bindall';
@@ -49,7 +50,12 @@ class ArtieEmotionalPopup extends React.Component {
                 if (psd.solutionDistance !== null) {
                     // We show the help popup
                     this.props.onArtieHelpReceived(psd.solutionDistance, new Date());
-                    this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
+
+                    if (psd.solutionDistance.totalDistance === 0) {
+                        this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
+                    } else {
+                        this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
+                    }
                 }
 
                 this.props.onArtieLoadingHelp(false);
@@ -70,7 +76,11 @@ class ArtieEmotionalPopup extends React.Component {
                     // If the response has a solution distance object
                     if (responseBodyObject !== null && responseBodyObject.solutionDistance !== null){
                         this.props.onArtieHelpReceived(responseBodyObject.solutionDistance);
-                        this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
+                        if (responseBodyObject.solutionDistance.totalDistance === 0) {
+                            this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
+                        } else {
+                            this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
+                        }
                     }
 
                     // Stops the loading help
