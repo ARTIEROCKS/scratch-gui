@@ -15,7 +15,9 @@ import {showExtensionAlert} from '../reducers/alerts';
 import {updateMicIndicator} from '../reducers/mic-indicator';
 import {artieBlocksUpdated, artieHelpReceived, artieResetSecondsHelpOpen} from '../reducers/artie-exercises';
 import {artieShowHelpPopup} from '../reducers/artie-help';
-import {artieChangeFlowState, ARTIE_FLOW_HELP_POPUP_STATE} from '../reducers/artie-flow';
+import {artieChangeFlowState, ARTIE_FLOW_HELP_POPUP_STATE,
+    ARTIE_FLOW_EXERCISE_STATEMENT_STATE
+} from '../reducers/artie-flow';
 import {sendBlockArtie} from '../lib/artie-api';
 
 /*
@@ -161,6 +163,10 @@ const vmListenerHOC = function (WrappedComponent) {
 
                                 // We show the help received
                                 this.props.onArtieHelpReceived(responseBodyObject.solutionDistance);
+
+                                if (responseBodyObject.solutionDistance.totalDistance === 0){
+                                    this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
+                                }
 
                             } else if (responseBodyObject !== null && responseBodyObject.predictedNeedHelp){
                                 // We show the help popup
