@@ -13,11 +13,11 @@ const _pedagogicalInterventionWebServiceUrl = 'https://prod.artie.rocks:8443';
 const _pedagogialWebUrl = 'https://prod.artie.rocks:8443';
 const _apiKey = 'k6siZlG9OZGyMorpmSUeYo87ebfsN7s0';
 
-const _pedagogicalSoftwarePath = '/pedagogicalsoftware';
-const _usersPath = '/users';
-const _studentsPath = '/students';
-const _exercisesPath = '/exercises';
-const _sensorPath = '/sensor';
+const _pedagogicalSoftwarePath = '/api/v1/pedagogicalsoftware';
+const _usersPath = '/api/v1/users';
+const _studentsPath = '/api/v1/students';
+const _exercisesPath = '/api/v1/exercises';
+const _sensorPath = '/api/v1/sensor';
 
 
 const _createArtieBlockFromTempBlock = (tempBlock) => ({id: tempBlock.id, elementName: tempBlock.elementName, elementFamily: tempBlock.elementFamily, next: tempBlock.next, inputs: tempBlock.inputs, nested: tempBlock.nested, previous: tempBlock.previous, parent: tempBlock.parent});
