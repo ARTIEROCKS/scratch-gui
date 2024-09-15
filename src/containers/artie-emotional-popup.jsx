@@ -79,7 +79,7 @@ class ArtieEmotionalPopup extends React.Component {
                         if (responseBodyObject.solutionDistance.totalDistance === 0) {
                             this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
                         } else {
-                            this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
+                            this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
                         }
                     }
 
