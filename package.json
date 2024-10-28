@@ -86,18 +86,22 @@
     "redux-throttle": "^0.1.1",
     "scratch-audio": "^1.0.0",
     "scratch-blocks": "^1.1.6",
-    "scratch-l10n": "^3.18.3",
+    "artie-scratch-l10n": "3.18.5",
     "scratch-paint": "^2.2.151",
     "scratch-render": "^1.0.233",
     "scratch-render-fonts": "^1.0.2",
     "scratch-storage": "^2.3.1",
     "scratch-svg-renderer": "^2.3.102",
-    "scratch-vm": "^4.5.471",
+    "artie-scratch-vm": "4.8.39-artie",
     "startaudiocontext": "^1.2.1",
     "style-loader": "4.0.0",
     "to-style": "^1.3.3",
     "wav-encoder": "^1.3.0",
-    "xhr": "^2.5.0"
+    "xhr": "^2.5.0",
+
+    "redux-logger": "^3.0.6",
+    "html2canvas": "^1.4.1",
+    "@splitsoftware/splitio-react": "^1.11.0"
   },
   "peerDependencies": {
     "react": "^16.0.0",
