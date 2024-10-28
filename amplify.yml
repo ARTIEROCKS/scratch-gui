@@ -3,6 +3,8 @@ frontend:
   phases:
     preBuild:
       commands:
+        - nvm install 18
+        - nvm use 18
         - npm install rimraf --global
         - npm install mkdirp --global
         - npm install webpack --global
