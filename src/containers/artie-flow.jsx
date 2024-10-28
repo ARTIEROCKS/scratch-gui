@@ -278,6 +278,9 @@ class ArtieFlow extends React.Component {
 
         // 1- Checks if the component must show the login component or not
         if (this.props.artieFlow.flowState === ARTIE_FLOW_LOGIN_STATE){
+
+            // We stop the recording
+            this.props.onChangeArtieWebcamRecording(false);
             return (<ArtieLogin
                 onUserChange={this.handleArtieUserChange}
                 onPasswordChange={this.handleArtiePasswordChange}

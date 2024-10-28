@@ -1,5 +1,5 @@
-import {createRef, useEffect, useRef, useState} from 'react';
-import regeneratorRuntime from 'regenerator-runtime';
+import {useEffect, useRef, useState} from 'react';
+import PropTypes from 'prop-types';
 
 const ArtieWebcamRecorderComponent = props => {
 
@@ -192,6 +192,17 @@ const ArtieWebcamRecorderComponent = props => {
     }, []);
 
     return null;
+};
+ArtieWebcamRecorderComponent.propTypes = {
+    artieWebcam: PropTypes.shape({
+        recording: PropTypes.bool.isRequired
+    }).isRequired,
+    send: PropTypes.func.isRequired,
+    userName: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    student: PropTypes.string.isRequired,
+    sensorObjectType: PropTypes.string.isRequired,
+    sensorName: PropTypes.string.isRequired
 };
 
 export default ArtieWebcamRecorderComponent;

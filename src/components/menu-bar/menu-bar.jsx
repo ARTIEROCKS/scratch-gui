@@ -510,6 +510,7 @@ class MenuBar extends React.Component {
     }
     handleStopEvaluation (){
         this.props.onArtieEvaluationStop(true);
+        this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
     }
     handleShowPopupStatement (){
         this.props.onArtiePopupStatement(true);
