@@ -1,6 +1,18 @@
 import PropTypes from 'prop-types';
 import {useEffect, useRef, useState, forwardRef, useImperativeHandle} from 'react';
 
+
+const formatDate = date => date.toLocaleString('es-ES', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'UTC',
+    timeZoneName: 'short'
+});
+
 const ArtieWebcamRecorderComponent = forwardRef(({
     userName,
     password,
@@ -14,7 +26,9 @@ const ArtieWebcamRecorderComponent = forwardRef(({
 
     const startRecording = () => {
         if (mediaRecorderRef.current) { // Check if webcam is ready
-            setFromDate(new Date()); // Initial fromDate for the first segment
+            const initialFromDate = new Date();
+            setFromDate(initialFromDate); // Initial fromDate for the first segment
+            mediaRecorderRef.current.fromDate = initialFromDate;
             mediaRecorderRef.current.start();
         } else {
             console.warn('Webcam is not ready. Please wait...');
@@ -38,19 +52,21 @@ const ArtieWebcamRecorderComponent = forwardRef(({
                 const toDate = new Date();
                 const jsonBlob = new Blob([JSON.stringify(event.data)], {type: 'application/json'});
 
-                send({
+                send(
                     userName,
                     password,
                     student,
                     sensorObjectType,
                     sensorName,
-                    data: jsonBlob,
-                    fromDate,
-                    toDate
-                });
+                    jsonBlob,
+                    formatDate(mediaRecorderRef.current.fromDate),
+                    formatDate(toDate)
+                );
 
                 // Update fromDate to prepare for the next segment
-                setFromDate(new Date());
+                const newFromDate = new Date();
+                setFromDate(newFromDate);
+                mediaRecorderRef.current.fromDate = newFromDate;
             }
         };
 
