@@ -50,30 +50,46 @@ const ArtieWebcamRecorderComponent = forwardRef(({
         const handleDataAvailable = event => {
             if (event.data.size > 0) {
                 const toDate = new Date();
-                const jsonBlob = new Blob([JSON.stringify(event.data)], {type: 'application/json'});
+                const reader = new FileReader();
 
-                send(
-                    userName,
-                    password,
-                    student,
-                    sensorObjectType,
-                    sensorName,
-                    jsonBlob,
-                    formatDate(mediaRecorderRef.current.fromDate),
-                    formatDate(toDate)
-                );
+                reader.readAsDataURL(event.data);
+                reader.onloadend = () => {
+                    
+                    const dataUrl = reader.result;
+                    
+                    send(
+                        userName,
+                        password,
+                        student,
+                        sensorObjectType,
+                        sensorName,
+                        dataUrl,
+                        formatDate(mediaRecorderRef.current.fromDate),
+                        formatDate(toDate)
+                    );
 
-                // Update fromDate to prepare for the next segment
-                const newFromDate = new Date();
-                setFromDate(newFromDate);
-                mediaRecorderRef.current.fromDate = newFromDate;
+                    // Update fromDate to prepare for the next segment
+                    const newFromDate = new Date();
+                    setFromDate(newFromDate);
+                    mediaRecorderRef.current.fromDate = newFromDate;
+                
+                };
             }
         };
 
         const initWebcam = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({video: true});
-                mediaRecorderRef.current = new MediaRecorder(stream, {mimeType: 'video/webm'});
+                const mimeType = 'video/webm; codecs=vp8';
+
+                if (MediaRecorder.isTypeSupported(mimeType)) {
+                    mediaRecorderRef.current = new MediaRecorder(stream, {mimeType});
+                    
+                } else {
+                    console.warn(`MIME type ${mimeType} is not supported. Defaulting to MP4.`);
+                    mediaRecorderRef.current = new MediaRecorder(stream, {mimeType: 'video/mp4; codecs=avc1'});
+                }
+
                 mediaRecorderRef.current.ondataavailable = handleDataAvailable;
 
                 // Añadir un retraso antes de llamar a startRecording
