@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
-import {useEffect, useRef, useState, forwardRef, useImperativeHandle} from 'react';
-
+import {useEffect, useRef, useState} from 'react';
 
 const formatDate = date => date.toLocaleString('es-ES', {
     year: 'numeric',
@@ -13,120 +12,52 @@ const formatDate = date => date.toLocaleString('es-ES', {
     timeZoneName: 'short'
 });
 
-const ArtieWebcamRecorderComponent = forwardRef(({
-    userName,
-    password,
-    student,
-    sensorObjectType,
-    sensorName,
-    send
-}, ref) => {
-    const mediaRecorderRef = useRef(null);
-    const [fromDate, setFromDate] = useState(null);
+const options = {mimeType: 'video/webm'};
+const constraints = {audio: true, video: true};
 
-    const startRecording = () => {
-        if (mediaRecorderRef.current) { // Check if webcam is ready
-            const initialFromDate = new Date();
-            setFromDate(initialFromDate); // Initial fromDate for the first segment
-            mediaRecorderRef.current.fromDate = initialFromDate;
-            mediaRecorderRef.current.start();
-        } else {
-            console.warn('Webcam is not ready. Please wait...');
-        }
-    };
-
-    const stopRecording = () => {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-            mediaRecorderRef.current.stop();
-        }
-    };
-
-    useImperativeHandle(ref, () => ({
-        startRecording,
-        stopRecording
-    }));
+const ArtieWebcamRecorderComponent = ({sendFunction}) => {
+    const [mediaRecorder, setMediaRecorder] = useState(null);
+    const recordingRef = useRef(false);
 
     useEffect(() => {
-        const handleDataAvailable = event => {
-            if (event.data.size > 0) {
-                const toDate = new Date();
-                const reader = new FileReader();
+        if (!mediaRecorder && navigator.mediaDevices) {
+            navigator.mediaDevices
+                .getUserMedia(constraints)
+                .then(stream => {
+                    const recorder = new MediaRecorder(stream, options);
+                    setMediaRecorder(recorder);
+                })
+                .catch(error => {
+                    console.error('Error accessing media devices.', error);
+                });
+        }
+    }, [mediaRecorder]);
 
-                reader.readAsDataURL(event.data);
-                reader.onloadend = () => {
-                    
-                    const dataUrl = reader.result;
-                    
-                    send(
-                        userName,
-                        password,
-                        student,
-                        sensorObjectType,
-                        sensorName,
-                        dataUrl,
-                        formatDate(mediaRecorderRef.current.fromDate),
-                        formatDate(toDate)
-                    );
-
-                    // Update fromDate to prepare for the next segment
-                    const newFromDate = new Date();
-                    setFromDate(newFromDate);
-                    mediaRecorderRef.current.fromDate = newFromDate;
-                
-                };
-            }
-        };
-
-        const initWebcam = async () => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({video: true});
-                const mimeType = 'video/webm; codecs=vp8';
-
-                if (MediaRecorder.isTypeSupported(mimeType)) {
-                    mediaRecorderRef.current = new MediaRecorder(stream, {mimeType});
-                    
-                } else {
-                    console.warn(`MIME type ${mimeType} is not supported. Defaulting to MP4.`);
-                    mediaRecorderRef.current = new MediaRecorder(stream, {mimeType: 'video/mp4; codecs=avc1'});
+    useEffect(() => {
+        if (mediaRecorder && !recordingRef.current) {
+            recordingRef.current = true;
+            mediaRecorder.start();
+            mediaRecorder.ondataavailable = e => {
+                if (typeof sendFunction === 'function') {
+                    sendFunction(e.data);
                 }
-
-                mediaRecorderRef.current.ondataavailable = handleDataAvailable;
-
-                // Añadir un retraso antes de llamar a startRecording
-                setTimeout(() => {
-                    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'recording') {
-                        startRecording();
-                    }
-                }, 1000); // Espera de 1 segundo
-            } catch (error) {
-                console.error('Error accessing webcam:', error);
-            }
-        };
-
-        initWebcam();
-    }, [userName, password, student, sensorObjectType, sensorName, send]);
-
-    useEffect(() => {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-            const interval = setInterval(() => {
-                mediaRecorderRef.current.requestData();
-            }, 5000);
-
-            return () => clearInterval(interval);
+            };
         }
-    }, [fromDate]);
-    
-    ArtieWebcamRecorderComponent.displayName = 'ArtieWebcamRecorderComponent';
-    return null; // No JSX returned since it's a functional, invisible component
-});
+
+        const interval = setInterval(() => {
+            if (mediaRecorder && recordingRef.current) {
+                mediaRecorder.requestData();
+            }
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [mediaRecorder, sendFunction]);
+
+    return null;
+};
 
 ArtieWebcamRecorderComponent.propTypes = {
-    userName: PropTypes.string.isRequired,
-    password: PropTypes.string.isRequired,
-    student: PropTypes.object.isRequired,
-    sensorObjectType: PropTypes.string.isRequired,
-    sensorName: PropTypes.string.isRequired,
-    send: PropTypes.func.isRequired
+    sendFunction: PropTypes.func.isRequired
 };
 
 export default ArtieWebcamRecorderComponent;

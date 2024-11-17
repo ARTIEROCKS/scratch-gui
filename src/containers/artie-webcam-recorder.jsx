@@ -13,18 +13,9 @@ class ArtieWebcamRecorder extends React.Component{
         this.recorderRef = React.createRef();
     }
 
-    componentDidUpdate (prevProps) {
-        if (prevProps.artieWebcam.recording !== this.props.artieWebcam.recording) {
-            if (this.props.artieWebcam.recording) {
-                this.recorderRef.current.startRecording();
-            } else {
-                this.recorderRef.current.stopRecording();
-            }
-        }
-    }
-
-    onHandleSendSensorInformation (userName, password, student, sensorObjectType, sensorName, data, fromDate, toDate) {
-        sendSensorInformation(userName, password, student, sensorObjectType, sensorName, data, fromDate, toDate);
+    onHandleSendSensorInformation (data, fromDate, toDate) {
+        sendSensorInformation(this.props.artieLogin.user.login, this.props.artieLogin.user.password,
+            this.props.artieLogin.currentStudent, 'VIDEO', 'SCRATCH_WEBCAM', data, fromDate, toDate);
     }
 
     render () {
@@ -36,13 +27,7 @@ class ArtieWebcamRecorder extends React.Component{
                 this.props.artieLogin.currentStudent.recordFace)) {
 
             return (<ArtieWebcamRecorderComponent
-                ref={this.recorderRef}
-                userName={this.props.artieLogin.user.login}
-                password={this.props.artieLogin.user.password}
-                student={this.props.artieLogin.currentStudent}
-                sensorObjectType={'VIDEO'}
-                sensorName={'SCRATCH_WEBCAM'}
-                send={this.onHandleSendSensorInformation}
+                sendFunction={this.onHandleSendSensorInformation}
             />);
         }
         return null;
@@ -55,8 +40,7 @@ const mapStateToProps = state => ({
 });
 
 ArtieWebcamRecorder.propTypes = {
-    artieLogin: PropTypes.object,
-    artieWebcam: PropTypes.object
+    artieLogin: PropTypes.object
 };
 
 export default compose(
