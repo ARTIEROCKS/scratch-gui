@@ -17,6 +17,7 @@ const constraints = {audio: true, video: true};
 
 const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
     const [mediaRecorder, setMediaRecorder] = useState(null);
+    const mediaStreamRef = useRef(null);
     const recordingRef = useRef(false);
     const fromDateRef = useRef(null);
 
@@ -26,21 +27,38 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
                 mediaRecorder.stop();
                 recordingRef.current = false;
             }
+        },
+        startRecording: () => {
+            if (mediaRecorder && recordingRef.current) {
+                mediaRecorder.start();
+            }
         }
     }));
 
     useEffect(() => {
+
         if (!mediaRecorder && navigator.mediaDevices) {
             navigator.mediaDevices
                 .getUserMedia(constraints)
                 .then(stream => {
                     const recorder = new MediaRecorder(stream, options);
                     setMediaRecorder(recorder);
+                    mediaStreamRef.current = stream;
                 })
                 .catch(error => {
                     console.error('Error accessing media devices.', error);
                 });
         }
+        // Cleanup function when component unmounts
+        return () => {
+            if (mediaRecorder && recordingRef.current) {
+                mediaRecorder.stop();
+                recordingRef.current = false;
+            }
+            if (mediaStreamRef.current) {
+                mediaStreamRef.current.getTracks().forEach(track => track.stop());
+            }
+        };
     }, [mediaRecorder]);
 
     useEffect(() => {
@@ -49,12 +67,10 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
             fromDateRef.current = new Date();
             mediaRecorder.start();
             mediaRecorder.ondataavailable = e => {
-                if (typeof send === 'function') {
+                if (mediaRecorder && recordingRef.current && typeof sendFunction === 'function') {
                     const toDate = new Date();
                     sendFunction(e.data, formatDate(fromDateRef.current), formatDate(toDate));
                     fromDateRef.current = toDate;
-                } else {
-                    console.error('send is not a function.');
                 }
             };
         }
