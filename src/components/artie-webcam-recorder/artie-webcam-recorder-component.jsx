@@ -54,9 +54,10 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
             if (mediaRecorder && recordingRef.current) {
                 mediaRecorder.stop();
                 recordingRef.current = false;
-            }
-            if (mediaStreamRef.current) {
-                mediaStreamRef.current.getTracks().forEach(track => track.stop());
+                
+                if (mediaStreamRef.current) {
+                    mediaStreamRef.current.getTracks().forEach(track => track.stop());
+                }
             }
         };
     }, [mediaRecorder]);
