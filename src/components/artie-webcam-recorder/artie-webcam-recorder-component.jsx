@@ -54,7 +54,7 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
             if (mediaRecorder && recordingRef.current) {
                 mediaRecorder.stop();
                 recordingRef.current = false;
-                
+
                 if (mediaStreamRef.current) {
                     mediaStreamRef.current.getTracks().forEach(track => track.stop());
                 }
@@ -70,8 +70,13 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
             mediaRecorder.ondataavailable = e => {
                 if (mediaRecorder && recordingRef.current && typeof sendFunction === 'function') {
                     const toDate = new Date();
-                    sendFunction(e.data, formatDate(fromDateRef.current), formatDate(toDate));
-                    fromDateRef.current = toDate;
+                    const reader = new FileReader();
+                    reader.onload = function () {
+                        const jsonBlob = reader.result;
+                        sendFunction(jsonBlob, formatDate(fromDateRef.current), formatDate(toDate));
+                        fromDateRef.current = toDate;
+                    };
+                    reader.readAsDataURL(e.data);
                 }
             };
         }
