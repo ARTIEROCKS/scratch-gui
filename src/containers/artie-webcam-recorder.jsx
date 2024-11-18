@@ -13,6 +13,12 @@ class ArtieWebcamRecorder extends React.Component{
         this.recorderRef = React.createRef();
     }
 
+    componentDidUpdate (prevProps) {
+        if (prevProps.artieWebcam.recording && !this.props.artieWebcam.recording && this.recorderRef.current !== null) {
+            this.recorderRef.current.stopRecording();
+        }
+    }
+
     onHandleSendSensorInformation (data, fromDate, toDate) {
         sendSensorInformation(this.props.artieLogin.user.login, this.props.artieLogin.user.password,
             this.props.artieLogin.currentStudent, 'VIDEO', 'SCRATCH_WEBCAM', data, fromDate, toDate);
@@ -27,6 +33,7 @@ class ArtieWebcamRecorder extends React.Component{
                 this.props.artieLogin.currentStudent.recordFace)) {
 
             return (<ArtieWebcamRecorderComponent
+                ref={this.recorderRef}
                 sendFunction={this.onHandleSendSensorInformation}
             />);
         }
@@ -40,7 +47,8 @@ const mapStateToProps = state => ({
 });
 
 ArtieWebcamRecorder.propTypes = {
-    artieLogin: PropTypes.object
+    artieLogin: PropTypes.object,
+    artieWebcam: PropTypes.object
 };
 
 export default compose(

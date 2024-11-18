@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState, forwardRef, useImperativeHandle} from 'react';
 
 const formatDate = date => date.toLocaleString('es-ES', {
     year: 'numeric',
@@ -15,9 +15,19 @@ const formatDate = date => date.toLocaleString('es-ES', {
 const options = {mimeType: 'video/webm'};
 const constraints = {audio: true, video: true};
 
-const ArtieWebcamRecorderComponent = ({sendFunction}) => {
+const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
     const [mediaRecorder, setMediaRecorder] = useState(null);
     const recordingRef = useRef(false);
+    const fromDateRef = useRef(null);
+
+    useImperativeHandle(ref, () => ({
+        stopRecording: () => {
+            if (mediaRecorder && recordingRef.current) {
+                mediaRecorder.stop();
+                recordingRef.current = false;
+            }
+        }
+    }));
 
     useEffect(() => {
         if (!mediaRecorder && navigator.mediaDevices) {
@@ -36,10 +46,15 @@ const ArtieWebcamRecorderComponent = ({sendFunction}) => {
     useEffect(() => {
         if (mediaRecorder && !recordingRef.current) {
             recordingRef.current = true;
+            fromDateRef.current = new Date();
             mediaRecorder.start();
             mediaRecorder.ondataavailable = e => {
-                if (typeof sendFunction === 'function') {
-                    sendFunction(e.data);
+                if (typeof send === 'function') {
+                    const toDate = new Date();
+                    sendFunction(e.data, formatDate(fromDateRef.current), formatDate(toDate));
+                    fromDateRef.current = toDate;
+                } else {
+                    console.error('send is not a function.');
                 }
             };
         }
@@ -54,10 +69,11 @@ const ArtieWebcamRecorderComponent = ({sendFunction}) => {
     }, [mediaRecorder, sendFunction]);
 
     return null;
-};
+});
 
 ArtieWebcamRecorderComponent.propTypes = {
     sendFunction: PropTypes.func.isRequired
 };
 
+ArtieWebcamRecorderComponent.displayName = 'ArtieWebcamRecorderComponent';
 export default ArtieWebcamRecorderComponent;
