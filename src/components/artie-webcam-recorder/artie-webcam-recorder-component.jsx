@@ -12,7 +12,7 @@ const formatDate = date => date.toLocaleString('es-ES', {
     timeZoneName: 'short'
 });
 
-const options = {mimeType: 'video/webm'};
+const options = {mimeType: 'video/webm;codecs=vp9'};
 const constraints = {audio: true, video: true};
 
 const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
@@ -83,9 +83,10 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
 
         const interval = setInterval(() => {
             if (mediaRecorder && recordingRef.current) {
-                mediaRecorder.requestData();
+                mediaRecorder.stop();
+                mediaRecorder.start();
             }
-        }, 5000);
+        }, 3000);
 
         return () => clearInterval(interval);
     }, [mediaRecorder, sendFunction]);
