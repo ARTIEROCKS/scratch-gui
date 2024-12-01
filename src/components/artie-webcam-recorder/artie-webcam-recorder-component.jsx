@@ -23,14 +23,15 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
 
     useImperativeHandle(ref, () => ({
         stopRecording: () => {
-            if (mediaRecorder && recordingRef.current) {
+            if (mediaRecorder && recordingRef.current !== null) {
                 mediaRecorder.stop();
                 recordingRef.current = false;
             }
         },
         startRecording: () => {
-            if (mediaRecorder && recordingRef.current) {
+            if (mediaRecorder && !recordingRef.current !== null) {
                 mediaRecorder.start();
+                recordingRef.current = true;
             }
         }
     }));
@@ -55,7 +56,7 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
                 mediaRecorder.stop();
                 recordingRef.current = false;
 
-                if (mediaStreamRef.current) {
+                if (mediaStreamRef.current !== null) {
                     mediaStreamRef.current.getTracks().forEach(track => track.stop());
                 }
             }
@@ -68,7 +69,7 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
             fromDateRef.current = new Date();
             mediaRecorder.start();
             mediaRecorder.ondataavailable = e => {
-                if (mediaRecorder && recordingRef.current && typeof sendFunction === 'function') {
+                if (mediaRecorder && typeof sendFunction === 'function') {
                     const toDate = new Date();
                     const reader = new FileReader();
                     reader.onload = function () {
@@ -82,9 +83,12 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
         }
 
         const interval = setInterval(() => {
-            if (mediaRecorder && recordingRef.current) {
+            if (mediaRecorder && recordingRef.current !== null && recordingRef.current) {
                 mediaRecorder.stop();
+                recordingRef.current = false;
+            } else if (recordingRef.current !== null && !recordingRef.current) {
                 mediaRecorder.start();
+                recordingRef.current = true;
             }
         }, 3000);
 
