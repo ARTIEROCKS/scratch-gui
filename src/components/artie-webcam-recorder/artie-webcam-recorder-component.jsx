@@ -52,13 +52,10 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
         }
         // Cleanup function when component unmounts
         return () => {
-            if (mediaRecorder && recordingRef.current) {
+            if (mediaRecorder && recordingRef.current !== null) {
                 mediaRecorder.stop();
                 recordingRef.current = false;
-
-                if (mediaStreamRef.current !== null) {
-                    mediaStreamRef.current.getTracks().forEach(track => track.stop());
-                }
+                mediaStreamRef.current.getTracks().forEach(track => track.stop());
             }
         };
     }, [mediaRecorder]);
@@ -82,17 +79,24 @@ const ArtieWebcamRecorderComponent = forwardRef(({sendFunction}, ref) => {
             };
         }
 
-        const interval = setInterval(() => {
+        const intervalStop = setInterval(() => {
             if (mediaRecorder && recordingRef.current !== null && recordingRef.current) {
                 mediaRecorder.stop();
                 recordingRef.current = false;
-            } else if (recordingRef.current !== null && !recordingRef.current) {
+            }
+        }, 5000);
+
+        const intervalStart = setInterval(() => {
+            if (mediaRecorder && recordingRef.current !== null && !recordingRef.current) {
                 mediaRecorder.start();
                 recordingRef.current = true;
             }
-        }, 3000);
+        }, 25000);
 
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(intervalStop);
+            clearInterval(intervalStart);
+        };
     }, [mediaRecorder, sendFunction]);
 
     return null;
