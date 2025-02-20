@@ -5,31 +5,38 @@ import PropTypes from 'prop-types';
 import bindAll from 'lodash.bindall';
 import ArtieWebcamRecorderComponent from '../components/artie-webcam-recorder/artie-webcam-recorder-component.jsx';
 import {sendSensorInformation} from '../lib/artie-api';
+import {changeArtieWebcamRecording} from '../reducers/artie-webcam';
 
 class ArtieWebcamRecorder extends React.Component{
     constructor (props) {
         super(props);
-        bindAll(this, ['onHandleSendSensorInformation', 'removeAllItems']);
-    }
-    componentWillMount () {
-        this.removeAllItems();
-    }
-    componentWillUnmount () {
-        this.removeAllItems();
+        bindAll(this, ['onHandleSendSensorInformation']);
+        this.recorderRef = React.createRef();
     }
 
-    onHandleSendSensorInformation (userName, password, student, sensorObjectType, sensorName, data, fromDate, toDate) {
-        sendSensorInformation(userName, password, student, sensorObjectType, sensorName, data, fromDate, toDate);
+    componentDidUpdate (prevProps) {
+        if (this.props.artieLogin !== null &&
+            this.props.artieLogin.user !== null && this.props.artieLogin.user.login !== null &&
+            this.props.artieLogin.user.password !== null &&
+            this.props.artieLogin.currentStudent !== null &&
+            (this.props.artieLogin.currentStudent.recordFace === null ||
+                this.props.artieLogin.currentStudent.recordFace) &&
+            !this.props.artieWebcam.recording) {
+
+            // We update the state of the webcam recording to true
+            this.props.onChangeArtieWebcamRecording(true);
+        } else if (prevProps.artieWebcam.recording && !this.props.artieWebcam.recording) {
+
+            // We update the state
+            this.props.onChangeArtieWebcamRecording(false);
+        }
     }
-    removeAllItems () {
-        window.localStorage.removeItem('webcamRecorder_isRecording');
-        window.localStorage.removeItem('webcamRecorder_props_recording');
-        window.localStorage.removeItem('webcamRecorder_audioSource');
-        window.localStorage.removeItem('webcamRecorder_videoSource');
-        window.localStorage.removeItem('webcamRecorder_fromDate');
-        window.localStorage.removeItem('webcamRecorder_toDate');
-        window.localStorage.removeItem('webcamRecorder_error');
+
+    onHandleSendSensorInformation (data, fromDate, toDate) {
+        sendSensorInformation(this.props.artieLogin.user.login, this.props.artieLogin.user.password,
+            this.props.artieLogin.currentStudent, 'VIDEO', 'SCRATCH_WEBCAM', data, fromDate, toDate);
     }
+
     render () {
         if (this.props.artieLogin !== null &&
             this.props.artieLogin.user !== null && this.props.artieLogin.user.login !== null &&
@@ -37,15 +44,9 @@ class ArtieWebcamRecorder extends React.Component{
             this.props.artieLogin.currentStudent !== null &&
             (this.props.artieLogin.currentStudent.recordFace === null ||
                 this.props.artieLogin.currentStudent.recordFace)) {
-
             return (<ArtieWebcamRecorderComponent
-                userName={this.props.artieLogin.user.login}
-                password={this.props.artieLogin.user.password}
-                student={this.props.artieLogin.currentStudent}
-                sensorObjectType={'VIDEO'}
-                sensorName={'SCRATCH_WEBCAM'}
-                send={this.onHandleSendSensorInformation}
-                artieWebcam={this.props.artieWebcam}
+                ref={this.recorderRef}
+                sendFunction={this.onHandleSendSensorInformation}
             />);
         }
         return null;
@@ -56,11 +57,17 @@ const mapStateToProps = state => ({
     artieLogin: state.scratchGui.artieLogin,
     artieWebcam: state.scratchGui.artieWebcam
 });
+
+const mapDispatchToProps = dispatch => ({
+    onChangeArtieWebcamRecording: recording => dispatch(changeArtieWebcamRecording(recording))
+});
+
 ArtieWebcamRecorder.propTypes = {
     artieLogin: PropTypes.object,
-    artieWebcam: PropTypes.object
+    artieWebcam: PropTypes.object,
+    onChangeArtieWebcamRecording: PropTypes.func
 };
 
 export default compose(
-    connect(mapStateToProps)
+    connect(mapStateToProps, mapDispatchToProps)
 )(ArtieWebcamRecorder);

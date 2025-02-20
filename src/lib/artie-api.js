@@ -9,8 +9,8 @@
 /* eslint-disable arrow-parens */
 
 const _inputElementsValues = ['text', 'math_number', 'math_positive_number', 'math_whole_number'];
-const _pedagogicalInterventionWebServiceUrl = 'https://prod.artie.rocks:8443';
-const _pedagogialWebUrl = 'https://prod.artie.rocks:8443';
+const _pedagogicalInterventionWebServiceUrl = 'http://pre-prod.artie.rocks:8000';
+const _pedagogialWebUrl = 'http://pre-prod.artie.rocks:8000';
 const _apiKey = 'k6siZlG9OZGyMorpmSUeYo87ebfsN7s0';
 
 const _pedagogicalSoftwarePath = '/api/v1/pedagogicalsoftware';
