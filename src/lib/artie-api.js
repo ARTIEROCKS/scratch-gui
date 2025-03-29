@@ -93,33 +93,45 @@ const _nestedInputsHandler = (parent, inputId, inputName, blocks) => {
 
     // 1- Searches for the input element in the block array
     const tmpElement = blocks.find(block => block.id === inputId);
-    const inputElement = _blockHandler(tmpElement, blocks);
+    if (tmpElement !== undefined) {
 
-    // 2.1- If the input element is a nested element
-    if (inputName.includes('SUBSTACK') && !_inputElementsValues.includes(tmpElement.opcode)){
+        const inputElement = _blockHandler(tmpElement, blocks);
 
-        // 2.1.1- Adds the parent element, without its next, nested, previous and parent to avoid large objects
-        inputElement.parent = {id: parent.id, elementName: parent.elementName, elementFamily: parent.elementFamily, next: null, inputs: null, nested: [], previous: null, parent: null}
+        // 2.1- If the input element is a nested element
+        if (inputName.includes('SUBSTACK') && !_inputElementsValues.includes(tmpElement.opcode)) {
 
-        // 2.1.2- Pushes the input element into the artie parent nested array
-        artieParent.nested.push(inputElement);
-    }
-    // 2.2- If the input element is an input
-    else {
-        // Gets all the fields from the different subInputs of the element
-        let tempFields = [];
-        if (inputElement.inputs !== undefined && inputElement.inputs !== null && inputElement.inputs.length > 0){
-            Object.values(inputElement.inputs).forEach((input) => {
-                tempFields = tempFields.concat(input.fields);
-            });
+            // 2.1.1- Adds the parent element, without its next, nested, previous and parent to avoid large objects
+            inputElement.parent = {
+                id: parent.id,
+                elementName: parent.elementName,
+                elementFamily: parent.elementFamily,
+                next: null,
+                inputs: null,
+                nested: [],
+                previous: null,
+                parent: null
+            }
+
+            // 2.1.2- Pushes the input element into the artie parent nested array
+            artieParent.nested.push(inputElement);
         }
+        // 2.2- If the input element is an input
+        else {
+            // Gets all the fields from the different subInputs of the element
+            let tempFields = [];
+            if (inputElement.inputs !== undefined && inputElement.inputs !== null && inputElement.inputs.length > 0) {
+                Object.values(inputElement.inputs).forEach((input) => {
+                    tempFields = tempFields.concat(input.fields);
+                });
+            }
 
-        const tempInput = {opcode: inputElement.elementName, name: inputName, fields: tempFields};
-        Object.values(tmpElement.fields).forEach((field) => {
-            tempInput.fields.push({opcode: field.elementName, name: field.name, value: field.value});
-        });
+            const tempInput = {opcode: inputElement.elementName, name: inputName, fields: tempFields};
+            Object.values(tmpElement.fields).forEach((field) => {
+                tempInput.fields.push({opcode: field.elementName, name: field.name, value: field.value});
+            });
 
-        artieParent.inputs.push(tempInput);
+            artieParent.inputs.push(tempInput);
+        }
     }
 
     return artieParent;
