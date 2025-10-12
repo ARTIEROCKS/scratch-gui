@@ -25,6 +25,7 @@ const baseConfig = new ScratchWebpackConfigBuilder(
             }
         },
         resolve: {
+            // alias removed; package link should provide 'artie-scratch-l10n'
             fallback: {
                 Buffer: require.resolve('buffer/'),
                 stream: require.resolve('stream-browserify')
