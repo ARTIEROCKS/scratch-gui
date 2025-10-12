@@ -128,6 +128,7 @@ import {ArtieExerciseStatementTooltip} from '../artie-exercises/artie-exercises-
 
 import html2canvas from 'html2canvas';
 import Spinner from '../spinner/spinner.jsx';
+import ArtieLoadingOverlay from '../artie-help/artie-loading-overlay.jsx';
 
 const ariaMessages = defineMessages({
     tutorials: {
@@ -478,22 +479,42 @@ class MenuBar extends React.Component {
             reader.readAsDataURL(content);
             reader.onloadend = function () {
                 binary = reader.result;
-                html2canvas(body).then(canvas => {
-                    canvasUrl = canvas.toDataURL('image/png');
-                    sendBlockArtie(currentStudent, sprites, currentExercise, false, emotionalState, secondsHelpOpen,
-                        true, lastLogin, lastExerciseChange, canvasUrl, binary)
-                        .then(() => {
-
-                            // Stops the loading help and shows the popup
-                            fOnArtieLoadingExercise(false);
-                            fOnArtieExerciseSentPopupOpen(true);
-                            fOnArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
-                        });
-                    if (secondsHelpOpen > 0) {
-                        fOnArtieResetSecondsHelpOpen();
-                    }
-                });
+                html2canvas(body)
+                    .then(canvas => {
+                        canvasUrl = canvas.toDataURL('image/png');
+                        return sendBlockArtie(
+                            currentStudent,
+                            sprites,
+                            currentExercise,
+                            false,
+                            emotionalState,
+                            secondsHelpOpen,
+                            true,
+                            lastLogin,
+                            lastExerciseChange,
+                            canvasUrl,
+                            binary
+                        );
+                    })
+                    .then(() => {
+                        // Éxito: mostramos popup y cambiamos de estado
+                        fOnArtieExerciseSentPopupOpen(true);
+                        fOnArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
+                    })
+                    .catch(() => {
+                        // En caso de error, simplemente cerramos el overlay en finally
+                    })
+                    .finally(() => {
+                        // Siempre detener la pantalla de carga y resetear contador si corresponde
+                        fOnArtieLoadingExercise(false);
+                        if (secondsHelpOpen > 0) {
+                            fOnArtieResetSecondsHelpOpen();
+                        }
+                    });
             };
+        }).catch(() => {
+            // Si falla la obtención del blob, aseguramos ocultar el overlay
+            this.props.onArtieLoadingExercise(false);
         });
     }
     handleArtieLogout (){
@@ -517,20 +538,33 @@ class MenuBar extends React.Component {
         this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
     }
     handleClickRequestEmotionalHelp (){
+        // Evita múltiples solicitudes mientras está cargando
+        if (this.props.artieExercises.loadingHelp) return;
+
         this.props.onArtieShowHelpPopup(null, true);
-        
+
         if (this.artieEmotionalPopupFeature === 'on') {
             // We show the emotional just in case the flag is active
             this.props.onArtieChangeFlowState(ARTIE_FLOW_EMOTIONAL_STATE);
         } else {
-            
+            // Activamos pantalla de carga mientras esperamos la ayuda
+            this.props.onArtieLoadingHelp(true);
+
             // In case the the flag is off we just show the help popup
-            sendBlockArtie(this.props.artieLogin.currentStudent, this.props.sprites,
-                this.props.artieExercises.currentExercise, true, this.props.artieHelp.emotionalState,
-                this.props.artieExercises.secondsHelpOpen, false, this.props.artieLogin.lastLogin,
-                this.props.artieExercises.lastExerciseChange, null, null)
+            sendBlockArtie(
+                this.props.artieLogin.currentStudent,
+                this.props.sprites,
+                this.props.artieExercises.currentExercise,
+                true,
+                this.props.artieHelp.emotionalState,
+                this.props.artieExercises.secondsHelpOpen,
+                false,
+                this.props.artieLogin.lastLogin,
+                this.props.artieExercises.lastExerciseChange,
+                null,
+                null
+            )
                 .then(responseBodyObject => {
-    
                     // If the response has a solution distance object
                     if (responseBodyObject !== null && responseBodyObject.solutionDistance !== null){
                         this.props.onArtieHelpReceived(responseBodyObject.solutionDistance);
@@ -540,7 +574,11 @@ class MenuBar extends React.Component {
                             this.props.onArtieChangeFlowState(ARTIE_FLOW_HELP_POPUP_STATE);
                         }
                     }
-    
+                })
+                .catch(() => {
+                    // En caso de error, aseguramos ocultar el overlay
+                })
+                .finally(() => {
                     // Stops the loading help
                     this.props.onArtieLoadingHelp(false);
                 });
@@ -930,19 +968,24 @@ class MenuBar extends React.Component {
                                 {this.props.artieLogin.user !== null && this.props.artieLogin.user.role === 0 && this.props.artieLogin.currentStudent !== null &&
                                 this.props.artieExercises.currentExercise !== null && !this.props.artieExercises.currentExercise.evaluation ?
                                     <MenuSection>
-                                        <MenuItem onClick={this.handleClickRequestEmotionalHelp}>
+                                        <MenuItem
+                                            onClick={this.props.artieExercises.loadingHelp ? undefined : this.handleClickRequestEmotionalHelp}
+                                            className={classNames({
+                                                [styles.disabled]: this.props.artieExercises.loadingHelp
+                                            })}
+                                        >
                                             <FormattedMessage
                                                 defaultMessage="Request help"
                                                 description="Menu bar item for requesting help"
                                                 id="gui.menuBar.artie.requestHelp"
                                             />
-                                            {this.props.artieExercises.loadingHelp ?
+                                            {this.props.artieExercises.loadingHelp ? (
                                                 <Spinner
                                                     small
                                                     className={styles.spinner}
                                                     level={'info'}
-                                                /> :
-                                                null }
+                                                />
+                                            ) : null }
                                         </MenuItem>
                                     </MenuSection> :
                                     null
@@ -1025,6 +1068,7 @@ class MenuBar extends React.Component {
                                         <RequestHelpButton
                                             className={styles.menuBarButton}
                                             onClick={this.handleClickRequestEmotionalHelp}
+                                            disabled={this.props.artieExercises.loadingHelp}
                                         />
                                     </React.Fragment> :
                                     null }
@@ -1207,7 +1251,9 @@ class MenuBar extends React.Component {
                 </div>
 
                 {aboutButton}
-                
+
+                {(this.props.artieExercises.loadingHelp || this.props.artieExercises.loadingExercise) ? <ArtieLoadingOverlay /> : null}
+
                 <ArtieFlow onArtieFeatureFlagLoaded={this.handleArtieFeatureFlagLoaded} />
                 <ArtieWebcamRecorder />
             </Box>
@@ -1309,7 +1355,17 @@ MenuBar.propTypes = {
     onArtieEvaluationStop: PropTypes.func.isRequired,
     onArtieHelpReceived: PropTypes.func.isRequired,
     onArtieLoadingHelp: PropTypes.func.isRequired,
-    onArtieResetSecondsHelpOpen: PropTypes.func.isRequired
+    onArtieResetSecondsHelpOpen: PropTypes.func.isRequired,
+    // Añadidos para validación
+    onArtieLoadingSolution: PropTypes.func.isRequired,
+    onArtieExerciseSentPopupOpen: PropTypes.func.isRequired,
+    saveProjectSb3: PropTypes.func.isRequired,
+    onClickArtie: PropTypes.func.isRequired,
+    onRequestCloseArtie: PropTypes.func.isRequired,
+    artieLogin: PropTypes.object.isRequired,
+    artieExercises: PropTypes.object.isRequired,
+    artieHelp: PropTypes.object.isRequired,
+    sprites: PropTypes.object.isRequired
 };
 
 MenuBar.defaultProps = {
