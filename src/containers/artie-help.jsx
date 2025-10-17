@@ -5,7 +5,7 @@ import React from 'react';
 import ArtieHelpComponent from '../components/artie-help/artie-help.jsx';
 import ScratchBlocks from 'scratch-blocks';
 import {connect} from 'react-redux';
-//import GreenFlag from '../components/green-flag/green-flag.svg';
+// import GreenFlag from '../components/green-flag/green-flag.svg';
 
 class ArtieHelp extends React.Component {
     constructor (props) {
@@ -52,32 +52,34 @@ class ArtieHelp extends React.Component {
         // Gets the workspace metrics
         const metrics = this.workspace.getMetrics();
 
-        //If the help is not null and we have some blocks to add
-        if(this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.addBlocks !== null){
+        // If the help is not null and we have some blocks to add
+        if (this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.addBlocks !== null) {
 
-            //We build the block array for the elements we have to add
-            var addBlockArray = [];
-            var dy = 10;
-            var dx = -1;
-            this.props.help.nextSteps.addBlocks.forEach(element => {addBlockArray.push(this.workspace.newBlock(element.blockName))});
+            // We build the block array for the elements we have to add
+            const addBlockArray = [];
+            let dy = 10;
+            let dx = -1;
+            this.props.help.nextSteps.addBlocks.forEach(element => {
+                addBlockArray.push(this.workspace.newBlock(element.blockName));
+            });
 
-            //Configure and render all the blocks
+            // Configure and render all the blocks
             addBlockArray.forEach(block => {
                 block.setMovable(false);
                 block.setDeletable(false);
                 block.contextMenu = false;
 
-                //If we haven't set the center of the workspace
-                if(dx == -1){
+                // If we haven't set the center of the workspace
+                if (dx === -1) {
 
-                    const {x, y} = block.getRelativeToSurfaceXY();
+                    const {x} = block.getRelativeToSurfaceXY();
                     const ltrX = ((metrics.viewWidth / 2) - (block.width / 2) + 25);
                     const mirrorX = x - ((x - this.state.rtlOffset) * 2);
                     dx = mirrorX - ltrX;
                     const midPoint = metrics.viewWidth / 2;
 
                     if (x === 0) {
-                        // if it's the first time positioning, it should always move right
+                        // If it's the first time positioning, it should always move right
                         if (block.width < midPoint) {
                             dx = ltrX;
                         } else if (block.width < metrics.viewWidth) {
@@ -89,7 +91,7 @@ class ArtieHelp extends React.Component {
                     }
                     if (block.width > metrics.viewWidth) {
                         dx = dx + block.width - metrics.viewWidth;
-                    }else {
+                    } else {
                         dx = (metrics.viewWidth / 2) - (block.width / 2) - x;
                         // If the procedure declaration is wider than the view width,
                         // keep the right-hand side of the procedure in view.
@@ -99,7 +101,7 @@ class ArtieHelp extends React.Component {
                     }
                 }
 
-                block.moveBy(dx,dy);
+                block.moveBy(dx, dy);
                 dy += 60;
 
                 block.initSvg();
@@ -127,32 +129,34 @@ class ArtieHelp extends React.Component {
         // Gets the workspace metrics
         const metrics = this.workspace.getMetrics();
 
-        //If the help is not null and we have some blocks to delete
-        if(this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.deleteBlocks !== null){
+        // If the help is not null and we have some blocks to delete
+        if (this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.deleteBlocks !== null) {
 
-            //We build the block array for the blocks we have to delete
-            var delBlockArray = [];
-            var dy = 10;
-            var dx = -1;
-            this.props.help.nextSteps.deleteBlocks.forEach(element => {delBlockArray.push(this.workspace.newBlock(element.blockName))});
+            // We build the block array for the blocks we have to delete
+            const delBlockArray = [];
+            let dy = 10;
+            let dx = -1;
+            this.props.help.nextSteps.deleteBlocks.forEach(element => {
+                delBlockArray.push(this.workspace.newBlock(element.blockName));
+            });
 
-            //Configure and render all the blocks
+            // Configure and render all the blocks
             delBlockArray.forEach(block => {
                 block.setMovable(false);
                 block.setDeletable(false);
                 block.contextMenu = false;
 
-                //If we haven't set the center of the workspace
-                if(dx == -1){
+                // If we haven't set the center of the workspace
+                if (dx === -1) {
 
-                    const {x, y} = block.getRelativeToSurfaceXY();
+                    const {x} = block.getRelativeToSurfaceXY();
                     const ltrX = ((metrics.viewWidth / 2) - (block.width / 2) + 25);
                     const mirrorX = x - ((x - this.state.rtlOffset) * 2);
                     dx = mirrorX - ltrX;
                     const midPoint = metrics.viewWidth / 2;
 
                     if (x === 0) {
-                        // if it's the first time positioning, it should always move right
+                        // If it's the first time positioning, it should always move right
                         if (block.width < midPoint) {
                             dx = ltrX;
                         } else if (block.width < metrics.viewWidth) {
@@ -164,7 +168,7 @@ class ArtieHelp extends React.Component {
                     }
                     if (block.width > metrics.viewWidth) {
                         dx = dx + block.width - metrics.viewWidth;
-                    }else {
+                    } else {
                         dx = (metrics.viewWidth / 2) - (block.width / 2) - x;
                         // If the procedure declaration is wider than the view width,
                         // keep the right-hand side of the procedure in view.
@@ -174,7 +178,7 @@ class ArtieHelp extends React.Component {
                     }
                 }
 
-                block.moveBy(dx,dy);
+                block.moveBy(dx, dy);
                 dy += 60;
 
                 block.initSvg();
@@ -202,32 +206,34 @@ class ArtieHelp extends React.Component {
         // Gets the workspace metrics
         const metrics = this.workspace.getMetrics();
 
-        //If the help is not null and we have some input values to replace
-        if(this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.replaceInputs !== null){
+        // If the help is not null and we have some input values to replace
+        if (this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.replaceInputs !== null) {
 
-            //We build the block array for the elements we have to replace
-            var replaceBlockArray = [];
-            var dy = 10;
-            var dx = -1;
-            this.props.help.nextSteps.replaceInputs.forEach(element => {replaceBlockArray.push(this.workspace.newBlock(element.element.blockName))});
+            // We build the block array for the elements we have to replace
+            const replaceBlockArray = [];
+            let dy = 10;
+            let dx = -1;
+            this.props.help.nextSteps.replaceInputs.forEach(element => {
+                replaceBlockArray.push(this.workspace.newBlock(element.element.blockName));
+            });
 
-            //Configure and render all the blocks
+            // Configure and render all the blocks
             replaceBlockArray.forEach(block => {
                 block.setMovable(false);
                 block.setDeletable(false);
                 block.contextMenu = false;
 
-                //If we haven't set the center of the workspace
-                if(dx == -1){
+                // If we haven't set the center of the workspace
+                if (dx === -1) {
 
-                    const {x, y} = block.getRelativeToSurfaceXY();
+                    const {x} = block.getRelativeToSurfaceXY();
                     const ltrX = ((metrics.viewWidth / 2) - (block.width / 2) + 25);
                     const mirrorX = x - ((x - this.state.rtlOffset) * 2);
                     dx = mirrorX - ltrX;
                     const midPoint = metrics.viewWidth / 2;
 
                     if (x === 0) {
-                        // if it's the first time positioning, it should always move right
+                        // If it's the first time positioning, it should always move right
                         if (block.width < midPoint) {
                             dx = ltrX;
                         } else if (block.width < metrics.viewWidth) {
@@ -239,7 +245,7 @@ class ArtieHelp extends React.Component {
                     }
                     if (block.width > metrics.viewWidth) {
                         dx = dx + block.width - metrics.viewWidth;
-                    }else {
+                    } else {
                         dx = (metrics.viewWidth / 2) - (block.width / 2) - x;
                         // If the procedure declaration is wider than the view width,
                         // keep the right-hand side of the procedure in view.
@@ -249,7 +255,7 @@ class ArtieHelp extends React.Component {
                     }
                 }
 
-                block.moveBy(dx,dy);
+                block.moveBy(dx, dy);
                 dy += 60;
 
                 block.initSvg();
@@ -277,32 +283,34 @@ class ArtieHelp extends React.Component {
         // Gets the workspace metrics
         const metrics = this.workspace.getMetrics();
 
-        //If the help is not null and we have some misplaced blocks
-        if(this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.replacePositions !== null){
+        // If the help is not null and we have some misplaced blocks
+        if (this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.replacePositions !== null) {
 
-            //We build the block array for the elements we have to add
-            var misplacedBlockArray = [];
-            var dy = 10;
-            var dx = -1;
-            this.props.help.nextSteps.replacePositions.forEach(element => {misplacedBlockArray.push(this.workspace.newBlock(element.blockName))});
+            // We build the block array for the elements we have to add
+            const misplacedBlockArray = [];
+            let dy = 10;
+            let dx = -1;
+            this.props.help.nextSteps.replacePositions.forEach(element => {
+                misplacedBlockArray.push(this.workspace.newBlock(element.blockName));
+            });
 
-            //Configure and render all the blocks
+            // Configure and render all the blocks
             misplacedBlockArray.forEach(block => {
                 block.setMovable(false);
                 block.setDeletable(false);
                 block.contextMenu = false;
 
-                //If we haven't set the center of the workspace
-                if(dx == -1){
+                // If we haven't set the center of the workspace
+                if (dx === -1) {
 
-                    const {x, y} = block.getRelativeToSurfaceXY();
+                    const {x} = block.getRelativeToSurfaceXY();
                     const ltrX = ((metrics.viewWidth / 2) - (block.width / 2) + 25);
                     const mirrorX = x - ((x - this.state.rtlOffset) * 2);
                     dx = mirrorX - ltrX;
                     const midPoint = metrics.viewWidth / 2;
 
                     if (x === 0) {
-                        // if it's the first time positioning, it should always move right
+                        // If it's the first time positioning, it should always move right
                         if (block.width < midPoint) {
                             dx = ltrX;
                         } else if (block.width < metrics.viewWidth) {
@@ -314,7 +322,7 @@ class ArtieHelp extends React.Component {
                     }
                     if (block.width > metrics.viewWidth) {
                         dx = dx + block.width - metrics.viewWidth;
-                    }else {
+                    } else {
                         dx = (metrics.viewWidth / 2) - (block.width / 2) - x;
                         // If the procedure declaration is wider than the view width,
                         // keep the right-hand side of the procedure in view.
@@ -324,7 +332,7 @@ class ArtieHelp extends React.Component {
                     }
                 }
 
-                block.moveBy(dx,dy);
+                block.moveBy(dx, dy);
                 dy += 60;
 
                 block.initSvg();
@@ -363,13 +371,25 @@ class ArtieHelp extends React.Component {
     }
     render () {
 
-        if(this.props.artieLogin !== null && this.props.artieLogin !== undefined && this.props.artieLogin.user !== null &&
-           this.props.artieExercises !== null && this.props.artieExercises !== null && this.props.artieExercises.help !== null &&
-           (this.props.artieExercises.help.nextSteps !== null || this.props.artieExercises.help.totalDistance === 0))
-        {
+        // Feature-flag guard:
+        // If Split flag 'Help_Popup' is OFF and the student interacts with the robot,
+        // do not render the help popup at all. Data fetching and timers can still run elsewhere,
+        // but the visual popup must remain hidden so the robot tutor handles the help.
+        const interactsWithRobot = Boolean(
+            (this.props.artieLogin && this.props.artieLogin.currentStudent && this.props.artieLogin.currentStudent.interactsWithRobot) ||
+            (this.props.artieLogin && this.props.artieLogin.user && this.props.artieLogin.user.interactsWithRobot)
+        );
+        const hideByFeature = this.props.artieHelpPopupFeature === 'off' && interactsWithRobot;
+
+        // eslint-disable-next-line max-len,no-undefined
+        if (this.props.artieLogin !== null && this.props.artieLogin !== undefined && this.props.artieLogin.user !== null &&
+            this.props.artieExercises !== null && this.props.artieExercises.help !== null &&
+           (this.props.artieExercises.help.nextSteps !== null || this.props.artieExercises.help.totalDistance === 0) &&
+           !hideByFeature) {
             return (
                 <ArtieHelpComponent
-                    help={this.props.help}
+                    // Forward the help payload directly from artieExercises to the presentational component
+                    help={this.props.artieExercises && this.props.artieExercises.help}
                     componentRefAdd={this.setBlocksAdd}
                     componentRefDel={this.setBlocksDel}
                     componentRefReplace={this.setBlocksReplaceInputs}
@@ -383,9 +403,8 @@ class ArtieHelp extends React.Component {
                     onToggleWarp={this.handleToggleWarp}
                 />
             );
-        }else{
-            return null;
         }
+        return null;
     }
 }
 
@@ -394,6 +413,18 @@ ArtieHelp.propTypes = {
     onRequestClose: PropTypes.func.isRequired,
     artieLogin: PropTypes.object,
     artieExercises: PropTypes.object,
+    // Split flag value coming from Split.io. Expected values: 'on' | 'off'
+    artieHelpPopupFeature: PropTypes.oneOf(['on', 'off']),
+    // Minimal help shape used by this container
+    help: PropTypes.shape({
+        nextSteps: PropTypes.shape({
+            addBlocks: PropTypes.array,
+            deleteBlocks: PropTypes.array,
+            replaceInputs: PropTypes.array,
+            replacePositions: PropTypes.array
+        }),
+        totalDistance: PropTypes.number
+    }),
     options: PropTypes.shape({
         media: PropTypes.string,
         zoom: PropTypes.shape({
@@ -418,7 +449,9 @@ ArtieHelp.defaultOptions = {
 };
 
 ArtieHelp.defaultProps = {
-    options: ArtieHelp.defaultOptions
+    options: ArtieHelp.defaultOptions,
+    // Safe default: show help unless Split explicitly turns it off
+    artieHelpPopupFeature: 'on'
 };
 
 const mapStateToProps = state => ({

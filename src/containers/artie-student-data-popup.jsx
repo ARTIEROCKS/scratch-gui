@@ -11,7 +11,7 @@ import {artieSetCurrentStudent} from '../reducers/artie-login';
 import {
     ARTIE_FLOW_EXERCISES_STATE,
     ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
-    artieChangeFlowState
+    setArtieFlowState
 } from '../reducers/artie-flow';
 
 const defaultGender = 1;
@@ -49,14 +49,6 @@ class ArtieStudentDataPopup extends React.Component {
 
     constructor (props) {
         super(props);
-        
-        const studentGender = (this.props.student !== null && typeof this.props.student.gender !== 'undefined' &&
-            this.props.student.gender > 0 ? this.props.student.gender : defaultGender);
-        const studentMotherTongue = (this.props.student !== null &&
-            typeof this.props.student.motherTongue !== 'undefined' &&
-            this.props.student.motherTongue > 0 ? this.props.student.motherTongue : defaultMotherTongue);
-        const studentAge = (this.props.student !== null && typeof this.props.student.age !== 'undefined' &&
-            this.props.student.age > 0 ? this.props.student.age : defaultAge);
 
         bindAll(this, [
             'handleOnGenderChange',
@@ -152,7 +144,7 @@ class ArtieStudentDataPopup extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
     onArtieSetCurrentStudent: currentStudent => dispatch(artieSetCurrentStudent(currentStudent)),
-    onArtieChangeFlowState: state => dispatch(artieChangeFlowState(state))
+    onArtieChangeFlowState: state => dispatch(setArtieFlowState(state))
 });
 
 

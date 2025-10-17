@@ -2,10 +2,10 @@ import ArtieEmotionalPopupComponent from '../components/artie-help/artie-emotion
 import {artieShowHelpPopup, artieAnswerHelpPopup, artieEmotionalStateChangeHelpPopup} from '../reducers/artie-help.js';
 import {artieHelpReceived, artieLoadingHelp, artieResetSecondsHelpOpen} from '../reducers/artie-exercises.js';
 import {
-    artieChangeFlowState,
     ARTIE_FLOW_WORKSPACE_STATE,
     ARTIE_FLOW_HELP_POPUP_STATE,
-    ARTIE_FLOW_EXERCISE_STATEMENT_STATE
+    ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
+    setArtieFlowState
 } from '../reducers/artie-flow.js';
 import React from 'react';
 import bindAll from 'lodash.bindall';
@@ -134,7 +134,7 @@ const mapDispatchToProps = dispatch => ({
     onEmotionalStatusChanged: emotionalState => dispatch(artieEmotionalStateChangeHelpPopup(emotionalState)),
     onArtieLoadingHelp: loading => dispatch(artieLoadingHelp(loading)),
     onArtieResetSecondsHelpOpen: () => dispatch(artieResetSecondsHelpOpen()),
-    onArtieChangeFlowState: state => dispatch(artieChangeFlowState(state))
+    onArtieChangeFlowState: state => dispatch(setArtieFlowState(state))
 });
 
 ArtieEmotionalPopup.propTypes = {

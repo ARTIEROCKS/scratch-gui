@@ -11,6 +11,9 @@ const initialState = {
     flowState: ARTIE_FLOW_LOGIN_STATE
 };
 
+// Generic action creator to change the flow state
+const setArtieFlowState = type => ({type});
+
 const reducer = function (state, action) {
     if (typeof state === 'undefined') state = initialState;
     switch (action.type) {
@@ -48,19 +51,15 @@ const reducer = function (state, action) {
     }
 };
 
-const artieChangeFlowState = state => ({
-    type: state
-});
-
 export {
     reducer as default,
     initialState as artieFlowInitialState,
-    artieChangeFlowState,
     ARTIE_FLOW_LOGIN_STATE,
     ARTIE_FLOW_STUDENT_DATA_STATE,
     ARTIE_FLOW_EXERCISES_STATE,
     ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
     ARTIE_FLOW_WORKSPACE_STATE,
     ARTIE_FLOW_EMOTIONAL_STATE,
-    ARTIE_FLOW_HELP_POPUP_STATE
+    ARTIE_FLOW_HELP_POPUP_STATE,
+    setArtieFlowState
 };

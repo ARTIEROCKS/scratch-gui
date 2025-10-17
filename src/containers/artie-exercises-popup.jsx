@@ -18,9 +18,9 @@ import {
 } from '../reducers/artie-exercises';
 import {artieSetCurrentStudent} from '../reducers/artie-login';
 import {
-    artieChangeFlowState,
     ARTIE_FLOW_WORKSPACE_STATE,
-    ARTIE_FLOW_EXERCISES_STATE
+    ARTIE_FLOW_EXERCISES_STATE,
+    setArtieFlowState
 } from '../reducers/artie-flow.js';
 
 const statementMessages = defineMessages({
@@ -253,7 +253,7 @@ class ArtieExercisePopup extends React.Component {
             return 'statement';
         } else if (exercises !== 'undefined' && exercises !== null && exercises.popupSolution){
             return 'solution';
-        } else if (exercises !== 'undefined' && exercises.help !== null && exercises.help.totalDistance === 0){
+        } else if (exercises !== 'undefined' && exercises !== null && exercises.help !== null && exercises.help.totalDistance === 0){
             return 'congratulations';
         }
         return null;
@@ -510,7 +510,7 @@ const mapDispatchToProps = dispatch => ({
     onArtieClearHelp: () => dispatch(artieClearHelp(new Date())),
     onArtiePopupStatement: active => dispatch(artiePopupStatement(active)),
     onArtieActivateExercises: () => dispatch(activateArtieExercises()),
-    onArtieChangeFlowState: state => dispatch(artieChangeFlowState(state))
+    onArtieChangeFlowState: state => dispatch(setArtieFlowState(state))
 });
 
 ArtieExercisePopup.propTypes = {
