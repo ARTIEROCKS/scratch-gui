@@ -90,6 +90,7 @@
     "redux-throttle": "^0.1.1",
     "scratch-audio": "^1.0.0",
     "scratch-blocks": "^1.1.6",
+    "artie-scratch-l10n": "3.19.000-artie",
     "scratch-paint": "^2.2.151",
     "scratch-render": "^1.0.233",
     "scratch-render-fonts": "^1.0.2",
