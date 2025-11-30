@@ -15,8 +15,9 @@ import {showExtensionAlert} from '../reducers/alerts';
 import {updateMicIndicator} from '../reducers/mic-indicator';
 import {artieBlocksUpdated, artieHelpReceived, artieResetSecondsHelpOpen} from '../reducers/artie-exercises';
 import {artieShowHelpPopup} from '../reducers/artie-help';
-import {artieChangeFlowState, ARTIE_FLOW_HELP_POPUP_STATE,
-    ARTIE_FLOW_EXERCISE_STATEMENT_STATE
+import {ARTIE_FLOW_HELP_POPUP_STATE,
+    ARTIE_FLOW_EXERCISE_STATEMENT_STATE,
+    setArtieFlowState
 } from '../reducers/artie-flow';
 import {sendBlockArtie} from '../lib/artie-api';
 
@@ -124,14 +125,14 @@ const vmListenerHOC = function (WrappedComponent) {
                 e.preventDefault();
             }
         }
-        handleBlockArtieUpdate (areBlocksOverGui) {
+        handleBlockArtieUpdate () {
             if (this.props.artieLogin.currentStudent !== null && this.props.artieExercises.currentExercise !== null){
                 setTimeout(() => {
                     this.props.onArtieBlocksUpdated(this.props.vm.editingTarget.blocks._blocks);
                     sendBlockArtie(this.props.artieLogin.currentStudent, this.props.sprites,
                         this.props.artieExercises.currentExercise, false, this.props.artieHelp.emotionalState,
                         this.props.artieExercises.secondsHelpOpen, false, this.props.artieLogin.lastLogin,
-                        this.props.artieExercises.lastExerciseChange,null, null)
+                        this.props.artieExercises.lastExerciseChange, null, null)
                         .then(responseBodyObject => {
                             if (responseBodyObject !== null && responseBodyObject.predictedNeedHelp !== null){
                                 this.props.onArtieShowHelpPopup(responseBodyObject.id,
@@ -151,9 +152,9 @@ const vmListenerHOC = function (WrappedComponent) {
                 setTimeout(() => {
                     this.props.onArtieBlocksUpdated(this.props.vm.editingTarget.blocks._blocks);
                     sendBlockArtie(this.props.artieLogin.currentStudent, this.props.sprites,
-                        this.props.artieExercises.currentExercise,false, this.props.artieHelp.emotionalState,
+                        this.props.artieExercises.currentExercise, false, this.props.artieHelp.emotionalState,
                         this.props.artieExercises.secondsHelpOpen, false, this.props.artieLogin.lastLogin,
-                        this.props.artieExercises.lastExerciseChange,null, null)
+                        this.props.artieExercises.lastExerciseChange, null, null)
                         .then(responseBodyObject => {
                             if ((responseBodyObject !== null && responseBodyObject.solutionDistance !== null &&
                                 responseBodyObject.needHelp) ||
@@ -271,7 +272,12 @@ const vmListenerHOC = function (WrappedComponent) {
         onArtieHelpReceived: PropTypes.func,
         onArtieResetSecondsHelpOpen: PropTypes.func,
         onArtieShowHelpPopup: PropTypes.func,
-        onArtieChangeFlowState: PropTypes.func
+        onArtieChangeFlowState: PropTypes.func,
+        // Added
+        artieLogin: PropTypes.object.isRequired,
+        artieExercises: PropTypes.object.isRequired,
+        artieHelp: PropTypes.object.isRequired,
+        sprites: PropTypes.object.isRequired
     };
     VMListener.defaultProps = {
         attachKeyboardEvents: true,
@@ -314,7 +320,7 @@ const vmListenerHOC = function (WrappedComponent) {
             dispatch(artieResetSecondsHelpOpen());
         },
         onArtieShowHelpPopup: (id, showHelpPopup) => dispatch(artieShowHelpPopup(id, showHelpPopup)),
-        onArtieChangeFlowState: state => dispatch(artieChangeFlowState(state)),
+        onArtieChangeFlowState: state => dispatch(setArtieFlowState(state)),
         onProjectRunStart: () => dispatch(setRunningState(true)),
         onProjectRunStop: () => dispatch(setRunningState(false)),
         onProjectChanged: () => dispatch(setProjectChanged()),

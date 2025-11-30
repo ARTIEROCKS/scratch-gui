@@ -9,14 +9,18 @@ import styles from './request-help-button.css';
 
 const RequestHelpButton = ({
     className,
-    onClick
+    onClick,
+    disabled
 }) => (
     <Button
         className={classNames(
             className,
-            styles.selectExerciseButton
+            styles.selectExerciseButton,
+            { [styles.disabled]: disabled }
         )}
         onClick={onClick}
+        disabled={disabled}
+        aria-disabled={disabled}
     >
         <FormattedMessage
             defaultMessage="Request help"
@@ -28,11 +32,13 @@ const RequestHelpButton = ({
 
 RequestHelpButton.propTypes = {
     className: PropTypes.string,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    disabled: PropTypes.bool
 };
 
 RequestHelpButton.defaultProps = {
-    onClick: () => {}
+    onClick: () => {},
+    disabled: false
 };
 
 export default RequestHelpButton;

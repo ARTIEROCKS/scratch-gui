@@ -41,7 +41,8 @@ import {
     ARTIE_FLOW_STUDENT_DATA_STATE,
     ARTIE_FLOW_EMOTIONAL_STATE,
     ARTIE_FLOW_HELP_POPUP_STATE,
-    artieChangeFlowState
+    ARTIE_FLOW_WORKSPACE_STATE,
+    setArtieFlowState
 } from '../reducers/artie-flow';
 import {changeArtieWebcamRecording} from '../reducers/artie-webcam';
 import {compose} from 'redux';
@@ -72,6 +73,34 @@ class ArtieFlow extends React.Component {
             'handleClickArtieExercisesOk',
             'handleLogout'
         ]);
+    }
+
+    componentDidUpdate (prevProps) {
+        // Auto-redirigir si el Help Popup está deshabilitado por feature flag y el alumno interactúa con el robot.
+        // Evita quedarse en ARTIE_FLOW_HELP_POPUP_STATE sin UI visible.
+        if (this.props.artieFlow.flowState === ARTIE_FLOW_HELP_POPUP_STATE &&
+            prevProps.artieFlow.flowState !== ARTIE_FLOW_HELP_POPUP_STATE) {
+            const artieLogin = this.props.artieLogin;
+            const interactsWithRobot = Boolean(
+                (artieLogin && artieLogin.currentStudent && artieLogin.currentStudent.interactsWithRobot) ||
+                (artieLogin && artieLogin.user && artieLogin.user.interactsWithRobot)
+            );
+            const hideByFeature = this.props.artieHelpPopupFeature === 'off' && interactsWithRobot;
+
+            if (hideByFeature) {
+                const help = this.props.artieExercises && this.props.artieExercises.help;
+                // Si no hay help o la distancia es > 0, volvemos al workspace.
+                if (!help || help.totalDistance > 0) {
+                    this.props.onArtieClearHelp();
+                    this.props.onArtieStateFlowChange(ARTIE_FLOW_WORKSPACE_STATE);
+                } else if (help && help.totalDistance === 0) {
+                    // Si la distancia es 0, mostrar el enunciado del ejercicio directamente.
+                    this.props.onArtieClearHelp();
+                    this.props.onArtieStateFlowChange(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
+                    this.props.onArtiePopupStatement(true);
+                }
+            }
+        }
     }
 
     /**
@@ -132,7 +161,7 @@ class ArtieFlow extends React.Component {
         });
         const splitClient = splitFactory.client(userId);
         splitClient.on(splitClient.Event.SDK_READY, () => {
-            this.props.onArtieFeatureFlagLoaded('Emotional_Popup', splitClient.getTreatment(featureFlag));
+            this.props.onArtieFeatureFlagLoaded(featureFlag, splitClient.getTreatment(featureFlag));
         });
     }
 
@@ -166,8 +195,9 @@ class ArtieFlow extends React.Component {
                 const tempStudent = this.props.artieLogin.students.filter(s => s.id === studentLogin)[0];
                 this.props.onArtieSetCurrentStudent(tempStudent);
 
-                // We get the feature flag
+                // We get the feature flags
                 this.handleSplitIO(tempStudent.id, 'Emotional_Popup');
+                this.handleSplitIO(tempStudent.id, 'Help_Popup');
 
                 // Once the student has been selected, we start recording
                 this.props.onChangeArtieWebcamRecording(true);
@@ -195,7 +225,7 @@ class ArtieFlow extends React.Component {
                     getArtieExercises(userLogin, passwordLogin, false)
                         .then(exercises => {
                             this.props.onArtieSetExercises(exercises);
-                            
+
                             // FLOW Changes to show the exercise list
                             this.props.onArtieStateFlowChange(ARTIE_FLOW_EXERCISES_STATE);
                         });
@@ -317,6 +347,8 @@ class ArtieFlow extends React.Component {
                 artieLogin={this.props.artieLogin}
                 artieExercises={this.props.artieExercises}
                 help={this.props.artieExercises.help}
+                // Forward Split flag so the help component can decide rendering
+                artieHelpPopupFeature={this.props.artieHelpPopupFeature}
             />);
         }
 
@@ -373,7 +405,7 @@ const mapDispatchToProps = dispatch => ({
     onChangeArtieWebcamRecording: recording => dispatch(changeArtieWebcamRecording(recording)),
 
     // 5- Flow properties
-    onArtieStateFlowChange: state => dispatch(artieChangeFlowState(state))
+    onArtieStateFlowChange: state => dispatch(setArtieFlowState(state))
 });
 
 ArtieFlow.propTypes = {
@@ -403,7 +435,9 @@ ArtieFlow.propTypes = {
     onArtieStateFlowChange: PropTypes.func.isRequired,
 
     // Split IO Functions
-    onArtieFeatureFlagLoaded: PropTypes.func
+    onArtieFeatureFlagLoaded: PropTypes.func,
+    // Split flag propagated from MenuBar. Expected: 'on' | 'off'. Defaults to undefined if not loaded yet.
+    artieHelpPopupFeature: PropTypes.oneOf(['on', 'off'])
 };
 
 ArtieLogin.propTypes = {

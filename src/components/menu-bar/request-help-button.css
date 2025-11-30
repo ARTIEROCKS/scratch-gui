@@ -1,5 +1,10 @@
 @import "../../css/colors.css";
 
 .select-exercise-button {
-    background: $data-primary;
+    background: hsla(30, 100%, 55%, 1); /* equivalente a $data-primary */
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

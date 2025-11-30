@@ -25,6 +25,7 @@ const baseConfig = new ScratchWebpackConfigBuilder(
             }
         },
         resolve: {
+            // alias removed; package link should provide 'artie-scratch-l10n'
             fallback: {
                 Buffer: require.resolve('buffer/'),
                 stream: require.resolve('stream-browserify')
@@ -40,7 +41,10 @@ const baseConfig = new ScratchWebpackConfigBuilder(
         'process.env.DEBUG': Boolean(process.env.DEBUG),
         'process.env.GA_ID': `"${process.env.GA_ID || 'UA-000000-01'}"`,
         'process.env.GTM_ENV_AUTH': `"${process.env.GTM_ENV_AUTH || ''}"`,
-        'process.env.GTM_ID': process.env.GTM_ID ? `"${process.env.GTM_ID}"` : null
+        'process.env.GTM_ID': process.env.GTM_ID ? `"${process.env.GTM_ID}"` : null,
+        'process.env.REACT_APP_PEDAGOGICAL_INTERVENTION_WEB_SERVICE_URL': `"${process.env.REACT_APP_PEDAGOGICAL_INTERVENTION_WEB_SERVICE_URL || 'http://localhost:8000'}"`,
+        'process.env.REACT_APP_PEDAGOGICAL_WEB_URL': `"${process.env.REACT_APP_PEDAGOGICAL_WEB_URL || 'http://localhost:8000'}"`,
+        'process.env.REACT_APP_API_KEY': `"${process.env.REACT_APP_API_KEY || 'k6siZlG9OZGyMorpmSUeYo87ebfsN7s0'}"`
     }))
     .addPlugin(new CopyWebpackPlugin({
         patterns: [
