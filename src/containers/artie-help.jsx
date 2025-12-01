@@ -49,13 +49,16 @@ class ArtieHelp extends React.Component {
 
         this.workspace.options.pathToMedia = 'static/blocks-media/';
 
-        // Gets the workspace metrics
+        // Get workspace metrics
         const metrics = this.workspace.getMetrics();
 
-        // If the help is not null and we have some blocks to add
-        if (this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.addBlocks !== null) {
+        // If we have help data and a non-empty list of blocks to add
+        if (this.props.help !== null &&
+            this.props.help.nextSteps !== null &&
+            this.props.help.nextSteps.addBlocks !== null
+        ) {
 
-            // We build the block array for the elements we have to add
+            // Build the block array for the blocks we need to add
             const addBlockArray = [];
             let dy = 10;
             let dx = -1;
@@ -69,7 +72,7 @@ class ArtieHelp extends React.Component {
                 block.setDeletable(false);
                 block.contextMenu = false;
 
-                // If we haven't set the center of the workspace
+                // If we have not yet computed the workspace center offset
                 if (dx === -1) {
 
                     const {x} = block.getRelativeToSurfaceXY();
@@ -79,7 +82,7 @@ class ArtieHelp extends React.Component {
                     const midPoint = metrics.viewWidth / 2;
 
                     if (x === 0) {
-                        // If it's the first time positioning, it should always move right
+                        // On first positioning, we always move the block to the right
                         if (block.width < midPoint) {
                             dx = ltrX;
                         } else if (block.width < metrics.viewWidth) {
@@ -126,13 +129,16 @@ class ArtieHelp extends React.Component {
 
         this.workspace.options.pathToMedia = 'static/blocks-media/';
 
-        // Gets the workspace metrics
+        // Get workspace metrics
         const metrics = this.workspace.getMetrics();
 
-        // If the help is not null and we have some blocks to delete
-        if (this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.deleteBlocks !== null) {
+        // If we have help data and a non-empty list of blocks to delete
+        if (this.props.help !== null &&
+            this.props.help.nextSteps !== null &&
+            this.props.help.nextSteps.deleteBlocks !== null
+        ) {
 
-            // We build the block array for the blocks we have to delete
+            // Build the block array for the blocks we need to delete
             const delBlockArray = [];
             let dy = 10;
             let dx = -1;
@@ -146,7 +152,7 @@ class ArtieHelp extends React.Component {
                 block.setDeletable(false);
                 block.contextMenu = false;
 
-                // If we haven't set the center of the workspace
+                // If we have not yet computed the workspace center offset
                 if (dx === -1) {
 
                     const {x} = block.getRelativeToSurfaceXY();
@@ -156,7 +162,7 @@ class ArtieHelp extends React.Component {
                     const midPoint = metrics.viewWidth / 2;
 
                     if (x === 0) {
-                        // If it's the first time positioning, it should always move right
+                        // On first positioning, we always move the block to the right
                         if (block.width < midPoint) {
                             dx = ltrX;
                         } else if (block.width < metrics.viewWidth) {
@@ -203,13 +209,16 @@ class ArtieHelp extends React.Component {
 
         this.workspace.options.pathToMedia = 'static/blocks-media/';
 
-        // Gets the workspace metrics
+        // Get workspace metrics
         const metrics = this.workspace.getMetrics();
 
-        // If the help is not null and we have some input values to replace
-        if (this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.replaceInputs !== null) {
+        // If we have help data and a non-empty list of inputs to replace
+        if (this.props.help !== null &&
+            this.props.help.nextSteps !== null &&
+            this.props.help.nextSteps.replaceInputs !== null
+        ) {
 
-            // We build the block array for the elements we have to replace
+            // Build the block array for the blocks whose inputs we need to replace
             const replaceBlockArray = [];
             let dy = 10;
             let dx = -1;
@@ -223,7 +232,7 @@ class ArtieHelp extends React.Component {
                 block.setDeletable(false);
                 block.contextMenu = false;
 
-                // If we haven't set the center of the workspace
+                // If we have not yet computed the workspace center offset
                 if (dx === -1) {
 
                     const {x} = block.getRelativeToSurfaceXY();
@@ -233,7 +242,7 @@ class ArtieHelp extends React.Component {
                     const midPoint = metrics.viewWidth / 2;
 
                     if (x === 0) {
-                        // If it's the first time positioning, it should always move right
+                        // On first positioning, we always move the block to the right
                         if (block.width < midPoint) {
                             dx = ltrX;
                         } else if (block.width < metrics.viewWidth) {
@@ -280,13 +289,16 @@ class ArtieHelp extends React.Component {
 
         this.workspace.options.pathToMedia = 'static/blocks-media/';
 
-        // Gets the workspace metrics
+        // Get workspace metrics
         const metrics = this.workspace.getMetrics();
 
-        // If the help is not null and we have some misplaced blocks
-        if (this.props.help !== null && this.props.help.nextSteps !== null && this.props.help.nextSteps.replacePositions !== null) {
+        // If we have help data and a non-empty list of misplaced blocks
+        if (this.props.help !== null &&
+            this.props.help.nextSteps !== null &&
+            this.props.help.nextSteps.replacePositions !== null
+        ) {
 
-            // We build the block array for the elements we have to add
+            // Build the block array for the misplaced blocks we need to show
             const misplacedBlockArray = [];
             let dy = 10;
             let dx = -1;
@@ -300,7 +312,7 @@ class ArtieHelp extends React.Component {
                 block.setDeletable(false);
                 block.contextMenu = false;
 
-                // If we haven't set the center of the workspace
+                // If we have not yet computed the workspace center offset
                 if (dx === -1) {
 
                     const {x} = block.getRelativeToSurfaceXY();
@@ -310,7 +322,7 @@ class ArtieHelp extends React.Component {
                     const midPoint = metrics.viewWidth / 2;
 
                     if (x === 0) {
-                        // If it's the first time positioning, it should always move right
+                        // On first positioning, we always move the block to the right
                         if (block.width < midPoint) {
                             dx = ltrX;
                         } else if (block.width < metrics.viewWidth) {
@@ -376,8 +388,12 @@ class ArtieHelp extends React.Component {
         // do not render the help popup at all. Data fetching and timers can still run elsewhere,
         // but the visual popup must remain hidden so the robot tutor handles the help.
         const interactsWithRobot = Boolean(
-            (this.props.artieLogin && this.props.artieLogin.currentStudent && this.props.artieLogin.currentStudent.interactsWithRobot) ||
-            (this.props.artieLogin && this.props.artieLogin.user && this.props.artieLogin.user.interactsWithRobot)
+            (this.props.artieLogin &&
+                this.props.artieLogin.currentStudent &&
+                this.props.artieLogin.currentStudent.interactsWithRobot) ||
+            (this.props.artieLogin &&
+                this.props.artieLogin.user &&
+                this.props.artieLogin.user.interactsWithRobot)
         );
         const hideByFeature = this.props.artieHelpPopupFeature === 'off' && interactsWithRobot;
 

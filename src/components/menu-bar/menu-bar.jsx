@@ -539,16 +539,16 @@ class MenuBar extends React.Component {
         this.props.onArtieChangeFlowState(ARTIE_FLOW_EXERCISE_STATEMENT_STATE);
     }
     handleClickRequestEmotionalHelp (){
-        // Evita múltiples solicitudes mientras está cargando
+        // Avoid multiple requests while help loading is in progress
         if (this.props.artieExercises.loadingHelp) return;
 
         this.props.onArtieShowHelpPopup(null, true);
 
         if (this.artieEmotionalPopupFeature === 'on') {
-            // We show the emotional popup just in the case the flag is active
+            // Show the emotional popup only when the feature flag is active
             this.props.onArtieChangeFlowState(ARTIE_FLOW_EMOTIONAL_STATE);
         } else {
-            // Activamos pantalla de carga mientras esperamos la ayuda
+            // Turn on loading overlay while waiting for the help response
             this.props.onArtieLoadingHelp(true);
 
             // Compute Split guard: if Help_Popup is OFF and the student interacts with the robot,
@@ -560,8 +560,10 @@ class MenuBar extends React.Component {
             );
             const hideByFeature = this.artieHelpPopupFeature === 'off' && interactsWithRobot;
 
-            // In case the the flag is off we just show the help popup
-            sendBlockArtie(
+            // Wrap the help request so we can enforce a client-side timeout
+            const HELP_TIMEOUT_MS = 15000; // 15 seconds to avoid an infinite loading overlay
+
+            const helpRequestPromise = sendBlockArtie(
                 this.props.artieLogin.currentStudent,
                 this.props.sprites,
                 this.props.artieExercises.currentExercise,
@@ -573,8 +575,25 @@ class MenuBar extends React.Component {
                 this.props.artieExercises.lastExerciseChange,
                 null,
                 null
-            )
+            );
+
+            const timeoutPromise = new Promise((resolve, reject) => {
+                this.artieHelpTimeoutId = setTimeout(() => {
+                    // Mark this as a timeout-specific error so we can handle it if needed
+                    const timeoutError = new Error('ARTIE_HELP_TIMEOUT');
+                    timeoutError.code = 'ARTIE_HELP_TIMEOUT';
+                    reject(timeoutError);
+                }, HELP_TIMEOUT_MS);
+            });
+
+            Promise.race([helpRequestPromise, timeoutPromise])
                 .then(responseBodyObject => {
+                    // If we got a real response, clear the timeout timer
+                    if (this.artieHelpTimeoutId) {
+                        clearTimeout(this.artieHelpTimeoutId);
+                        this.artieHelpTimeoutId = null;
+                    }
+
                     // If the response has a solution distance object
                     if (responseBodyObject !== null && responseBodyObject.solutionDistance !== null){
                         this.props.onArtieHelpReceived(responseBodyObject.solutionDistance);
@@ -586,12 +605,19 @@ class MenuBar extends React.Component {
                     }
                 })
                 .catch(() => {
-                    // En caso de error, aseguramos ocultar el overlay
+                    // If the error is a timeout or a network/server error, just ensure the overlay closes.
+                    if (this.artieHelpTimeoutId) {
+                        clearTimeout(this.artieHelpTimeoutId);
+                        this.artieHelpTimeoutId = null;
+                    }
+
+                    // TODO: Optionally dispatch a user-visible error for ARTIE help timeout
                 })
                 .finally(() => {
-                    // Stops the loading help
+                    // Stop the loading help overlay in all paths (success, error or timeout)
                     this.props.onArtieLoadingHelp(false);
                 });
+
             if (this.props.artieExercises.secondsHelpOpen > 0) {
                 this.props.onArtieResetSecondsHelpOpen();
             }
