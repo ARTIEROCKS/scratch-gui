@@ -9,6 +9,7 @@
 /* eslint-disable arrow-parens */
 
 const _inputElementsValues = ['text', 'math_number', 'math_positive_number', 'math_whole_number'];
+
 const _pedagogicalInterventionWebServiceUrl = process.env.REACT_APP_PEDAGOGICAL_INTERVENTION_WEB_SERVICE_URL || 'http://localhost:8000';
 const _pedagogialWebUrl = process.env.REACT_APP_PEDAGOGICAL_WEB_URL || 'http://localhost:8000';
 const _apiKey = process.env.REACT_APP_API_KEY || 'k6siZlG9OZGyMorpmSUeYo87ebfsN7s0';
